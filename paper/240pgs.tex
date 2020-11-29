@@ -120,16 +120,50 @@ While some have shown including a few thousands individuals from other ancestrie
 \subsection*{Drop in prediction in other ancestries}
 
 %% FIGURE 1 HERE
-\begin{figure}[htb]
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{lasso-ancestry}
 \caption{}
 \label{fig:lasso-ancestry}
 \end{figure}
 
+%\subsection*{Size matters for prediction, but not only}
+\subsection*{Lessons learned}
+
+- small sample size is okay if small polygenicity
+
+- hybrid heritability is often chosen, even if improvement in predictive performance is usually small
+
+- comparing LDpred2 and PLR
+
+\subsection*{Including more variants?}
+
+- Zoomed plots
+
+- Performance of 5M vs 1M only
+
+\subsection*{Training using multiple ancestries}
+
+Not better, but not worse when using the same sample size.
+
+\subsection*{Including family history?}
+
+We first replicated the analyses of [MARGAUX]. We derived the LT-FH phenotypes for the same 12 traits for the individuals in the training set.
+We then run separately a GWAS using either the case-control phenotype or the corresponding LT-FH phenotypes.
+When comparing Z-Scores obtained from the GWAS of the LT-FH phenotypes to the ones using case-control phenotypes, we report increase in power from 28\% for prostate cancer to 500\% for Alzheimer's disease [TO VERIFY].
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Discussion}
+
+- How fast it is to derive polygenic scores with lasso, even for large sample sizes and number of variants [TALK ABOUT SNPNET HERE].
+
+LIMITATIONS:
+- Could use better prediction but can just combine linearly with other PGS made on external data [CITE CLARA]
+- LDpred2 could not be run with 5M+ variants; we are working on this
+- Better method development for prediction in other ancestries
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
