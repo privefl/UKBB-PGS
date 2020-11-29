@@ -1,0 +1,197 @@
+%% LyX 1.3 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english, 12pt]{article}
+\usepackage{times}
+%\usepackage{algorithm2e}
+\usepackage{url}
+\usepackage{bbm}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,letterpaper,tmargin=2cm,bmargin=2cm,lmargin=1.5cm,rmargin=1.5cm}
+\usepackage{rotating}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{setspace}
+\usepackage{lineno}
+\usepackage{hyperref}
+\usepackage{bbm}
+\usepackage{makecell}
+
+%\renewcommand{\arraystretch}{1.8}
+
+%\usepackage{xr}
+%\externaldocument{paper-ldpred2-supp}
+
+%\linenumbers
+%\doublespacing
+\onehalfspacing
+%\usepackage[authoryear]{natbib}
+\usepackage{natbib} \bibpunct{(}{)}{;}{author-year}{}{,}
+
+%Pour les rajouts
+\usepackage{color}
+\definecolor{trustcolor}{rgb}{0,0,1}
+
+\usepackage{dsfont}
+\usepackage[warn]{textcomp}
+\usepackage{adjustbox}
+\usepackage{multirow}
+\usepackage{graphicx}
+\graphicspath{{../figures/}}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+\usepackage{algorithm} 
+\usepackage{algpseudocode} 
+
+\let\tabbeg\tabular
+\let\tabend\endtabular
+\renewenvironment{tabular}{\begin{adjustbox}{max width=0.9\textwidth}\tabbeg}{\tabend\end{adjustbox}}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+%% Bold symbol macro for standard LaTeX users
+%\newcommand{\boldsymbol}[1]{\mbox{\boldmath $#1$}}
+
+%% Because html converters don't know tabularnewline
+\providecommand{\tabularnewline}{\\}
+
+\usepackage{babel}
+\makeatother
+
+
+\begin{document}
+
+
+\title{Phenome-wide polygenic scores from the UK Biobank}
+\author{Florian Priv\'e,$^{\text{1,}*}$ ...,$^{\text{2}}$ and Bjarni J. Vilhj\'almsson$^{\text{1,3}}$}
+
+\date{~ }
+\maketitle
+
+\noindent$^{\text{\sf 1}}$National Centre for Register-Based Research, Aarhus University, Aarhus, 8210, Denmark. \\
+\noindent$^{\text{\sf 3}}$Bioinformatics Research Centre, Aarhus University, Aarhus, 8000, Denmark. \\
+\noindent$^\ast$To whom correspondence should be addressed.\\
+
+\noindent Contact: \url{florian.prive.21@gmail.com}
+
+\vspace*{4em}
+
+\abstract{	
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+
+\section{Introduction}
+
+Ever larger genetic data is becoming increasingly available to researchers.
+This enables deriving polygenic scores (PGS), which summarize an individual genetic components for a particular trait or disease by combining information from many genetic variants.
+Polygenic scores are usually derived from summary statistics from a large meta-analysis of multiple GWAS and an ancestry-matched LD reference panel \cite[]{choi2020tutorial}. 
+Yet, this is not the only way to derive polygenic scores.
+Indeed, polygenic scores can be directly derived from individual-level data, i.e.\ from the genetic and phenotypic information of many individuals.
+Biobank datasets such as the UK Biobank now links genetic data for half a million individuals with phenotypic data for hundreds of traits and diseases \cite[]{bycroft2018uk}.
+Before having access to large genetic datasets such as the UK Biobank, using a single individual-level data to derive polygenic scores was pointless because of the small sample sizes.
+It proved nevertheless useful for deriving PGS for traits with moderately large effects, such as autoimmune diseases \cite[]{abraham2014accurate,prive2019efficient}.
+Yet, now that we have access to such large datasets, individual-level data can be used to derive competitive PGS for hundreds of phenotypes.
+Here, we apply our fast implementation of penalized regressions \cite[]{prive2019efficient} to the UK Biobank data to derive PGS for 240 traits using the UK Biobank genetic and phenotypic data only.
+[ADD WHY THESE PGS WOULD BE USEFUL FOR RESEARCHERS / CITE PGS CATALOG + OTHER CANCER PRS-WEB.]
+As an alternative method, we also run LDpred2-auto [CITE ME], for which we directly derive the summary statistics from the individual-level data available.
+
+A major concern about PGS is that they are not transferable to other ancestries, i.e.\ a PGS derived in people of European ancestry is not likely to predict as well in people of African ancestry.
+Here, we are also well positioned to reiterate this concern with strong evidence. 
+Indeed, while the UKBB data contains genetic information for more than 450K British or European individuals, it also contains the same data for about 9000 people of South Asian ancestry, 1500 of Chinese ancestry and 4000 of African ancestry [CHANGE NUMBERS?].
+But, even if these people genetically comes from a different ancestry, they all live in Great Britain, and had their genetic and phenotypic information derived in the same way as people of European ancestry.
+This makes the UK Biobank data very well suited for comparing and evaluating predictive performance of derived PGS in diverse ancestries.
+We show that results about transferability of PGS derived from European ancestry to other ancestries are quite alarming. 
+Indeed, overall for the 240 PGS, variance of the phenotypes explained by the PGS decreases by [COMPLETE].
+We finally try to derive PGS by including diverse ancestries for training the models [SHOULD DO THIS?].
+While some have shown including a few thousands individuals from other ancestries might be useful in the context for finding genetic-disease association, it does not seem to beneficial in the context of prediction [TO SHOW].
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Results}
+
+\subsection*{Overview of methods}
+
+\subsection*{Drop in prediction in other ancestries}
+
+%% FIGURE 1 HERE
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.9\textwidth]{lasso-ancestry}
+\caption{}
+\label{fig:lasso-ancestry}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Discussion}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Methods}
+
+\subsection{Data}
+
+We have derived polygenic scores for 240 phenotypes using the UK Biobank (UKBB) data \cite[]{bycroft2018uk}.
+We read dosages data from UKBB BGEN files using function \texttt{snp\_readBGEN()} of R package bigsnpr \cite[]{prive2017efficient}.
+We filtered the data to 433,868 genetically homogeneous individuals, i.e.\ those with a log Mahalanobis distance from the first 16 PCs of less than 5 \cite[]{prive2020efficient}.
+For the variants, we used 1.117,182 HapMap3 variants that were also present in the iPSYCH2012 data with INFO score larger than 0.3 \cite[]{pedersen2018ipsych2012}.
+Even if the iPSYCH data is not used in this study, we aim to use the PGS derived here in iPSYCH in the future.
+
+To define phenotypes, we first mapped ICD10 and ICD9 codes (UKBB fields 40001, 40002, 40006, 40013, 41202, 41270 and 41271) to phecodes using R package PheWAS \cite[]{carroll2014r,wu2019mapping}. 
+We filtered down to 142 phecodes of interest that showed potential genetic signals in the PheWeb results from the SAIGE genome-wide association study in the UKBB \cite[]{zhou2018efficiently,taliun2020exploring}. We got 104 phecodes for which we could predict something using \texttt{big\_spLogReg()}.
+Second, we looked closely at all 2408 UKBB fields that we had access to and filtered down to defining 111 continuous and 25 binary phenotypes.
+
+\subsection{Penalized regressions}
+
+To derive polygenic risk scores based on individual-level data from the UKBB, we used our fast implementation of penalized linear and logistic regressions \cite[]{prive2019efficient}.
+Our implementation supports for lasso and elastic-net penalizations. For the sake of simplicity and because the UKBB data is very large, we have decided to only use the lasso penalty \cite[]{prive2019efficient}.
+We recall that fitting a penalized linear regression with lasso penalty corresponds to finding the vector of effects $\beta$ that minimizes
+\[L(\lambda) = \underbrace{ ||y - G \beta||_2^2 }_\text{Loss function} + \underbrace{ \lambda \|\beta\|_1 }_\text{Penalisation} ~,\]
+where $G$ is the genotype matrix, $y$ is the (quantitative) phenotype of interest and $\lambda$ is a hyper-parameter that needs to be chosen.
+
+In this paper, we have extended our implementation in two ways by allowing for using different penalties for the variants (i.e.\ having $\sum_{j} \lambda_j |\beta_j|$ instead of $\lambda \|\beta\|_1$).
+First, this enables us to use a different scaling for genotypes. It is assumed by default that variants in $G$ are scaled. By using $\lambda_j \propto 1 / \text{sd}_j$, this.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+%\vspace*{5em}
+
+\section*{Software and code availability}
+
+%[TODO: EXPORT CODE FROM CLUSTER] 
+
+%All code used for this paper is available at \url{https://github.com/privefl/paper-ldpred2/tree/master/code}.
+
+\section*{Acknowledgements}
+
+%Authors thank Naomi Wray and Alkes Price for pointing to issues due to long-range LD regions in LDpred1, Yixuan Qiu for pointing to matrix-free solvers, Doug Speed and others for early testing of the software and for providing useful feedback,
+Authors thank GenomeDK and Aarhus University for providing computational resources and support that contributed to these research results.
+This research has been conducted using the UK Biobank Resource under Application Number 41181.
+
+\section*{Funding}
+
+F.P. and B.V.\ are supported by the Danish National Research Foundation (Niels Bohr Professorship to Prof. John McGrath), and also acknowledge the Lundbeck Foundation Initiative for Integrative Psychiatric Research, iPSYCH (R248-2017-2003).
+
+\section*{Declaration of Interests}
+
+The authors declare no competing interests.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+
+\bibliographystyle{natbib}
+\bibliography{refs}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\end{document}
