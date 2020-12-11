@@ -99,6 +99,8 @@ It proved nevertheless useful for deriving PGS for traits with moderately large 
 Yet, now that we have access to such large datasets, individual-level data can be used to derive competitive PGS for hundreds of phenotypes.
 
 A major concern about PGS is that they usually transfer poorly to other ancestries, i.e.\ a PGS derived in people of European ancestry is not likely to predict as well in people of African ancestry.
+Prediction in another ancestry has been shown to decay with genetic distance to the training population \cite[]{scutari2016using,wang2020theoretical}.
+[COMPLETE + ADD POSSIBLE REASONS WHY]
 Here, we are also well positioned to reiterate this concern with strong evidence. 
 Indeed, while the UKBB data contains genetic information for more than 450K British or European individuals, it also contains the same data for tens of thousands of individuals of non-British ancestry \cite[]{prive2020ancestry}.
 But, even if these people genetically comes from a different ancestry, they all live in Great Britain, and had their genetic and phenotypic information derived in the same way as people of European ancestry.
@@ -181,6 +183,12 @@ LIMITATIONS:
 - LDpred2 could not be run with 5M+ variants; we are working on this
 - Better method development for prediction in other ancestries
 
+We show here that transferability of PGS to other populations is even worse than what has been previously reported.
+Indeed, compared to three previous studies \cite[]{martin2019clinical,duncan2019analysis,wang2020theoretical}, we show a relative predictive performance compared to Europeans of 
+\textasciitilde15\% for Africans (vs.\ 22\%, 42\% and 24\%), 
+\textasciitilde46\% for East Asians (vs.\ 50\%, 95\% and 64\%) and 
+\textasciitilde61\% for South Asians (vs.\ 60\%, 62.5\% and 72\%).
+We also show that predictive performance already decrease within Europe with only \textasciitilde92.5\% for East Europe and \textasciitilde83.5\% for South Europe. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
