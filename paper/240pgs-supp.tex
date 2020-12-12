@@ -23,9 +23,6 @@
 
 %\renewcommand{\arraystretch}{1.8}
 
-%\usepackage{xr}
-%\externaldocument{SCT-supp}
-
 %\linenumbers
 %\doublespacing
 \onehalfspacing
@@ -75,13 +72,21 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.9\textwidth]{lasso-ancestry-geno}
+	\caption{}
+	\label{fig:lasso-ancestry-geno}
+\end{figure}
+
 \begin{figure}[htbp]
-	\centerline{\includegraphics[width=0.9\textwidth]{qc-plot-new-formula}}
-	\caption{Comparison of the standard deviations (SD) computed from both genotypes and summary statistics for the 1000 most associated variants with bilirubin concentration. A) uses the previous formula $\text{sd}(\boldsymbol{G_j}) \approx \frac{\text{sd}(\boldsymbol{y})}{\sqrt{n ~ \text{se}(\hat{\gamma}_j)^2}}$ proposed in \cite{prive2020ldpred2} while B) uses the updated formula $\text{sd}(\boldsymbol{G_j}) \approx \frac{\text{sd}(\boldsymbol{y})}{\sqrt{n ~ \text{se}(\hat{\gamma}_j)^2 + \hat{\gamma}_j^2}}$ proposed here, which does one less approximation.}
-	\label{fig:new-formula}
+	\centerline{\includegraphics[width=0.9\textwidth]{ratio-dist}}
+	\caption{Relative predictive performance with UK compared to the PC distance with UK between centers of ancestry groups \cite[]{prive2020ancestry}. Relative performance values are the ones reported in Figure 1 of the main text.}
+	\label{fig:ratio-dist}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \begin{figure}[htbp]
 	\centerline{\includegraphics[width=0.95\textwidth]{power_LTFH}}
@@ -100,6 +105,14 @@
 	\centerline{\includegraphics[width=0.9\textwidth]{lasso_LTFH2}}
 	\caption{}
 	\label{fig:lasso-ltfh2}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}[htbp]
+	\centerline{\includegraphics[width=0.9\textwidth]{qc-plot-new-formula}}
+	\caption{Comparison of the standard deviations (SD) computed from both genotypes and summary statistics for the 1000 most associated variants with bilirubin concentration. A) uses the previous formula $\text{sd}(\boldsymbol{G_j}) \approx \frac{\text{sd}(\boldsymbol{y})}{\sqrt{n ~ \text{se}(\hat{\gamma}_j)^2}}$ proposed in \cite{prive2020ldpred2} while B) uses the updated formula $\text{sd}(\boldsymbol{G_j}) \approx \frac{\text{sd}(\boldsymbol{y})}{\sqrt{n ~ \text{se}(\hat{\gamma}_j)^2 + \hat{\gamma}_j^2}}$ proposed here, which does one less approximation.}
+	\label{fig:new-formula}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
