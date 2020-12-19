@@ -144,6 +144,10 @@ For prediction in UK ancestry, penalized regression tend to provide better predi
 The sparse option in LDpred2-auto also provides similar performance as LDpred2-auto without this option (Figure \ref{fig:sparse-ldpred2}).
 [TALK ABOUT SPARSITY OF RESULTING EFFECTS? COMPARE TO P?]
 
+Running each model takes between a few minutes and a few days depending on the number of non-zero effects (Figure\ref{fig:timings-plr}).
+
+LDpred2-auto completed under seven hours for most phenotypes (Figure \ref{fig:timings-ldpred2}).
+
 \subsection*{Lessons learned}
 
 - small sample size is okay if small polygenicity
@@ -224,16 +228,17 @@ There are 586,534 such high-quality variants.
 
 \subsection*{Penalized regressions}
 
-To derive polygenic risk scores based on individual-level data from the UKBB, we used our fast implementation of penalized linear and logistic regressions \cite[]{prive2019efficient}.
-Our implementation supports for lasso and elastic-net penalizations. For the sake of simplicity and because the UKBB data is very large, we have decided to only use the lasso penalty \cite[]{prive2019efficient}.
+To derive polygenic risk scores based on individual-level data from the UKBB, we use our fast implementation of penalized linear and logistic regressions from R package bigstatsr \cite[]{prive2019efficient}.
+Recently, \cite{qian2020fast} have proposed another R package, snpnet, for fitting penalized regressions on large genetic data; we  provide theoretical and empirical evidence that bigstatsr is much faster than snpnet (Supplementary Note).
+Our implementation supports for lasso and elastic-net penalizations; yet, for the sake of simplicity and because the UKBB data is very large, we have decided to only use the lasso penalty \cite[]{prive2019efficient}.
 We recall that fitting a penalized linear regression with lasso penalty corresponds to finding the vector of effects $\beta$ that minimizes
 \[L(\lambda) = \underbrace{ ||y - G \beta||_2^2 }_\text{Loss function} + \underbrace{ \lambda \|\beta\|_1 }_\text{Penalisation} ~,\]
 where $G$ is the genotype matrix, $y$ is the (quantitative) phenotype of interest and $\lambda$ is a hyper-parameter that needs to be chosen.
 
-For this paper, we have extended our implementation in two ways by allowing for using different penalties for the variants (i.e.\ having $\sum_{j} \lambda_j |\beta_j|$ instead of $\lambda \|\beta\|_1$).
-First, this enables us to use a different scaling for genotypes. By default, variants in $G$ are implicitly scaled. By using $\lambda_j \propto (\text{SD}_j)^{(\nu - 1)}$, this effectively scales variant $j$ by dividing it by $(\text{SD}_j)^\nu$. The default is using $\nu = 1$ but we also test $\nu = 0$ (no scaling) and $\nu = 0.5$ (Pareto scaling). We introduce a new parameter \texttt{power\_scale} for which the user can provide a vector of values to test; the best value will be chosen within the Cross-Model Selection and Averaging (CMSA) procedure \cite[]{prive2019efficient}.
-We also introduce a second parameter, \texttt{power\_adaptive}, which can be used to penalize less variants with the largest marginal effects \cite[]{zou2006adaptive}; we try 3 values here (0 the default, 0.5 and 1.5) and the best one is chosen within the CMSA procedure.
-[MOVE EXPLANATIONS FROM SUPP NOTE]
+We have extended our implementation in two ways by allowing for using different penalties for the variants (i.e.\ having $\sum_{j} \lambda_j |\beta_j|$ instead of $\lambda \|\beta\|_1$).
+First, this enables us to use a different scaling for genotypes. By default, variants in $G$ are implicitly scaled. By using $\lambda_j \propto (\text{SD}_j)^{(\xi - 1)}$, this effectively scales variant $j$ by dividing it by $(\text{SD}_j)^\xi$ in our implementation.
+The default is using $\xi = 1$ but we also test $\xi = 0$ (no scaling) and $\xi = 0.5$ (Pareto scaling). We introduce a new parameter \texttt{power\_scale} for which the user can provide a vector of values to test; the best value will be chosen within the Cross-Model Selection and Averaging (CMSA) procedure \cite[]{prive2019efficient}.
+We also introduce a second parameter, \texttt{power\_adaptive}, which can be used to put less penalizition on variants with the largest marginal effects \cite[]{zou2006adaptive}; we try 3 values here (0 the default, 0.5 and 1.5) and the best one is chosen within the CMSA procedure.
 
 \subsection*{LDpred2-auto}
 
@@ -266,6 +271,8 @@ which now gives (note the added term $\hat{\gamma}_j^2$)
 We now use this updated formula in the code for LDpred2, and also recommend using it for the QC procedure proposed in \cite{prive2020ldpred2}.
 Figure \ref{fig:new-formula} shows that the new formula \eqref{eq:approx-sd-lin} is better.
 
+[ADD SOMETHING ABOUT HOW TO CHOOSE CHAINS]
+
 
 \subsection*{Performance metric [AND COVARIATES?]}
 
@@ -285,6 +292,10 @@ We implement this in function \texttt{pcor} of R package bigstatsr and use it he
 All code used for this paper is available at \url{https://github.com/privefl/UKBB-PGS/tree/master/code}.
 We have extensively used R packages bigstatsr and bigsnpr \cite[]{prive2017efficient} for analyzing large genetic data, packages from the future framework \cite[]{bengtsson2020unifying} for easy scheduling and parallelization of analyses on the HPC cluster, and packages from the tidyverse suite \cite[]{wickham2019welcome} for shaping and visualizing results.
 We have also used R package deming to fit Deming regressions.
+
+R packages bigstatsr and bigsnpr can be installed from GitHub.
+A tutorial on fitting penalized regressions with R package bigstatsr is available at \url{https://privefl.github.io/bigstatsr/articles/penalized-regressions.html}.
+A tutorial on running LDpred2 with R package bigsnpr is available at \url{https://privefl.github.io/bigsnpr/articles/LDpred2.html}.
 
 \section*{Acknowledgements}
 
