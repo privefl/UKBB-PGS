@@ -64,7 +64,7 @@
 \begin{document}
 
 
-\title{Phenome-wide polygenic scores from the UK Biobank}
+\title{Phenome-wide and ancestry-wide polygenic scores\\from the UK Biobank}
 \author{Florian Priv\'e,$^{\text{1,}*}$ ...,$^{\text{2}}$ and Bjarni J. Vilhj\'almsson$^{\text{1,3}}$}
 
 \date{~ }
@@ -136,17 +136,28 @@ In contrast, for e.g.\ hair and skin color, predictive performance decrease quic
 \label{fig:lasso-ancestry}
 \end{figure}
 
+We then investigate some of the outlier phenotypes in figure \ref{fig:lasso-ancestry}, especially the ones from blood biochemistry which have some variants with large effects.
+We focus on ``total bilirubin'', ``lipoprotein A'' (lipoA) and ``apolipoprotein B'' (apoB). We perform a GWAS in each of the eight ancestry groups defined here, including all variants with an imputation INFO score larger than 0.3 and within a window of 500Kb from the top hit from the GWAS in the training set (most individuals from UK and HapMap3 variants); there are approximately 30K such variants.
+For bilirubin, the top hit belongs to HapMap3 variants used in the training data and explain around 30\% of the phenotypic variance (Figure \ref{fig:zoom-bilirubin}). Effects from the three top hits are fairly consistent within all ancestry groups (Figure \ref{fig:top3-bilirubin}) explaining why genetic prediction is such consistent il all ancestries, except for China for which these variants are rarer (Figure \ref{fig:lasso-ancestry}).
+For lipoA, results are very different; HapMap3 variants are far from being the top hits in the UK with the top HapMap3 variant explaining 5\% of phenotypic variance in UK compared to 29\% for the top hit (Figure \ref{fig:zoom-lipoA}).
+Note that this top hit is more than 200Kb away from the HapMap3 top hit from UK. 
+The 3 top hits for lipoA do not have very consistent effect sizes [WHAT TO CONCLUDE FROM THIS?] (Figure \ref{fig:top3-lipoA}).
+Finally, for apoB, effects from the three top hits, which are not part of HapMap3 variants, are also consistent and explain up to 8.5\% of the phenotypic variance (Figures \ref{fig:zoom-apoB} \& \ref{fig:top3-apoB}).
 
 \subsection*{Comparison of predictive models}
 
 Penalized regression and LDpred2-auto provides approximately similar predictive performance across all traits and ancestries considered here (Figure \ref{fig:plr-ldpred2}); there are only four pairs of phenotype-ancestry (out of nearly 2000 pairs) for which 95\% CI for partial-$r$ from penalized regression and LDpred2 are not overlapping: ``615: Endometriosis'' in China with 0.065 (0.0074 - 0.122) vs -0.051 (-0.108 - 0.0068), ``hard falling asleep'' in UK with -0.0349 (-0.742 - 0.0045) vs 0.071 (0.031 - 0.110), height in UK with 0.634 (0.626 - 0.643) vs 0.613 (0.605 - 0.622), and log-bilirubin in Nigeria with 0.546 (0.523 - 0.569) vs 0.475 (0.449 - 0.500).
 For prediction in UK ancestry, penalized regression tend to provide better predictive performance than LDpred2 when prediction is easy (e.g.\ partial-$r$ > 0.5) and LDpred2 tends to outperform penalized regression when predicting the phenotype is more difficult (Figure \ref{fig:plr-ldpred2}).
 The sparse option in LDpred2-auto also provides similar performance as LDpred2-auto without this option (Figure \ref{fig:sparse-ldpred2}).
-[TALK ABOUT SPARSITY OF RESULTING EFFECTS? COMPARE TO P?]
 
-Running each model takes between a few minutes and a few days depending on the number of non-zero effects (Figure\ref{fig:timings-plr}).
+Sparsity of resulting effects follows a very different pattern for penalized regression compared to LDpred2-auto-sp.
+Indeed, penalized regression has a tendency not to include variants if it is uncertain that they have a non-zero effect, i.e.\ when effects are very small and prediction is difficult (Figure \ref{fig:sparsity-plr}).
+In contrast, LDpred2-auto-sparse has a tendency not to discard variants, only when $h^2$ is high enough it sets lots of effects to 0 if $p$ is small (Figure \ref{fig:sparsity-ldpred2}). 
+Finally, running each penalized regression model takes between a few minutes and a few days depending on the number of non-zero effects in the resulting model (Figure\ref{fig:timings-plr}).
+In contrast, LDpred2-auto should take the same computation time for all phenotypes; it completed under seven hours for most phenotypes (Figure \ref{fig:timings-ldpred2}).
 
-LDpred2-auto completed under seven hours for most phenotypes (Figure \ref{fig:timings-ldpred2}).
+
+\subsection*{Heritability and prediction}
 
 \subsection*{Lessons learned}
 
