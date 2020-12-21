@@ -185,10 +185,39 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.9\textwidth]{heritability}
+	\caption{}
+	\label{fig:heritability}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{ldpred2-heritability-quant}
+\caption{}
+\label{fig:heritability-quant}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{ldpred2-heritability-binary}
+\caption{}
+\label{fig:heritability-binary}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.8\textwidth]{sparsity-plr}
+	\caption{}
+	\label{fig:sparsity-plr}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}[htbp]
 	\centerline{\includegraphics[width=0.95\textwidth]{power_LTFH}}
-	\caption{Z-Scores from GWAS using case-control phenotypes and LT-FH phenotypes. Only variants with at least one Z-Score larger than 6 (in absolute value) are represented. The slope (in blue) is computed using Deming regression using the inverse of the absolute value as standard deviations.
+	\caption{Z-Scores from GWAS using case-control phenotypes and LT-FH phenotypes. Only genome-wide significant variants are represented. The slope (in blue) is computed using Deming regression using the inverse of the absolute value as standard deviations (to put more weight on the more significant variants).
 	In the title are reported the phecode as well as this slope (squared), which we report as the power multiplier.}
 	\label{fig:power-ltfh}
 \end{figure}
@@ -202,7 +231,7 @@
 \centering
 \includegraphics[width=.85\linewidth]{lasso_LTFH2}
 \end{subfigure}
-\caption{Two subfigures presenting the same results, i.e.\ the partial correlation achieved per phenotype and per population, when using either the normal case-control phenotype for training or the phenotype derived using LT-FH. Partial correlations are always derived in the test set using the case-control phenotypes.}
+\caption{Two subfigures presenting the same results, the partial correlation achieved per phenotype and per population when using either the normal case-control phenotype for training or the phenotype derived using LT-FH. Partial correlations are always derived using the case-control phenotypes in the test set.}
 \label{fig:lasso-ltfh}
 \end{figure}
 
