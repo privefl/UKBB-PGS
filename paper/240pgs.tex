@@ -81,6 +81,17 @@
 \abstract{	
 }
 
+\vspace{5em}
+
+[FEEDBACK NEEDED:]
+\begin{itemize}
+	\item add name + affiliation (+ funding)
+	\item tell if parts are missing or should be restructured
+	\item add citations when appropriate
+	\item which supplementary figures are worth moving in main text?
+	\item What to export and share? All correlations/estimates?
+\end{itemize}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -168,13 +179,9 @@ Note that this top hit is more than 200Kb away from the HapMap3 top hit from UK.
 The 3 top hits for lipoA do not have very consistent effect sizes [WHAT TO CONCLUDE FROM THIS?] (Figure \ref{fig:top3-lipoA}).
 Finally, for apoB, effects from the three top hits, which are not part of HapMap3 variants, are also consistent and explain up to 8.5\% of the phenotypic variance (Figures \ref{fig:zoom-apoB} \& \ref{fig:top3-apoB}).
 
-\subsection*{Including more variants? [MERGE WITH MULTIPLE ANCESTRY?]}
+\subsection*{Training using multiple ancestries and more variants}
 
-- Zoomed plots
-
-- Performance of 5M vs 1M only
-
-\subsection*{Training using multiple ancestries}
+- Performance of 8M vs 1M only
 
 Not better, but not worse when using the same sample size.
 
@@ -194,7 +201,11 @@ In contrast, LDpred2-auto should take the same computation time for all phenotyp
 \subsection*{Heritability and prediction}
 
 Figure \ref{fig:heritability} shows that heritability estimates from LDpred2-auto is largely similar to estimates from LD score regression (LDSC, using a 3cM window), except for phenotypes with smaller proportion of causal variants $p$ where estimates from LDSC are unreliable.
-Figures \ref{fig:heritability-quant} and \ref{fig:heritability-binary} reports heritability estimates from LDpred2-auto from quantitative and binary traits.
+Figures \ref{fig:heritability-quant} and \ref{fig:heritability-binary} report heritability estimates from LDpred2-auto from quantitative and binary traits. 
+[DESCRIBE SOME OF THEM]
+\cite{daetwyler2008accuracy} have derived the following formula for the upper bound of the predictive accuracy of polygenic scores: $r^2 = \dfrac{h^2}{1 + (1 - r^2) \frac{M_c}{N h^2}}$, where $h^2$ is the SNP heritability, $M_c = M \cdot p$ is the number of independent loci affecting a trait and $N$ is the sample size.
+We verify this by comparing the solution $r$ from the previous equation using the estimates from LDpred2-auto and the partial correlation of the polygenic score on the test set (Figure \ref{fig:upper-formula}).
+We then slightly modify this equation by using $M_c = M \cdot p^\alpha$; the best fit to the data is obtained for $\alpha = 0.68$ (Figure \ref{fig:power-pred-formula}) and provides theoretical values for the correlation that are very close the observed ones (Figure \ref{fig:pred-formula}).
 
 \subsection*{Using family history to improve genetic prediction}
 
@@ -213,24 +224,29 @@ Evaluating both predictive models using the case-control status of individuals i
 
 \section*{Discussion}
 
-- How fast it is to derive polygenic scores with lasso, even for large sample sizes and number of variants [TALK ABOUT SNPNET HERE].
-
-LIMITATIONS:
-- Could use better prediction but can just combine linearly with other PGS made on external data [CITE CLARA]
-- LDpred2 could not be run with 5M+ variants; we are working on this
-- Better method development for prediction in other ancestries
-- Discuss Doug's paper about improved heritability models for prediction
-
-[ADD WHY THESE PGS WOULD BE USEFUL FOR RESEARCHERS / CITE PGS CATALOG + OTHER CANCER PRS-WEB.]
-
-We show here that transferability of PGS to other populations is even worse than what has been previously reported.
+We show here that transferability of PGS to other populations is worse or at least as bad as what has been previously reported.
 Indeed, compared to three previous studies \cite[]{martin2019clinical,duncan2019analysis,wang2020theoretical}, we show a relative predictive performance compared to Europeans of 
 \textasciitilde15\% for Africans (vs.\ 22\%, 42\% and 24\%), 
 \textasciitilde46\% for East Asians (vs.\ 50\%, 95\% and 64\%) and 
 \textasciitilde61\% for South Asians (vs.\ 60\%, 62.5\% and 72\%).
-We also show that predictive performance already decrease within Europe with only \textasciitilde92.5\% for East Europe and \textasciitilde83.5\% for South Europe. 
-
+We also show that predictive performance already decrease within Europe with only \textasciitilde92.5\% for East Europe and \textasciitilde83.5\% for South Europe of the performance reached within UK. 
 Previous studies have shown that this reduction in performance in other ancestries is primarly due to difference in LD and allele frequencies between populations, and not so much about difference in effects / positions of causal variants \cite[]{shi2020localizing,wang2020theoretical,cavazos2020inclusion}.
+[CAN WE CONCLUDE THE SAME FROM THE ZOOM PLOTS?]
+
+We showcase two methods to build polygenic score when large individual-level data is available. Even though LDpred2-auto is a method based on  summary statistics, it also provides good predictive performance for individual-level data compared to penalized regression.
+Fitting of penalized models is relatively fast when using 1M HapMap3 variants but much slower when using 8M variants (recall that this is more than 3 TB of data!).
+This is the most efficient penalized regression implementation currently available; recently, \cite{qian2020fast} have developed an efficient new package, snpnet, but we have found it to be much less efficient than our package bigstatsr (Supplementary Note).
+As for LDpred2, it cannot be run using 8M variants at the moment but we are investigating two ways to make this possible and will likely be presented in future work.
+
+Here we only use the UK Biobank data to fit polygenic scores. We do show how to use family information to slightly improve prediction. Note that we are working on extending the LT-FH model to account also for additional information such as time and sex differences in prevalence.
+Yet, we do not use external information such as functional annotations; those could be used to improve the heritability model used by predictive methods in order to improve predictive performance \cite{zhang2020improved}.
+Moreover, we do not use external summary statistics. Nevertheless, \cite{albinana2020leveraging} have shown that an efficient strategy to improve predictive ability of polygenic scores consists in combining two different polygenic scores, one derived using external summary statistics, and another one derived using individual-level data.
+Therefore, the polygenic scores could be combined with polygenic scores derived using external summary statistics; we will release these PGS publicly and shared them in databases such as the PGS Catalog and the Cancer-PRSweb \cite[]{fritsche2020cancer,lambert2020polygenic}.
+
+
+LIMITATIONS:
+- Better method development for prediction in other ancestries
+
 
 [whereas
 GWAS in African ancestry populations are not subject to this bias \cite[]{kim2018genetic,cavazos2020inclusion}.]
@@ -238,9 +254,8 @@ GWAS in African ancestry populations are not subject to this bias \cite[]{kim201
 
 - small sample size is okay if small polygenicity
 
-- hybrid heritability is often chosen, even if improvement in predictive performance is usually small
+- better way to choose chains in LDpred2-auto?
 
-- comparing LDpred2 and PLR
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
