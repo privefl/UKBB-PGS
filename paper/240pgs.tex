@@ -90,6 +90,8 @@
 	\item add citations when appropriate
 	\item which supplementary figures are worth moving in main text?
 	\item What to export and share? All correlations/estimates?
+	\item Some methods/captions not clear enough?
+	\item Whatever other remark you have
 \end{itemize}
 
 
@@ -167,7 +169,8 @@ In contrast, for e.g.\ hair and skin color, predictive performance decrease quic
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{lasso-ancestry}
-\caption{}
+\caption{Partial correlation (and 95\% CI) in the UK test set and a test set from another ancestry group. Each point represents a phenotype and training has been performed with penalized regression on UK individuals (training 1 in table \ref{tab:size-sets}) and HapMap3 variants. The slope (in blue) is computed using Deming regression with the CIs as standard deviations.
+This slope (squared) is provided in the title, which we report as the relative predictive performance compared to testing in UK.}
 \label{fig:lasso-ancestry}
 \end{figure}
 
@@ -179,11 +182,13 @@ Note that this top hit is more than 200Kb away from the HapMap3 top hit from UK.
 The 3 top hits for lipoA do not have very consistent effect sizes [WHAT TO CONCLUDE FROM THIS?] (Figure \ref{fig:top3-lipoA}).
 Finally, for apoB, effects from the three top hits, which are not part of HapMap3 variants, are also consistent and explain up to 8.5\% of the phenotypic variance (Figures \ref{fig:zoom-apoB} \& \ref{fig:top3-apoB}).
 
-\subsection*{Training using multiple ancestries and more variants}
+\subsection*{Training with multiple ancestries}
 
-- Performance of 8M vs 1M only
+Here we use all ancestry groups expect for the Caribbean for training; we remove the same number of UK individuals to keep the same training sample size as before (Table \ref{tab:size-sets}).
+In figure \ref{fig:lasso-multi}, we investigate nine phenotypes: breast cancer (phecode: 174.1), prostate cancer (186), type-2 diabetes (250.2), hypertension (401), CAD (411.4), ``darker skin'', total bilirubin concentration, lipoprotein A concentration, and years of education.
+We predict in the test sets from the UK and the Caribbean; overall, predictive performance are very similar when using this multi-ancestry training compared to when using only UK individuals, in both the UK and the Caribbean. When predicting lipoprotein A concentration in the Caribbean is the only time when prediction improves strongly.
 
-Not better, but not worse when using the same sample size.
+[SHOULD ALSO TRY LDPRED2-AUTO?]
 
 \subsection*{Comparison of predictive models}
 
@@ -234,9 +239,9 @@ Previous studies have shown that this reduction in performance in other ancestri
 [CAN WE CONCLUDE THE SAME FROM THE ZOOM PLOTS?]
 
 We showcase two methods to build polygenic score when large individual-level data is available. Even though LDpred2-auto is a method based on  summary statistics, it also provides good predictive performance for individual-level data compared to penalized regression.
-Fitting of penalized models is relatively fast when using 1M HapMap3 variants but much slower when using 8M variants (recall that this is more than 3 TB of data!).
-This is the most efficient penalized regression implementation currently available; recently, \cite{qian2020fast} have developed an efficient new package, snpnet, but we have found it to be much less efficient than our package bigstatsr (Supplementary Note).
-As for LDpred2, it cannot be run using 8M variants at the moment but we are investigating two ways to make this possible and will likely be presented in future work.
+Fitting of penalized models is relatively fast when using 1M HapMap3 variants; we have also tried fitting penalized regression using 8M variants (3 TB!); this was possible but took several days for the phenotypes we tried (data not shown) so we have not investigated this further.
+To the best of our knowledge, the implementation we use is the most efficient penalized regression implementation currently available; recently, \cite{qian2020fast} have developed an efficient new package, snpnet, but we have found it to be much less efficient than our package bigstatsr (Supplementary Note).
+As for LDpred2, it currently cannot be run using 8M variants, but we are investigating two ways to make this possible in future work.
 
 Here we only use the UK Biobank data to fit polygenic scores. We do show how to use family information to slightly improve prediction. Note that we are working on extending the LT-FH model to account also for additional information such as time and sex differences in prevalence.
 Yet, we do not use external information such as functional annotations; those could be used to improve the heritability model used by predictive methods in order to improve predictive performance \cite{zhang2020improved}.
@@ -244,7 +249,8 @@ Moreover, we do not use external summary statistics. Nevertheless, \cite{albinan
 Therefore, the polygenic scores could be combined with polygenic scores derived using external summary statistics; we will release these PGS publicly and shared them in databases such as the PGS Catalog and the Cancer-PRSweb \cite[]{fritsche2020cancer,lambert2020polygenic}.
 
 
-LIMITATIONS:
+[PROBABLY NEED TO COMPLETE DISCU. WITH WHAT? RANDOM LESSON LEARNED?]
+
 - Better method development for prediction in other ancestries
 
 
@@ -303,7 +309,7 @@ In LDpred2-auto, these two parameters are directly estimated from the data \cite
 We also get a vector of effects to derive the PGS, and the posterior probability of being causal for all variants.
 We use the \texttt{sparse} option in LDpred2-auto to also obtain a vector of effects that is potentially sparse, i.e.\ some of the effects are exactly 0.
 Also note that, as we use linear regression for all phenotypes, we use the total sample size instead of the effective sample size for binary phenotypes.
-This means that heritability estimates from both LD score regression and LDpred2-auto has to be transformed to liability scale using both the prevalence in the GWAS and in the population; this can be performed using function \texttt{coef\_to\_liab} from R package bigsnpr.
+This means that heritability estimates from both LD score regression and LDpred2-auto has to be transformed to the liability scale using both the prevalence in the GWAS and in the population; this can be performed using function \texttt{coef\_to\_liab} from R package bigsnpr.
 For simplicity, we assume here that the prevalence in the population is the same as the prevalence in the training set from the UK Biobank we use here.
 
 We also slightly modify the formulas used in \cite{prive2020ldpred2}; we have previously used 

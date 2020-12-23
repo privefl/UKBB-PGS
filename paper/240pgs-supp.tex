@@ -71,6 +71,8 @@
 
 \section*{Supplementary Tables and Figures}
 
+\vspace{5em}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}[htbp]
@@ -82,14 +84,16 @@
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.9\textwidth]{lasso-ancestry-geno}
-	\caption{}
+	\caption{Partial correlation (and 95\% CI) in the UK test set and a test set from another ancestry group. Each point represents a phenotype (only 83 of the continuous phenotypes here) and training has been performed with penalized regression on UK individuals (training 1 in table 1) and \textbf{genotyped} variants. The slope (in blue) is computed using Deming regression with the CIs as standard deviations.
+	This slope (squared) is provided in the title, which we report as the relative predictive performance compared to testing in UK.}
 	\label{fig:lasso-ancestry-geno}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{ldpred2-ancestry}
-\caption{}
+\caption{Partial correlation (and 95\% CI) in the UK test set and a test set from another ancestry group. Each point represents a phenotype and training has been performed with \textbf{LDpred2-auto} on UK individuals (training 1 in table 1) and HapMap3 variants. The slope (in blue) is computed using Deming regression with the CIs as standard deviations.
+This slope (squared) is provided in the title, which we report as the relative predictive performance compared to testing in UK.}
 \label{fig:ldpred2-ancestry}
 \end{figure}
 
@@ -98,42 +102,42 @@
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.9\textwidth]{zoom_log_bilirubin}
-	\caption{}
+	\caption{Zoomed Manhattan plot for total \textbf{bilirubin} concentration. Here the (partial) correlation $r$ between each variant and the phenotype is reported, where $r = t / \sqrt{n + t^2}$, where $t$ is the t-score and $n$ is the degrees of freedom (the sample size minus the number of variables in the model, i.e.\ the covariates used in the GWAS, the intercept and the variant).The GWAS includes all variants with an imputation INFO score larger than 0.3 and within a 500Kb radius around the top hit from the GWAS performed in the UK training set and on the HapMap3 variants, represented by a vertical dotted line.}
 	\label{fig:zoom-bilirubin}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.9\textwidth]{top3_log_bilirubin}
-	\caption{}
+	\caption{Effect sizes and variance explained for the top three variants from figure \ref{fig:zoom-bilirubin}.}
 	\label{fig:top3-bilirubin}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.9\textwidth]{zoom_log_lipoA}
-	\caption{}
+	\caption{Zoomed Manhattan plot for \textbf{lipoprotein A} concentration. Here the (partial) correlation $r$ between each variant and the phenotype is reported, where $r = t / \sqrt{n + t^2}$, where $t$ is the t-score and $n$ is the degrees of freedom (the sample size minus the number of variables in the model, i.e.\ the covariates used in the GWAS, the intercept and the variant). The GWAS includes all variants with an imputation INFO score larger than 0.3 and within a 500Kb radius around the top hit from the GWAS performed in the UK training set and on the HapMap3 variants, represented by a vertical dotted line.}
 	\label{fig:zoom-lipoA}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.9\textwidth]{top3_log_lipoA}
-	\caption{}
+	\caption{Effect sizes and variance explained for the top three variants from figure \ref{fig:zoom-lipoA}.}
 	\label{fig:top3-lipoA}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.9\textwidth]{zoom_apoB}
-	\caption{}
+	\caption{Zoomed Manhattan plot for \textbf{apolipoprotein B} concentration. Here the (partial) correlation $r$ between each variant and the phenotype is reported, where $r = t / \sqrt{n + t^2}$, where $t$ is the t-score and $n$ is the degrees of freedom (the sample size minus the number of variables in the model, i.e.\ the covariates used in the GWAS, the intercept and the variant). The GWAS includes all variants with an imputation INFO score larger than 0.3 and within a 500Kb radius around the top hit from the GWAS performed in the UK training set and on the HapMap3 variants, represented by a vertical dotted line.}
 	\label{fig:zoom-apoB}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.9\textwidth]{top3_apoB}
-	\caption{}
+	\caption{Effect sizes and variance explained for the top three variants from figure \ref{fig:zoom-apoB}.}
 	\label{fig:top3-apoB}
 \end{figure}
 
@@ -141,29 +145,38 @@
 
 \begin{figure}[h]
 	\centering
+	\includegraphics[width=0.9\textwidth]{lasso_multi_pcor}
+	\caption{Partial correlation achieved per phenotype (facets) and per ancestry group (x-axis) when training penalized regressions either with UK individuals only (training 1 in table 1) or when using individuals of multiple ancestries (training 2).}
+	\label{fig:lasso-multi}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}[h]
+	\centering
 	\includegraphics[width=0.9\textwidth]{PLR-ldpred2}
-	\caption{}
+	\caption{\textbf{A)} Partial correlations (and 95\% CI) achieved per phenotype (each point) and per ancestry group (each facet) when training either with LASSO or with LDpred2-auto. \textbf{B)} Focus on the UK facet in A), facetting per proportion of causal variants $p$ and coloring by SNP heritability $h^2$ (estimates from LDpred2-auto).}
 	\label{fig:plr-ldpred2}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{sparse-ldpred2}
-\caption{}
+\caption{Partial correlations achieved per phenotype (each point) and per ancestry group (each facet) when training either with LDpred2-auto or with LDpred2-auto-sparse (sparse option enabled).}
 \label{fig:sparse-ldpred2}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.8\textwidth]{sparsity-plr}
-	\caption{}
+	\caption{Proportion of variants with non-zero effects in the penalized regression models for each phenotype (point) versus the proportion of causal variants $p$ estimated from LDpred2-auto, colored by the partial correlation achieved in the UK test set.}
 	\label{fig:sparsity-plr}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.8\textwidth]{sparsity-ldpred2}
-	\caption{}
+	\caption{Proportion of variants with non-zero effects in LDpred2-auto-sparse for each phenotype (point) versus the proportion of causal variants $p$ estimated from LDpred2-auto, colored by the SNP heritability $h^2$ estimated from LDpred2-auto.}
 	\label{fig:sparsity-ldpred2}
 \end{figure}
 
@@ -188,42 +201,43 @@
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.9\textwidth]{heritability}
-	\caption{}
+	\caption{SNP heritability $h^2$ estimates from LDpred2-auto versus LD score regression (using a 3cM window), for each phenotype (point) and colored by the proportion of causal variants $p$ estimated from LDpred2-auto. Heritability estimates for binary traits have been transformed to the liability scale (see Methods).}
 	\label{fig:heritability}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{ldpred2-heritability-quant}
-\caption{}
+\caption{SNP heritability $h^2$ estimates from LDpred2-auto for continuous phenotypes, colored by the proportion of causal variants $p$ estimated from LDpred2-auto. }
 \label{fig:heritability-quant}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{ldpred2-heritability-binary}
-\caption{}
+\caption{SNP heritability $h^2$ estimates from LDpred2-auto for binary phenotypes, colored by the proportion of causal variants $p$ estimated from LDpred2-auto.
+Heritability estimates have been transformed to the liability scale (see Methods).}
 \label{fig:heritability-binary}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.9\textwidth]{upper-formula}
-	\caption{}
+	\caption{Comparison between the observed partial correlation and the theoretical solution $r$ from the formula for the upper bound of the predictive accuracy of polygenic scores: $r^2 = \dfrac{h^2}{1 + (1 - r^2) \frac{M_c}{N h^2}}$, where $M_c = M \cdot p$ here.}
 	\label{fig:upper-formula}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.9\textwidth]{power-pred-formula}
-	\caption{}
+	\caption{Mean square error between the two axes in \ref{fig:upper-formula} when using $M_c = M \cdot p^\text{power}$. Minimum is obtained for $\text{power} = 0.68$.}
 	\label{fig:power-pred-formula}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.9\textwidth]{pred-formula}
-	\caption{}
+	\caption{Same as figure \ref{fig:upper-formula} when using $M_c = M \cdot p^{0.68}$, where 0.68 is the argmin in figure \ref{fig:power-pred-formula}.}
 	\label{fig:pred-formula}
 \end{figure}
 
