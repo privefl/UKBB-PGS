@@ -84,7 +84,7 @@
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.9\textwidth]{lasso-ancestry-geno}
-	\caption{Partial correlation (and 95\% CI) in the UK test set and a test set from another ancestry group. Each point represents a phenotype (only 83 of the continuous phenotypes here) and training has been performed with penalized regression on UK individuals (training 1 in table 1) and \textbf{genotyped} variants. The slope (in blue) is computed using Deming regression with the CIs as standard deviations.
+	\caption{Partial correlation (and 95\% CI) in the UK test set and a test set from another ancestry group. Each point represents a phenotype (only 83 of the continuous phenotypes here) and training has been performed with penalized regression on UK individuals (training 1 in table 1) and \textbf{genotyped} variants. The slope (in blue) is computed using Deming regression accounting for standard errors in both x and y.
 	This slope (squared) is provided in the title, which we report as the relative predictive performance compared to testing in UK.}
 	\label{fig:lasso-ancestry-geno}
 \end{figure}
@@ -92,7 +92,7 @@
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{ldpred2-ancestry}
-\caption{Partial correlation (and 95\% CI) in the UK test set and a test set from another ancestry group. Each point represents a phenotype and training has been performed with \textbf{LDpred2-auto} on UK individuals (training 1 in table 1) and HapMap3 variants. The slope (in blue) is computed using Deming regression with the CIs as standard deviations.
+\caption{Partial correlation (and 95\% CI) in the UK test set and a test set from another ancestry group. Each point represents a phenotype and training has been performed with \textbf{LDpred2-auto} on UK individuals (training 1 in table 1) and HapMap3 variants. The slope (in blue) is computed using Deming regression accounting for standard errors in both x and y.
 This slope (squared) is provided in the title, which we report as the relative predictive performance compared to testing in UK.}
 \label{fig:ldpred2-ancestry}
 \end{figure}
