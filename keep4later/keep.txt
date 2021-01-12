@@ -1,0 +1,87 @@
+\subsection*{Heritability and prediction}
+
+Figure \ref{fig:heritability} shows that heritability estimates from LDpred2-auto is largely similar to estimates from LD score regression (LDSC, using a 3cM window), except for phenotypes with smaller proportion of causal variants $p$ for which estimates from LDSC are unreliable.
+Figures \ref{fig:heritability-quant} and \ref{fig:heritability-binary} report heritability estimates from LDpred2-auto from quantitative and binary traits.
+[DESCRIBE SOME OF THEM?]
+\cite{daetwyler2008accuracy} have derived the following formula for the upper bound of the predictive accuracy of polygenic scores: $r^2 = \dfrac{h^2}{1 + (1 - r^2) \frac{M_c}{N h^2}}$, where $h^2$ is the SNP heritability, $M_c = M \cdot p$ is the number of independent loci affecting a trait and $N$ is the sample size.
+We verify this equation by comparing the observed partial correlation of the PGS with the solution $r$ from this equation using the estimates from LDpred2-auto as parameters (Figure \ref{fig:upper-formula}).
+We then slightly modify this equation by using $M_c = M \cdot p^\alpha$; the best fit to the data is obtained for $\alpha = 0.68$ (Figure \ref{fig:power-pred-formula}) and provides analytical values for the correlation that are very close the observed ones (Figure \ref{fig:pred-formula}).
+
+\subsection*{Using family history to improve genetic prediction}
+
+We first replicate the analyses of \cite{hujoel2020liability} proposing the LT-FH method to estimate the genetic liability of individuals based on family history in order to improve power in GWAS.
+We derive the LT-FH phenotypes for the same 12 traits for the individuals in the training set.
+We then run separately a GWAS using either the case-control phenotypes or the corresponding LT-FH phenotypes.
+When comparing Z-Scores obtained from the GWAS of the LT-FH phenotypes to the ones using case-control phenotypes, we report increase in power from 28\% for prostate cancer to 580\% for Alzheimer's disease (Figure \ref{fig:power-ltfh}).
+This shows that the LT-FH phenotypes better capture the genetic liability of the disease compared to the case-control phenotype.
+
+Then, we also use these LT-FH phenotypes to train penalized regressions and see if this could improve predictive performance compared to using the case-control phenotype.
+We report non-significant improvements in predictive performance for breast cancer (174.1), type-2 diabetes (250.2) and coronary artery disease (411.4) when evaluating both predictive models using the case-control status of individuals in the test set (Figure \ref{fig:lasso-ltfh}).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.9\textwidth]{heritability}
+	\caption{SNP heritability $h^2$ estimates from LDpred2-auto versus LD score regression (using a 3cM window), for each phenotype (point) and colored by the proportion of causal variants $p$ estimated from LDpred2-auto. Heritability estimates for binary traits have been transformed to the liability scale (see Methods).}
+	\label{fig:heritability}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{ldpred2-heritability-quant}
+\caption{SNP heritability $h^2$ estimates from LDpred2-auto for continuous phenotypes, colored by the proportion of causal variants $p$ estimated from LDpred2-auto. }
+\label{fig:heritability-quant}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{ldpred2-heritability-binary}
+\caption{SNP heritability $h^2$ estimates from LDpred2-auto for binary phenotypes, colored by the proportion of causal variants $p$ estimated from LDpred2-auto.
+Heritability estimates have been transformed to the liability scale (see Methods).}
+\label{fig:heritability-binary}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.9\textwidth]{upper-formula}
+	\caption{Comparison between the observed partial correlation and the theoretical solution $r$ from the formula for the upper bound of the predictive accuracy of polygenic scores: $r^2 = \dfrac{h^2}{1 + (1 - r^2) \frac{M_c}{N h^2}}$, where $M_c = M \cdot p$ here.}
+	\label{fig:upper-formula}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.9\textwidth]{power-pred-formula}
+	\caption{Mean square error between the two axes in \ref{fig:upper-formula} when using $M_c = M \cdot p^\text{power}$. Minimum is obtained for $\text{power} = 0.68$.}
+	\label{fig:power-pred-formula}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.9\textwidth]{pred-formula}
+	\caption{Same as figure \ref{fig:upper-formula} when using $M_c = M \cdot p^{0.68}$, where 0.68 is the argmin in figure \ref{fig:power-pred-formula}.}
+	\label{fig:pred-formula}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}[htbp]
+	\centerline{\includegraphics[width=0.95\textwidth]{power_LTFH}}
+	\caption{Z-Scores from GWAS using case-control phenotypes and LT-FH phenotypes. Only genome-wide significant variants are represented. The slope (in blue) is computed using Deming regression using the inverse of the absolute value as standard deviations (to put more weight on the more significant variants).
+	In the title are reported the phecode as well as this slope (squared), which we report as the power multiplier.}
+	\label{fig:power-ltfh}
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{subfigure}{\textwidth}
+\centering
+\includegraphics[width=.85\linewidth]{lasso_LTFH}
+\end{subfigure}\vspace{1em}
+\begin{subfigure}{\textwidth}
+\centering
+\includegraphics[width=.85\linewidth]{lasso_LTFH2}
+\end{subfigure}
+\caption{Two subfigures presenting the same results, the partial correlation achieved per phenotype and per population when using either the normal case-control phenotype for training or the phenotype derived using LT-FH. Partial correlations are always derived using the case-control phenotypes in the test set.}
+\label{fig:lasso-ltfh}
+\end{figure}
+
