@@ -66,14 +66,20 @@
 \begin{document}
 
 
-\title{Phenome-wide and ancestry-wide polygenic scores\\from the UK Biobank}
-\author{Florian Priv\'e,$^{\text{1,}*}$ ...,$^{\text{2}}$ and Bjarni J. Vilhj\'almsson$^{\text{1,3}}$}
+\title{High-resolution portability of {\NBTRAIT} polygenic scores\\when derived and applied in the same cohort}
+\author{Florian Priv\'e,$^{\text{1,}*}$ Hugues Aschard,$^{\text{2,3}}$ Lasse Folkersen,$^{\text{4}}$ Clive Hoggart,$^{\text{5}}$ Paul O'Reilly,$^{\text{5}}$ and Bjarni J. Vilhj\'almsson$^{\text{1,6}}$}
 
 \date{~ }
 \maketitle
 
+[COMPLETE + ORDER THIS]
+
 \noindent$^{\text{\sf 1}}$National Centre for Register-Based Research, Aarhus University, Aarhus, 8210, Denmark. \\
-\noindent$^{\text{\sf 3}}$Bioinformatics Research Centre, Aarhus University, Aarhus, 8000, Denmark. \\
+\noindent$^{\text{\sf 2}}$Department of Computational Biology, USR 3756 CNRS, Institut Pasteur, Paris, 75015, France. \\
+\noindent$^{\text{\sf 3}}$Program in Genetic Epidemiology and Statistical Genetics, Harvard T.H. Chan School of Public Health, Boston, MA, 02115, USA. \\
+\noindent$^{\text{\sf 4}}$[LASSE] \\
+\noindent$^{\text{\sf 5}}$Department of Genetics and Genomic Sciences, Icahn School of Medicine at Mount Sinai, New York, New York, 10029, USA \\
+\noindent$^{\text{\sf 6}}$Bioinformatics Research Centre, Aarhus University, Aarhus, 8000, Denmark. \\
 \noindent$^\ast$To whom correspondence should be addressed.\\
 
 \noindent Contact: \url{florian.prive.21@gmail.com}
@@ -83,11 +89,11 @@
 \abstract{
 }
 
-\vspace{5em}
+\clearpage
 
 [FEEDBACK NEEDED:]
 \begin{itemize}
-	\item add name + affiliation (+ funding)
+	\item Verify names and affiliations
 	\item tell if parts are missing or should be restructured
 	\item add citations when appropriate
 	\item which supplementary figures are worth moving in main text?
@@ -104,31 +110,31 @@
 
 \section*{Introduction}
 
-Ever larger genetic data is becoming increasingly available to researchers.
-This enables deriving polygenic scores (PGS), which summarize an individual genetic components for a particular trait or disease by combining information from many genetic variants.
-Polygenic scores are usually derived from summary statistics from a large meta-analysis of multiple Genome-Wide Association Studies (GWAS) and an ancestry-matched Linkage Disequilibrium (LD) reference panel \cite[]{choi2020tutorial}.
-Yet, this is not the only way to derive polygenic scores.
-Indeed, polygenic scores can be directly derived from individual-level data, i.e.\ from the genetic and phenotypic information of many individuals.
+Ever larger genetic data is becoming more readily available to researchers.
+This enables researchers to derive polygenic scores (PGS), which summarize an individual genetic components for a particular trait or disease by combining information from many genetic variants.
+In Human Genetics, polygenic scores are usually derived from summary statistics from a large meta-analysis of multiple Genome-Wide Association Studies (GWAS) and an ancestry-matched Linkage Disequilibrium (LD) reference panel \cite[]{choi2020tutorial}.
+Yet, polygenic scores can be directly derived from individual-level data when available, i.e.\ from the genetic and phenotypic information of many individuals \cite[]{de2013whole}.
 Biobank datasets such as the UK Biobank now links genetic data for half a million individuals with phenotypic data for hundreds of traits and diseases \cite[]{bycroft2018uk}.
 Before having access to large genetic datasets such as the UK Biobank, using a single individual-level data to derive polygenic scores was usually pointless because of the small sample sizes available.
-It proved nevertheless useful for deriving PGS for traits with moderately large effects, such as autoimmune diseases \cite[]{abraham2014accurate,prive2019efficient}.
-Yet, now that we have access to such large datasets, individual-level data can be used to derive competitive PGS for hundreds of phenotypes.
+Individual-level data methods proved nevertheless useful for deriving PGS for traits with moderately large effects, such as autoimmune diseases \cite[]{abraham2014accurate,prive2019efficient}.
+Yet, now that researchers can have access to large datasets, individual-level data may be used to derive competitive PGS for hundreds of phenotypes.
 
 A major concern about PGS is that they usually transfer poorly to other ancestries, i.e.\ a PGS derived from people of European ancestry is not likely to predict as well in people of African ancestry.
 Prediction in another ancestry has been shown to decay with genetic distance to the training population \cite[]{scutari2016using,wang2020theoretical} and with increasing proportion of admixture with a distant ancestry \cite[]{bitarello2020polygenic,cavazos2020inclusion}.
-Here, we are also well positioned to reiterate this concern with strong evidence.
-Indeed, while the UKBB data contains genetic information for more than 450K British or European individuals, it also contains the same data for tens of thousands of individuals of non-British ancestry \cite[]{prive2020ancestry}.
-These people genetically comes from a different ancestry, but they all live in the UK and had their genetic and phenotypic information derived in the same way as people of European ancestry.
-This makes the UK Biobank data very well suited for comparing and evaluating predictive performance of derived PGS in diverse ancestries.
+Individual-level data from the UK Biobank offer an opportunity to further investigate this question in a more controlled setting.
+Indeed, while the UKBB data contains genetic information for more than 450K British or European individuals, it also contains the same data for tens of thousands of individuals of non-British ancestry \cite[]{bycroft2018uk}.
+Of particular interest, those individuals of diverse ancestries all live in the UK and had their genetic and phenotypic information derived in the same way as people of European ancestry. 
+This allows to circumvent potential confounding bias that might arise in comparative analyses from independent studies, and makes the UK Biobank data very well suited for comparing and evaluating predictive performance of derived PGS in diverse ancestries and across multiple phenotypes.
 
-Here we apply our fast implementation of penalized regressions \cite[]{prive2019efficient} to the UK Biobank data to derive PGS for {\NBTRAIT} traits using the UK Biobank genetic and phenotypic data only.
+Here, we examine the extent to which polygenic risk scores are transferable between ancestries. We apply a computationally efficient implementation of penalized regressions \cite[]{prive2019efficient} to the UK Biobank data to derive PGS for {\NBTRAIT} traits using the UK Biobank genetic and phenotypic data only.
 As an alternative method, we also run LDpred2-auto \cite[]{prive2020ldpred2}, for which we directly derive the summary statistics from the individual-level data available.
-We show that results about transferability of PGS derived from European ancestry to other ancestries are quite alarming.
-Indeed, overall for around 240 phenotypes, variance of the phenotypes explained by the PGS is only 64.7\% in India, 48.6\% in China, and 18\% in Nigeria compared to in individuals of UK ancestry.
-We finally derive PGS by including diverse ancestries for training the polygenic scores.
-While some have shown including a few thousands individuals from other ancestries might be useful in the context of finding genetic-disease association, it does not seem beneficial in the context of prediction.
-
-[HIGHLIGHT OTHER CONCLUSIONS?]
+We show a dramatically low portability of PGS from European ancestry to other ancestries.
+Indeed, on average, the phenotypic variance explained by the PGS is only 64.7\% in India, 48.6\% in China, and 18\% in Nigeria compared to in individuals of UK ancestry.
+[ADD SOMETHING ABOUT THE METHOD FOR DEFINING GROUPS HERE]
+These results are presented at a finer scale than the usual continental level and allows us to show that prediction already drops within Europe (for East and South Europe).
+We also explore the performance of PGS trained using a mixture of European and non-European ancestry samples.
+While some have shown including a few thousands individuals from other ancestries might be useful in the context of finding genetic-disease association and fine-mapping [CITATIONS?], here it does not prove beneficial for prediction when naively using all ancestries together in training.
+Finally, we compare penalized regression to LDpred2-auto, and show that summary statistics methods can be powerful when applied to individual-level data as well.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -137,10 +143,10 @@ While some have shown including a few thousands individuals from other ancestrie
 \subsection*{Overview of methods}
 
 We derive polygenic scores for {\NBTRAIT} phenotypes using the UK Biobank (UKBB) data \cite[]{bycroft2018uk}.
-We divide this data in 8 ancestry groups following \cite{prive2020ancestry}.
-We use most of people from UK ancestry to train polygenic scores based on individual-level genotypes and phenotypes, and assess prediction in the remaining individuals from the 8 ancestry groups in the test set (Table \ref{tab:size-sets}).
-We use two different methods to derive polygenic scores, penalized regression and LDpred2-auto. We also report estimates for SNP heritability $h^2$ and proportion of causal variants $p$ from LDpred2-auto.
-As additional analyses, we also train models using multiple ancestry groups, and we use family history to try improving predictive models.
+[REPLACE BY NOW EXPLAINING IN THIS PAPER]We divide this data in 8 ancestry groups following \cite{prive2020ancestry}.
+We use 391,124 individuals of UK ancestry to train polygenic scores based on individual-level genotypes and phenotypes, and assess prediction in remaining individuals from 8 ancestry groups (Table \ref{tab:size-sets}).
+We use two different methods to derive polygenic scores, penalized regression and LDpred2-auto.
+As additional analyses, we also train models using a mixture of multiple ancestries, and investigate other variants than the HapMap3 variants used in the main analyses.
 
 \begin{table}[ht]
 	\centering
@@ -160,13 +166,13 @@ As additional analyses, we also train models using multiple ancestry groups, and
 	Second analyses involve multiple ancestry training and keep only the UK3 and Caribbean groups as test sets; UK2 is removed from the training so that sample size from training 2 is the same as training 1 (391,124 individuals).\label{tab:size-sets}}
 \end{table}
 
-\subsection*{Drop in prediction in other ancestries}
+\subsection*{Portability of polygenic scores to other ancestries}
 
 Figure \ref{fig:lasso-ancestry} presents the results when fitting penalized regressions using a training set composed of UK individuals and testing in 8 different ancestry groups. Averaged over around 240 phenotypes, compared to prediction performance in individuals of UK ancestry, relative predictive ability in terms of partial-$r^2$ (see Methods) is only 93.8\% in Poland, 85.6\% in Italy, 72.2\% in Iran, 64.7\% in India, 48.6\% in China, 25.2\% in the Caribbean, and 18\% in Nigeria.
-Overall, relative predictive performance decreases approximately linearly with PC distance to UK (Figure \ref{fig:ratio-dist}).
-As a follow-up analysis to ensure that this drop in performance in other ancestries is not due to imputation, we perform the same analysis for 83 of the continuous phenotypes using high-quality genotyped variants (see Methods) instead of the (mostly imputed) HapMap3 variants; results are highly consistent (Figure \ref{fig:lasso-ancestry-geno}).
+[PUT AFTER? MOVE TO MAIN TEXT + ADD SUPPLEMENTARY ANALYSES]Overall, relative predictive performance decreases approximately linearly with PC distance to UK (Figure \ref{fig:ratio-dist}).
+As a follow-up analysis to ensure that this drop in performance in other ancestries is not due to imputation, we perform the same analysis for 83 of the continuous phenotypes using high-quality genotyped variants only (see Methods) instead of the (mostly imputed) HapMap3 variants; results are highly consistent (Figure \ref{fig:lasso-ancestry-geno}).
 These results are also very similar when using LDpred2-auto instead of penalized regression for training predictive models for all phenotypes (Figure \ref{fig:ldpred2-ancestry}).
-A few phenotypes deviate from this global trend; of note, prediction of bilirubin concentration ranges between for 0.537 and 0.619 (partial-$r$) for all ancestries except for China for which it is 0.415 (95\% CI: 0.374 - 0.453).
+A few phenotypes deviate from this global trend, e.g.\ prediction of bilirubin concentration ranges between 0.537 and 0.619 (partial-$r$) for all ancestries except for China for which it is 0.415 (95\% CI: 0.374 - 0.453).
 In contrast, for e.g.\ hair and skin color, predictive performance decrease quickly and prediction for both China and Nigeria is not significantly different from 0, while of 0.420 (95\% CI: 0.409 - 0.432) for ``darker hair'' [SHOULD PROBABLY VERIFY HOW I DEFINE THESE PHENOTYPES -> TRIED WITHOUT ANY TRANSFORMATION AND PREDICTION IS BETTER -> CHANGE NUMBERS? VERIFY ALL TRANSFORMATIONS?] (Figure \ref{fig:lasso-ancestry}).
 
 %% FIGURE 1 HERE
@@ -178,7 +184,9 @@ This slope (squared) is provided in the title, which we report as the relative p
 \label{fig:lasso-ancestry}
 \end{figure}
 
-We then investigate some of the outlier phenotypes in figure \ref{fig:lasso-ancestry}, especially the ones from blood biochemistry which have some variants with large effects.
+\subsection*{Using more than HapMap3 variants?}
+
+We investigate some of the outlier phenotypes in figure \ref{fig:lasso-ancestry}, especially the ones from blood biochemistry which have some variants with large effects.
 We focus on ``total bilirubin'', ``lipoprotein A'' (lipoA) and ``apolipoprotein B'' (apoB). We perform a localized GWAS in each of the eight ancestry groups defined here, including all variants with an imputation INFO score larger than 0.3 and within a window of 500Kb from the top hit from the GWAS in the training set 1 (UK individuals and HapMap3 variants); there are approximately 30K such variants.
 For bilirubin, the top hit belongs to HapMap3 variants used in the training data and explains around 30\% of the phenotypic variance (Figure \ref{fig:zoom-bilirubin}). Effects from the three top hits are fairly consistent within all ancestry groups (Figure \ref{fig:top3-bilirubin}) explaining why genetic prediction is consistent in all ancestries, except for China for which these variants are rarer (Figure \ref{fig:lasso-ancestry}).
 For lipoA, results are very different; HapMap3 variants are far from being the top hits in the UK with the top HapMap3 variant explaining 5\% of phenotypic variance in UK compared to 29\% for the top hit (Figure \ref{fig:zoom-lipoA}).
@@ -186,10 +194,13 @@ Note that this top hit is more than 200Kb away from the HapMap3 top hit from UK.
 The 3 top hits for lipoA do not have very consistent effect sizes [WHAT TO CONCLUDE FROM THIS?] (Figure \ref{fig:top3-lipoA}).
 Finally, for apoB, effects from the three top hits, which are not part of HapMap3 variants, are also consistent and explain up to 8.5\% of the phenotypic variance (Figures \ref{fig:zoom-apoB} \& \ref{fig:top3-apoB}).
 
-\subsection*{Training with multiple ancestries}
+[ADD NEW LDPRED2-LARGE RESULTS HERE]
+
+\subsection*{Training with a mixture of ancestries}
 
 Here we use all ancestry groups expect for the Caribbean for training; we remove the same number of UK individuals to keep the same training sample size as before (Table \ref{tab:size-sets}).
-In figure \ref{fig:lasso-multi}, we investigate nine phenotypes: breast cancer (phecode: 174.1), prostate cancer (186), type-2 diabetes (250.2), hypertension (401), CAD (411.4), ``darker skin'', total bilirubin concentration, lipoprotein A concentration, and years of education.
+We recall that Caribbean people are mostly admixed between African, European and South Asian ancestries [REF TO PC SCORES FIGURE], which are all represented in the training set 2 here.
+In figure \ref{fig:lasso-multi}, we investigate nine phenotypes: breast cancer (phecode: 174.1), prostate cancer (186), type-2 diabetes (250.2), hypertension (401), CAD (411.4), skin tone, total bilirubin concentration, lipoprotein A concentration, and years of education.
 We predict in the test sets from the UK and the Caribbean; overall, predictive performance are very similar when using this multi-ancestry training compared to when using only UK individuals, in both the UK and the Caribbean. When predicting lipoprotein A concentration in the Caribbean is the only time when prediction improves strongly.
 
 [SHOULD ALSO TRY LDPRED2-AUTO? MORE PHENOTYPES?]
@@ -243,6 +254,8 @@ GWAS in African ancestry populations are not subject to this bias \cite[]{kim201
 - small sample size is okay if small polygenicity
 
 - better way to choose chains in LDpred2-auto?
+
+- add limitation on transformation of phenotypes based on visual inspection
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
