@@ -72,12 +72,10 @@
 \date{~ }
 \maketitle
 
-[COMPLETE + ORDER THIS]
-
 \noindent$^{\text{\sf 1}}$National Centre for Register-Based Research, Aarhus University, Aarhus, 8210, Denmark. \\
 \noindent$^{\text{\sf 2}}$Department of Computational Biology, USR 3756 CNRS, Institut Pasteur, Paris, 75015, France. \\
 \noindent$^{\text{\sf 3}}$Program in Genetic Epidemiology and Statistical Genetics, Harvard T.H. Chan School of Public Health, Boston, MA, 02115, USA. \\
-\noindent$^{\text{\sf 4}}$[LASSE] \\
+\noindent$^{\text{\sf 4}}$Danish National Genome Center, Copenhagen, 2300, Denmark \\
 \noindent$^{\text{\sf 5}}$Department of Genetics and Genomic Sciences, Icahn School of Medicine at Mount Sinai, New York, New York, 10029, USA \\
 \noindent$^{\text{\sf 6}}$Bioinformatics Research Centre, Aarhus University, Aarhus, 8000, Denmark. \\
 \noindent$^\ast$To whom correspondence should be addressed.\\
@@ -126,14 +124,23 @@ Indeed, while the UKBB data contains genetic information for more than 450K Brit
 Of particular interest, those individuals of diverse ancestries all live in the UK and had their genetic and phenotypic information derived in the same way as people of European ancestry. 
 This allows to circumvent potential confounding bias that might arise in comparative analyses from independent studies, and makes the UK Biobank data very well suited for comparing and evaluating predictive performance of derived PGS in diverse ancestries and across multiple phenotypes.
 
-Here, we examine the extent to which polygenic risk scores are transferable between ancestries. We apply a computationally efficient implementation of penalized regression \cite[]{prive2019efficient} to the UK Biobank data to derive PGS for {\NBTRAIT} traits using the UK Biobank genetic and phenotypic data only.
+However, to be able to investigate portability of PGS to other ancestries, we must first define groups of different ancestries from the data.
+Principal Component Analysis (PCA) has been widely used to correct for population structure in association studies and has been shown to mirror geography in Europe \cite[]{price2006principal,novembre2008genes}.
+Due to its popularity, many methods have been developed for efficiently performing PCA \cite[]{abraham2017flashpca2,prive2020efficient} as well as appropriately projecting samples onto a reference PCA space \cite[]{zhang2020fast,prive2020efficient}, making possible to perform these analyses for ever increasing datasets in human genetics.
+Naturally, PCA has also been used for ancestry inference. 
+However, among all studies where we have seen PCA used for ancestry inference, we have found there was no consensus on what is the most appropriate method for inferring ancestry using PCA.
+For example, there may be divergences on which distance metric to use and the number of PCs to use to compute these distances.
+
+In this study, we examine the extent to which polygenic risk scores are transferable between ancestries. 
+We first propose a simple, robust and effective method for global ancestry inference and grouping from PCA of genetic data, and use it to define 8 ancestry groups in the UK Biobank data.
+We then apply a computationally efficient implementation of penalized regression \cite[]{prive2019efficient} to derive PGS for {\NBTRAIT} traits using the UK Biobank genetic and phenotypic data only.
 As an alternative method, we also run LDpred2-auto \cite[]{prive2020ldpred2}, for which we directly derive the summary statistics from the individual-level data available.
 We show a dramatically low portability of PGS from European ancestry to other ancestries.
 Indeed, on average, the phenotypic variance explained by the PGS is only 64.7\% in India, 48.6\% in China, and 18\% in Nigeria compared to in individuals of UK ancestry.
-[ADD SOMETHING ABOUT THE METHOD FOR DEFINING GROUPS HERE]
-These results are presented at a finer scale than the usual continental level and allows us to show that prediction already drops within Europe (for East and South Europe).
+These results are presented at a finer scale than the usual continental level, which allows us to show that prediction already drops within Europe (for East and South Europe compared to UK).
 We also explore the performance of PGS trained using a mixture of European and non-European ancestry samples.
 While some have shown including a few thousands individuals from other ancestries might be useful in the context of finding genetic-disease association and fine-mapping [CITATIONS?], here it does not prove beneficial for prediction when naively using all ancestries together in training.
+[ADD SOMETHING ABOUT THE SET OF 8M VARIANTS?]
 Finally, we compare penalized regression to LDpred2-auto, and show that summary statistics methods can be powerful when applied to individual-level data as well.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -143,7 +150,7 @@ Finally, we compare penalized regression to LDpred2-auto, and show that summary 
 \subsection*{Overview of methods}
 
 We derive polygenic scores for {\NBTRAIT} phenotypes using the UK Biobank (UKBB) data \cite[]{bycroft2018uk}.
-[REPLACE BY NOW EXPLAINING IN THIS PAPER]We divide this data in 8 ancestry groups following \cite{prive2020ancestry}.
+We divide this data in 8 ancestry groups.
 We use 391,124 individuals of UK ancestry to train polygenic scores based on individual-level genotypes and phenotypes, and assess prediction in remaining individuals from 8 ancestry groups (Table \ref{tab:size-sets}).
 We use two different methods to derive polygenic scores, penalized regression and LDpred2-auto.
 As additional analyses, we also train models using a mixture of multiple ancestries, and investigate other variants than the HapMap3 variants used in the main analyses.
@@ -165,6 +172,16 @@ As additional analyses, we also train models using a mixture of multiple ancestr
 	First analyses use UK1 + UK2 (391,124 individuals) as training set and the other groups as test sets.
 	Second analyses involve multiple ancestry training and keep only the UK3 and Caribbean groups as test sets; UK2 is removed from the training so that sample size from training 2 is the same as training 1 (391,124 individuals).\label{tab:size-sets}}
 \end{table}
+
+\subsection*{Ancestry grouping}
+
+[TODO: MODIFY]
+Here we propose a simple, robust and effective method for global ancestry inference and grouping from Principal Component Analysis (PCA) of genetic data.
+The proposed approach is particularly useful for methods that need to be applied in homogeneous samples.
+First, we show that Euclidean distances in the PCA space are proportional to $F_{ST}$ between populations.
+Then, we show how to use this PCA-based distance to infer ancestry in the UK Biobank and the POPRES datasets.
+We propose two solutions, either relying on projection of PCs to reference populations such as from the 1000 Genomes Project, or by directly using the internal data.
+Finally, we conclude that our method and the community would benefit from having an easy access to a reference dataset with an even better coverage of the worldwide genetic diversity than the 1000 Genomes Project.
 
 \subsection*{Portability of polygenic scores to other ancestries}
 
@@ -199,7 +216,9 @@ Note that this top hit is more than 200Kb away from the HapMap3 top hit from UK.
 The 3 top hits for lipoA do not have very consistent effect sizes across ancestries (Figure \ref{fig:top3-lipoA}).
 Finally, for apoB, effects from the three top hits, which are not part of HapMap3 variants, are fairly consistent across ancestries and explain up to 8.5\% of the phenotypic variance (Figures \ref{fig:zoom-apoB} \& \ref{fig:top3-apoB}).
 
-We then try to use more than HapMap3 variants for training; we use more than 8M common variants (Methods). 
+We then investigate using more than HapMap3 variants for training; we use more than 8M common variants (Methods) and apply LDpred2 thanks to p-value thresholding and winner's curse correction (Methods). 
+
+[DESCRIBE FIGURE \ref{fig:ldpred2-large} + ADD TABLE]
 
 [ADD NEW LDPRED2-LARGE RESULTS HERE. DO I HAVE APOB? LINK WITH RESULTS FROM ZOOMED GWAS]
 
@@ -272,13 +291,13 @@ GWAS in African ancestry populations are not subject to this bias \cite[]{kim201
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section*{Methods}
+\section*{Materials and Methods}
 
 \subsection*{Data}
 
 We derive polygenic scores for {\NBTRAIT} phenotypes using the UK Biobank (UKBB) data \cite[]{bycroft2018uk}.
 We read dosages data from UKBB BGEN files using function \texttt{snp\_readBGEN()} of R package bigsnpr \cite[]{prive2017efficient}.
-We divide the UKBB data in 8 ancestry groups following \cite{prive2020ancestry}, and restrict to 437,669 individuals without second-degree relatives (KING kinship $< 2^{-3.5}$).
+We divide the UKBB data in 8 ancestry groups (Supplementary Note), and restrict to 437,669 individuals without second-degree relatives (KING kinship $< 2^{-3.5}$).
 For the variants, we use 1,040,096 HapMap3 variants used in the LD reference provided in \cite{prive2020ldpred2} and that were also present in the iPSYCH2015 data \cite[]{bybjerg2020ipsych2015} with imputation INFO score larger than 0.6.
 Even though the iPSYCH data is not used in this study, we plan to use the PGS derived here for iPSYCH in the future [OR SAY IN THE DISCUSSION WHEN WE TALK ABOUT PROVIDING THE PGS TO RESEARCHERS?].
 
@@ -380,7 +399,7 @@ All code used for this paper is available at \url{https://github.com/privefl/UKB
 We have extensively used R packages bigstatsr and bigsnpr \cite[]{prive2017efficient} for analyzing large genetic data, packages from the future framework \cite[]{bengtsson2020unifying} for easy scheduling and parallelization of analyses on the HPC cluster, and packages from the tidyverse suite \cite[]{wickham2019welcome} for shaping and visualizing results.
 We have also used R package deming to fit Deming regressions.
 
-R packages bigstatsr and bigsnpr can be installed from GitHub.
+R packages bigstatsr and bigsnpr can be installed from GitHub and CRAN.
 A tutorial on fitting penalized regressions with R package bigstatsr is available at \url{https://privefl.github.io/bigstatsr/articles/penalized-regressions.html}.
 A tutorial on running LDpred2 with R package bigsnpr is available at \url{https://privefl.github.io/bigsnpr/articles/LDpred2.html}.
 
