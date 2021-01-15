@@ -201,7 +201,7 @@ This slope (squared) is provided in the title, which we report as the relative p
 \end{figure}
 
 \begin{figure}[htb]
-	\centerline{\includegraphics[width=0.85\textwidth]{ratio-dist}}
+	\centerline{\includegraphics[width=0.8\textwidth]{ratio-dist}}
 	\caption{Relative predictive performance with UK compared to PC distance with UK. PC distances are computed using Euclidean distance between geometric medians of the first 16 reported PC scores (Field 22009) of each ancestry group. Relative performance values are the ones reported in figure \ref{fig:lasso-ancestry}.}
 	\label{fig:ratio-dist}
 \end{figure}
@@ -392,8 +392,6 @@ We implement this in function \texttt{pcor} of R package bigstatsr and use it he
 %\vspace*{5em}
 
 \section*{Software and code availability}
-
-[TODO: EXPORT CODE FROM CLUSTER]
 
 All code used for this paper is available at \url{https://github.com/privefl/UKBB-PGS/tree/master/code}.
 We have extensively used R packages bigstatsr and bigsnpr \cite[]{prive2017efficient} for analyzing large genetic data, packages from the future framework \cite[]{bengtsson2020unifying} for easy scheduling and parallelization of analyses on the HPC cluster, and packages from the tidyverse suite \cite[]{wickham2019welcome} for shaping and visualizing results.
