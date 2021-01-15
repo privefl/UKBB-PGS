@@ -119,7 +119,8 @@ Yet, now that researchers can have access to large datasets, individual-level da
 
 A major concern about PGS is that they usually transfer poorly to other ancestries, i.e.\ a PGS derived from people of European ancestry is not likely to predict as well in people of African ancestry.
 Prediction in another ancestry has been shown to decay with genetic distance to the training population \cite[]{scutari2016using,wang2020theoretical} and with increasing proportion of admixture with a distant ancestry \cite[]{bitarello2020polygenic,cavazos2020inclusion}.
-Individual-level data from the UK Biobank offer an opportunity to further investigate this question in a more controlled setting.
+This portability issue is suspected to be primarly due to difference in LD and allele frequencies between populations, and not so much about difference in effects / positions of causal variants \cite[]{shi2020localizing,wang2020theoretical,cavazos2020inclusion}.
+Individual-level data from the UK Biobank offer an opportunity to further investigate this problem of portability of PGS in a more controlled setting.
 Indeed, while the UKBB data contains genetic information for more than 450K British or European individuals, it also contains the same data for tens of thousands of individuals of non-British ancestry \cite[]{bycroft2018uk}.
 Of particular interest, those individuals of diverse ancestries all live in the UK and had their genetic and phenotypic information derived in the same way as people of European ancestry. 
 This allows to circumvent potential confounding bias that might arise in comparative analyses from independent studies, and makes the UK Biobank data very well suited for comparing and evaluating predictive performance of derived PGS in diverse ancestries and across multiple phenotypes.
@@ -175,13 +176,13 @@ As additional analyses, we also train models using a mixture of multiple ancestr
 
 \subsection*{Ancestry grouping}
 
-[TODO: MODIFY]
-Here we propose a simple, robust and effective method for global ancestry inference and grouping from Principal Component Analysis (PCA) of genetic data.
-The proposed approach is particularly useful for methods that need to be applied in homogeneous samples.
-First, we show that Euclidean distances in the PCA space are proportional to $F_{ST}$ between populations.
+Detailed results can be found in the Supplementary Note; we recall main results here.
+First, we show that (squared) Euclidean distances in the PCA space of genetic data are approximately proportional to $F_{ST}$ between populations.
+We also show that using only 2 PCs, or even 4 PCs, is not enough to distinguish between some populations.
 Then, we show how to use this PCA-based distance to infer ancestry in the UK Biobank and the POPRES datasets.
-We propose two solutions, either relying on projection of PCs to reference populations such as from the 1000 Genomes Project, or by directly using the internal data.
-Finally, we conclude that our method and the community would benefit from having an easy access to a reference dataset with an even better coverage of the worldwide genetic diversity than the 1000 Genomes Project.
+We propose two solutions, either relying on projection of PCs to reference populations such as from the 1000 Genomes Project, or by directly using internal data.
+We show that these solutions are simple, robust and effective methods for global ancestry inference and grouping from PCA of genetic data.
+Here we use the second solution, relying on PCs computed within the UK Biobank and individual information on the countries of birth, to derive the eight ancestry groups presented in table \ref{tab:size-sets}.
 
 \subsection*{Portability of polygenic scores to other ancestries}
 
@@ -189,7 +190,7 @@ Figure \ref{fig:lasso-ancestry} presents the results when fitting penalized regr
 As a follow-up analysis to ensure that this drop in performance in other ancestries is not due to imputation, we perform the same analysis for 83 of the continuous phenotypes using high-quality genotyped variants only (see Methods) instead of the (mostly imputed) HapMap3 variants; results are highly consistent (Figure \ref{fig:lasso-ancestry-geno}).
 These results are also very similar when using LDpred2-auto instead of penalized regression for training predictive models for all phenotypes (Figure \ref{fig:ldpred2-ancestry}).
 A few phenotypes deviate from this global trend, e.g.\ prediction of bilirubin concentration ranges between 0.537 and 0.619 (partial-$r$) for all ancestries except for China for which it is 0.415 (95\% CI: 0.374 - 0.453).
-In contrast, for e.g.\ hair and skin color, predictive performance decrease quickly and prediction for both China and Nigeria is not significantly different from 0, while of 0.420 (95\% CI: 0.409 - 0.432) for ``darker hair'' [SHOULD PROBABLY VERIFY HOW I DEFINE THESE PHENOTYPES -> TRIED WITHOUT ANY TRANSFORMATION AND PREDICTION IS BETTER -> CHANGE NUMBERS? VERIFY ALL TRANSFORMATIONS?] (Figure \ref{fig:lasso-ancestry}).
+In contrast, for e.g.\ hair and skin color, predictive performance decrease quickly and prediction for both China and Nigeria is not significantly different from 0, while of 0.420 (95\% CI: 0.409 - 0.432) for ``darker hair'' (Figure \ref{fig:lasso-ancestry}).
 Overall, relative predictive performance decreases approximately linearly with PC distance to UK (Figure \ref{fig:ratio-dist}). A similar pattern is observed when computing PCA based on more balanced ancestry groups, as recommended in \cite{prive2020efficient} (Figure \ref{fig:ratio-dist2}).
 
 \begin{figure}[htb]
@@ -217,10 +218,9 @@ The 3 top hits for lipoA do not have very consistent effect sizes across ancestr
 Finally, for apoB, effects from the three top hits, which are not part of HapMap3 variants, are fairly consistent across ancestries and explain up to 8.5\% of the phenotypic variance (Figures \ref{fig:zoom-apoB} \& \ref{fig:top3-apoB}).
 
 We then investigate using more than HapMap3 variants for training; we use more than 8M common variants (Methods) and apply LDpred2 thanks to p-value thresholding and winner's curse correction (Methods). 
-
-[DESCRIBE FIGURE \ref{fig:ldpred2-large} + ADD TABLE]
-
-[ADD NEW LDPRED2-LARGE RESULTS HERE. DO I HAVE APOB? LINK WITH RESULTS FROM ZOOMED GWAS]
+Except for lipoA for which we get a large improvement in predictive accuracy compared to using HapMap3 variants only, there is no significant improvement for the other seven phenotypes analyzed here (Figure \ref{fig:ldpred2-large}). Remarkably, while the partial correlation for lipoA is about 75\% in the UK test set when using this prioritized set of variants, it is still not different from 0 when applied to the Nigeria group.
+For height and BMI, estimated heritability is reduced when using this set of most significant variants, and all these variants are estimated to be causal, i.e.\ estimate of $p$ is 1 (Table \ref{tab:ldpred2-est-large}). As height and BMI are very polygenic traits ($p$ is estimated to be \textasciitilde2\% and \textasciitilde4\% respectively when using HapMap3 variants), contribution from less significant causal variants is missed due to this thresholding selection.
+For the three binary phenotypes, breast cancer (phecode: 174.1), prostate cancer (185) and coronary artery disease (411.4), while heritability estimates are larger when using this set of prioritized variants (Table \ref{tab:ldpred2-est-large}), predictive accuracy seems lower than when using HapMap3 variants (Figure \ref{fig:ldpred2-large}).
 
 \subsection*{Training with a mixture of ancestries}
 
@@ -231,7 +231,7 @@ We predict in the test sets from the UK and the Caribbean; overall, predictive p
 
 \subsection*{Comparison of predictive models}
 
-[ALSO ADD AVERAGE R ACROSS ALL PHENOTYPES]Penalized regression and LDpred2-auto provides approximately similar predictive performance across all traits and ancestries considered here (Figure \ref{fig:plr-ldpred2}); there are only four pairs of phenotype-ancestry (out of nearly 2000 pairs) for which 95\% CIs for partial-$r$ from penalized regression and LDpred2 are not overlapping: ``615: Endometriosis'' in China with 0.065 (0.0074 - 0.122) vs -0.051 (-0.108 - 0.0068); ``hard falling asleep'' in UK with -0.0349 (-0.742 - 0.0045) vs 0.071 (0.031 - 0.110); height in UK with 0.634 (0.626 - 0.643) vs 0.613 (0.605 - 0.622); log-bilirubin in Nigeria with 0.546 (0.523 - 0.569) vs 0.475 (0.449 - 0.500).
+[ALSO ADD AVERAGE R ACROSS ALL PHENOTYPES?] Penalized regression and LDpred2-auto provides approximately similar predictive performance across all traits and ancestries considered here (Figure \ref{fig:plr-ldpred2}); there are only four pairs of phenotype-ancestry (out of nearly 2000 pairs) for which 95\% CIs for partial-$r$ from penalized regression and LDpred2 are not overlapping: ``615: Endometriosis'' in China with 0.065 (0.0074 - 0.122) vs -0.051 (-0.108 - 0.0068); ``hard falling asleep'' in UK with -0.0349 (-0.742 - 0.0045) vs 0.071 (0.031 - 0.110); height in UK with 0.634 (0.626 - 0.643) vs 0.613 (0.605 - 0.622); log-bilirubin in Nigeria with 0.546 (0.523 - 0.569) vs 0.475 (0.449 - 0.500).
 For prediction in UK ancestry, penalized regression tends to provide better predictive performance than LDpred2 for traits that are well predicted (e.g.\ partial-$r$ > 0.5) and LDpred2 tends to outperform penalized regression when predicting the phenotype is more difficult (Figure \ref{fig:plr-ldpred2}).
 
 Both methods allows for fitting sparse effects, i.e.\ some resulting effects are exactly 0. Sparse models may be beneficial because they may be more easily interpreted and implemented. 
@@ -247,40 +247,39 @@ In contrast, LDpred2-auto should take the same computation time for all phenotyp
 
 \section*{Discussion}
 
-[Paul: I guess the main take-homes here are: 
-1. Portability problem is just as strong within same cohort
-2. Portability problem highlighted here at high-resolution (country-level)
-3. Drop-off in portability already seen within Europe, and worldwide is proportional to ?PC distance?
-4. Results similar whether PRS derived from summary stats or ind-level data
-5. Using target ancestries in the training data doesn?t seem to improve power much (really not sure about this conclusion though?!)]
-
-Here, we have shown a poor portability of PGS to other populations, in agreement to what has been previously reported.
+In this paper, we have shown a poor portability of PGS to other populations, in agreement to what has been previously reported.
 Indeed, compared to three previous studies \cite[]{martin2019clinical,duncan2019analysis,wang2020theoretical}, we show a relative predictive performance compared to Europeans of
 \textasciitilde18\% for Africans (vs.\ 22\%, 42\% and 24\%),
 \textasciitilde49\% for East Asians (vs.\ 50\%, 95\% and 64\%) and
 \textasciitilde65\% for South Asians (vs.\ 60\%, 62.5\% and 72\%).
-We also show that predictive performance already decrease within Europe with only \textasciitilde94\% for East Europe and \textasciitilde86\% for South Europe of the performance reached within UK.
-Previous studies have shown that this reduction in performance in other ancestries is primarly due to difference in LD and allele frequencies between populations, and not so much about difference in effects / positions of causal variants \cite[]{shi2020localizing,wang2020theoretical,cavazos2020inclusion}.
+Our results provide a significant addition to the current literature in many ways. First, we show that the portability issue is as strong even when PGS are derived and applied in the same cohort. 
+Second, the presented results are averaged over {\NBTRAIT} phenotypes, which is much more than what is typically used.
+Third, we provide this result at a finer scale than the usual continental level by proposing a simple, robust and effective method for grouping UKBB individuals in eight ancestry groups.
+This allows us to show e.g.\ that predictive performance already decrease within Europe with only \textasciitilde94\% for East Europe and \textasciitilde86\% for South Europe of the performance reached within UK.
 
-We showcase two methods to build polygenic scores when large individual-level data is available. Although LDpred2-auto is a method based on  summary statistics, it provides good predictive performance for individual-level data compared to penalized regression.
+We showcase two methods to build polygenic scores when large individual-level data is available. Although LDpred2-auto is a method based on summary statistics, it provides good predictive performance compared to penalized regression, when applied to individual-level data.
+Moreover, portability results shown here are similar when using either the individual-level penalized regression or the summary statistics based LDpred2 method.
 Fitting of penalized models is relatively fast when using 1M HapMap3 variants; we have also tried fitting penalized regression using 8M variants (>3TB of data); this was possible but took several days for the phenotypes we tried (data not shown) so we have not investigated this further.
 To the best of our knowledge, the implementation we use is the most efficient penalized regression implementation currently available. Recently, \cite{qian2020fast} have developed snpnet, a new R package for fitting penalized regressions on large individual-level genetic data, but we have found it to be much less efficient than our package bigstatsr (Supplementary Note).
-As for LDpred2, it currently cannot be run using 8M variants, but we are investigating two ways to make this possible in future work [CHANGE].
+As for LDpred2, it currently cannot be run using 8M variants, but we show a way to use a subset of 1M prioritized variants out of these 8M. 
+Using this new set of variants provides a large improvement in predicting lipoprotein A concentration (lipoA), but not for the other seven phenotypes studied in this analysis.
+This improvement for lipoA is not surprising given that the top HapMap3 variant explains 5\% of phenotypic variance compared to 29\% for the (non-HapMap3) top hit (Figure \ref{fig:zoom-lipoA}).
 
-Here we only use the UK Biobank data to fit polygenic scores. We do show how to use family information to slightly improve prediction. Note that we are working on extending the LT-FH model to account for additional information such as time and sex differences in prevalence.
-Yet, we do not use external information such as functional annotations; those could be used to improve the heritability model assumed by predictive methods in order to improve predictive performance \cite[]{zhang2020improved}.
+Here we only use the UK Biobank data to fit polygenic scores.
+We do not use external information such as functional annotations; those could be used to improve the heritability model assumed by predictive methods in order to improve predictive performance \cite[]{zhang2020improved}.
 Moreover, we do not use external summary statistics. Nevertheless, \cite{albinana2020leveraging} have shown that an efficient strategy to improve predictive ability of polygenic scores consists in combining two different polygenic scores, one derived using external summary statistics, and another one derived using individual-level data.
 Therefore, the polygenic scores derived here could be combined with polygenic scores derived using external summary statistics; we will release these PGS publicly and shared them in databases such as the PGS Catalog and the Cancer-PRSweb \cite[]{fritsche2020cancer,lambert2020polygenic}.
 
 
-[PROBABLY NEED TO COMPLETE DISCU. WITH WHAT? LESSONS LEARNED?]
+[PROBABLY NEED TO COMPLETE DISCU. WITH WHAT?]
+
+- add something about multi ancestry training?
+
+- add something about using external information to provide better portability?
 
 - Better method development for prediction in other ancestries
 
-
-[whereas
-GWAS in African ancestry populations are not subject to this bias \cite[]{kim2018genetic,cavazos2020inclusion}.]
-
+- GWAS in African ancestry populations are not subject to this bias \cite[]{kim2018genetic,cavazos2020inclusion} -> same for prediction?.
 
 - small sample size is okay if small polygenicity
 
@@ -393,7 +392,7 @@ We implement this in function \texttt{pcor} of R package bigstatsr and use it he
 
 \section*{Software and code availability}
 
-All code used for this paper is available at \url{https://github.com/privefl/UKBB-PGS/tree/master/code}.
+All code used for this paper is available at \url{https://github.com/privefl/UKBB-PGS/tree/master/code}. Links to the code used for the two supplementary notes are provided there.
 We have extensively used R packages bigstatsr and bigsnpr \cite[]{prive2017efficient} for analyzing large genetic data, packages from the future framework \cite[]{bengtsson2020unifying} for easy scheduling and parallelization of analyses on the HPC cluster, and packages from the tidyverse suite \cite[]{wickham2019welcome} for shaping and visualizing results.
 We have also used R package deming to fit Deming regressions.
 
