@@ -12,3 +12,4 @@
 *.aux
 *.tex.bak
 figures/
+!docs/figures/
