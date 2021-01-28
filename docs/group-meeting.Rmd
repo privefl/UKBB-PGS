@@ -211,7 +211,7 @@ class: center middle inverse
 ### Using family history (LT-FH) to increase power (for GWAS)
 
 ```{r, out.width="58%"}
-knitr::include_graphics("../keep4later/power_LTFH.JPG")
+knitr::include_graphics("figures/power_LTFH.JPG")
 ```
 
 .footnote[Hujoel, M.L.A., Gazal, S., Loh, P. et al. Liability threshold modeling of case–control status and family history of disease increases association power. Nat Genet 52, 541–547 (2020).]
@@ -221,7 +221,7 @@ knitr::include_graphics("../keep4later/power_LTFH.JPG")
 ### Using LT-FH to increase power (for prediction)
 
 ```{r, out.width="90%"}
-knitr::include_graphics("../keep4later/lasso_LTFH.JPG")
+knitr::include_graphics("figures/lasso_LTFH.JPG")
 ```
 
 .footnote[I could use LT-FH++ (multi) to improve further in future work with Emil.]
@@ -231,7 +231,7 @@ knitr::include_graphics("../keep4later/lasso_LTFH.JPG")
 ### Validating inference from LDpred2-auto
 
 ```{r, out.width="82%"}
-knitr::include_graphics("../keep4later/heritability.JPG")
+knitr::include_graphics("figures/heritability.JPG")
 ```
 
 .footnote[Clara gets some similar results with 500+ external sumstats.]
@@ -241,7 +241,7 @@ knitr::include_graphics("../keep4later/heritability.JPG")
 ### Formula for upper prediction
 
 ```{r, out.width="75%", fig.align='right'}
-knitr::include_graphics("../keep4later/upper-formula.JPG")
+knitr::include_graphics("figures/upper-formula.JPG")
 ```
 
 <span class="footnote"> $r^2 = \frac{h^2}{1 + (1 - r^2) \frac{M p}{N h^2}}$ </span>
