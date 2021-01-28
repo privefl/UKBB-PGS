@@ -144,12 +144,81 @@ class: center middle inverse
 
 &lt;br&gt;
 
-&lt;img src="figures/ratio-dist-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="figures/ratio-dist-1.png" width="75%" style="display: block; margin: auto;" /&gt;
 
 &lt;!-- &lt;span class="footnote"&gt;Recall: `\(\text{dist}_{PC}^2 \propto F_{ST}\)`&lt;/span&gt; --&gt;
 
 ---
 
+### Using more than HapMap3 variants?
+
+#### "Zoomed" GWAS around top HM3 variants for Lipoprotein A 
+
+&lt;img src="figures/zoom_log_lipoA.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Using more than HapMap3 variants for prediction?
+
+&lt;img src="figures/ldpred2-large-1.png" width="85%" style="display: block; margin: auto;" /&gt;
+
+.footnote[Should try using HM3 + top very high significant?]
+
+---
+
+### (Naively) using multiple ancestries in training
+
+&lt;br&gt; 
+
+&lt;img src="figures/lasso_multi_pcor-1.png" width="88%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Comparing the two methods used
+
+#### Similar, but LASSO is better when prediction is higher, and inversely
+
+&lt;img src="figures/PLR-ldpred2.JPG" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: center middle inverse
+
+# Future work
+
+### (started as part of this project)
+
+---
+
+### Using family history (LT-FH) to increase power (for GWAS)
+
+&lt;img src="../keep4later/power_LTFH.JPG" width="58%" style="display: block; margin: auto;" /&gt;
+
+.footnote[Hujoel, M.L.A., Gazal, S., Loh, P. et al. Liability threshold modeling of case–control status and family history of disease increases association power. Nat Genet 52, 541–547 (2020).]
+
+---
+
+### Using LT-FH to increase power (for prediction)
+
+&lt;img src="../keep4later/lasso_LTFH.JPG" width="90%" style="display: block; margin: auto;" /&gt;
+
+.footnote[I could use LT-FH++ (multi) to improve further in future work with Emil.]
+
+---
+
+### Validating inference from LDpred2-auto
+
+&lt;img src="../keep4later/heritability.JPG" width="82%" style="display: block; margin: auto;" /&gt;
+
+.footnote[Clara gets some similar results with 500+ external sumstats.]
+
+---
+
+### Formula for upper prediction
+
+&lt;img src="../keep4later/upper-formula.JPG" width="75%" style="display: block; margin: auto 0 auto auto;" /&gt;
+
+&lt;span class="footnote"&gt; `\(r^2 = \frac{h^2}{1 + (1 - r^2) \frac{M p}{N h^2}}\)` &lt;/span&gt;
 
 ---
 

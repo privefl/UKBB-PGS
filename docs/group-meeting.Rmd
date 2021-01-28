@@ -152,7 +152,7 @@ knitr::include_graphics("figures/lasso-ancestry-1.png")
 
 <br>
 
-```{r, out.width="80%"}
+```{r, out.width="75%"}
 knitr::include_graphics("figures/ratio-dist-1.png")
 ```
 
@@ -160,6 +160,91 @@ knitr::include_graphics("figures/ratio-dist-1.png")
 
 ---
 
+### Using more than HapMap3 variants?
+
+#### "Zoomed" GWAS around top HM3 variants for Lipoprotein A 
+
+```{r, out.width="100%"}
+knitr::include_graphics("figures/zoom_log_lipoA.png")
+```
+
+---
+
+### Using more than HapMap3 variants for prediction?
+
+```{r, out.width="85%"}
+knitr::include_graphics("figures/ldpred2-large-1.png")
+```
+
+.footnote[Should try using HM3 + top very high significant?]
+
+---
+
+### (Naively) using multiple ancestries in training
+
+<br> 
+
+```{r, out.width="88%"}
+knitr::include_graphics("figures/lasso_multi_pcor-1.png")
+```
+
+---
+
+### Comparing the two methods used
+
+#### Similar, but LASSO is better when prediction is higher, and inversely
+
+```{r, out.width="90%"}
+knitr::include_graphics("figures/PLR-ldpred2.JPG")
+```
+
+---
+
+class: center middle inverse
+
+# Future work
+
+### (started as part of this project)
+
+---
+
+### Using family history (LT-FH) to increase power (for GWAS)
+
+```{r, out.width="58%"}
+knitr::include_graphics("../keep4later/power_LTFH.JPG")
+```
+
+.footnote[Hujoel, M.L.A., Gazal, S., Loh, P. et al. Liability threshold modeling of case–control status and family history of disease increases association power. Nat Genet 52, 541–547 (2020).]
+
+---
+
+### Using LT-FH to increase power (for prediction)
+
+```{r, out.width="90%"}
+knitr::include_graphics("../keep4later/lasso_LTFH.JPG")
+```
+
+.footnote[I could use LT-FH++ (multi) to improve further in future work with Emil.]
+
+---
+
+### Validating inference from LDpred2-auto
+
+```{r, out.width="82%"}
+knitr::include_graphics("../keep4later/heritability.JPG")
+```
+
+.footnote[Clara gets some similar results with 500+ external sumstats.]
+
+---
+
+### Formula for upper prediction
+
+```{r, out.width="75%", fig.align='right'}
+knitr::include_graphics("../keep4later/upper-formula.JPG")
+```
+
+<span class="footnote"> $r^2 = \frac{h^2}{1 + (1 - r^2) \frac{M p}{N h^2}}$ </span>
 
 ---
 
