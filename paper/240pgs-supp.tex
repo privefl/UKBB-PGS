@@ -97,13 +97,13 @@ The square of this slope is provided above each plot, which we report as the rel
 
 \begin{figure}[htbp]
 	\centerline{\includegraphics[width=0.85\textwidth]{ratio-dist-restricted}}
-	\caption{Relative predictive performance with UK (reported in figure 1) compared to PC distance with UK. PCA is computed using individuals from test 1 (Table 1), and PC distances are computed using Euclidean distance between geometric medians of the first 32 PC scores of each ancestry group (shown in figure \ref{fig:PCs-restricted}). Relative performance values are the ones reported in figure 1 of the main text.}
+	\caption{Relative predictive performance with UK (ratio of variance explained in one group compared to the one in the UK group) compared to PC distance with UK. PCA is computed using individuals from test 1 (Table 1), and PC distances are computed using Euclidean distance between geometric medians of the first 32 PC scores of each ancestry group (shown in figure \ref{fig:PCs-restricted}). Relative performance values are the ones reported in figure 2 of the main text.}
 	\label{fig:ratio-dist2}
 \end{figure}
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=0.95\textwidth]{PC-scores-restricted}}
-\caption{PC scores 19 to 40 when PCA is computed using individuals from test 1 (Table 1). First 32 PCs visually capture some population structure.}
+\caption{PC scores 19 to 40 when PCA is computed using individuals from test 1 (Table 1). PCs 19 to 32 visually capture some population structure, so we use first 32 PCs when computing the PC distances.}
 \label{fig:PCs-restricted}	
 \end{figure}
 
@@ -126,7 +126,7 @@ The square of this slope is provided above each plot, which we report as the rel
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.9\textwidth]{top3_log_lipoA}
-	\caption{Effect sizes and variance explained for the top three variants from figure \ref{fig:zoom-lipoA}.}
+	\caption{Effect sizes and variance explained for the top three variants from figure 4.}
 	\label{fig:top3-lipoA}
 \end{figure}
 
