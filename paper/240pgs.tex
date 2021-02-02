@@ -82,9 +82,10 @@
 
 \noindent Contact: \url{florian.prive.21@gmail.com}
 
-\vspace*{4em}
+\clearpage
 
 \abstract{
+	The low portability of polygenic scores (PGS) across global populations is a major concern that must be addressed before PGS can be applied in the clinic. Indeed, prediction has been shown to decay as a function of genetic distance between training and test cohorts. However, such cohorts differ not only in their genetic distance but also in their geographical distance and their data collection and assaying, conflating multiple factors. In this study, we examine the extent to which PGS are transferable between ancestries by deriving polygenic scores on 240 curated traits from the UK Biobank data and applying them in eight ancestry groups from the same cohort, thus limiting potential confounding from using multiple cohorts. We define these ancestry groups at a high-resolution country-specific level, based on a simple, robust and effective method that we introduce here. We then apply two different predictive methods to derive polygenic scores for all 240 phenotypes, and show a systematic and dramatic reduction in portability of PGS trained in the inferred ancestral UK population and applied to the inferred ancestral Polish - Italian - Iranian - Indian - Chinese - Caribbean - Nigerian populations, respectively. These analyses, performed at a finer scale than the usual continental scale, demonstrate that prediction already drops off within European ancestries and reduces globally in proportion to PC distance, even when all individuals reside in the same country and are genotyped and phenotyped as part of the same cohort. Our study provides high-resolution insights into the PGS portability problem and offers clues towards possible solutions.
 }
 
 \clearpage
@@ -191,19 +192,19 @@ As a follow-up analysis to ensure that this drop in performance in other ancestr
 These results are also very similar when using LDpred2-auto instead of penalized regression for training predictive models for all phenotypes (Figure \ref{fig:ldpred2-ancestry}).
 A few phenotypes deviate from this global trend, e.g.\ prediction of bilirubin concentration ranges between 0.537 and 0.619 (partial-$r$) for all ancestries except for China for which it is 0.415 (95\% CI: 0.374 - 0.453).
 In contrast, for e.g.\ hair and skin color, predictive performance decrease quickly and prediction for both China and Nigeria is not significantly different from 0, while of 0.420 (95\% CI: 0.409 - 0.432) for ``darker hair'' (Figure \ref{fig:lasso-ancestry}).
-Overall, relative predictive performance decreases approximately linearly with PC distance to UK (Figure \ref{fig:ratio-dist}). A similar pattern is observed when computing PCA based on more balanced ancestry groups, as recommended in \cite{prive2020efficient} (Figure \ref{fig:ratio-dist2}).
+Overall, relative predictive performance decreases approximately linearly with PC distance to the UK (Figure \ref{fig:ratio-dist}). A similar pattern is observed when computing PCA based on more balanced ancestry groups, as recommended in \cite{prive2020efficient} (Figure \ref{fig:ratio-dist2}).
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.9\textwidth]{lasso-ancestry}
-\caption{Partial correlation (and 95\% CI) in the UK test set versus in a test set from another ancestry group (each facet). Each point represents a phenotype and training has been performed with penalized regression on UK individuals (training 1 in table \ref{tab:size-sets}) and HapMap3 variants. The slope (in blue) is computed using Deming regression accounting for standard errors in both x and y.
-This slope (squared) is provided in the title, which we report as the relative predictive performance compared to testing in UK.}
+\caption{Partial correlation (and 95\% CI) in the UK test set versus in a test set from another ancestry group (each panel). Each point represents a phenotype and training has been performed with penalized regression on UK individuals (training 1 in table \ref{tab:size-sets}) and HapMap3 variants. The slope (in blue) is computed using Deming regression accounting for standard errors in both x and y.
+The square of this slope is provided above each plot, which we report as the relative predictive performance compared to testing in UK.}
 \label{fig:lasso-ancestry}
 \end{figure}
 
 \begin{figure}[htb]
 	\centerline{\includegraphics[width=0.8\textwidth]{ratio-dist}}
-	\caption{Relative predictive performance with UK compared to PC distance with UK. PC distances are computed using Euclidean distance between geometric medians of the first 16 reported PC scores (Field 22009) of each ancestry group. Relative performance values are the ones reported in figure \ref{fig:lasso-ancestry}.}
+	\caption{Relative predictive performance with UK (reported in figure \ref{fig:lasso-ancestry}) compared to PC distance with UK. PC distances are computed using Euclidean distance between geometric medians of the first 16 reported PC scores (Field 22009) of each ancestry group. Relative performance values are the ones reported in figure \ref{fig:lasso-ancestry}.}
 	\label{fig:ratio-dist}
 \end{figure}
 
@@ -219,7 +220,7 @@ Finally, for apoB, effects from the three top hits, which are not part of HapMap
 
 We then investigate using more than HapMap3 variants for training; we use more than 8M common variants (Methods) and apply LDpred2-auto thanks to p-value thresholding and winner's curse correction (Methods). 
 Except for lipoA for which we get a large improvement in predictive accuracy compared to using HapMap3 variants only, there is no significant improvement for the other seven phenotypes analyzed here (Figure \ref{fig:ldpred2-large}). Remarkably, while the partial correlation for lipoA is about 75\% in the UK test set when using this prioritized set of variants, it is still not different from 0 when applied to the Nigeria group.
-For height and BMI, estimated heritability is reduced when using this set of most significant variants, and all these variants are estimated to be causal, i.e.\ estimate of $p$ is 1 (Table \ref{tab:ldpred2-est-large}). As height and BMI are very polygenic traits ($p$ is estimated to be \textasciitilde2\% and \textasciitilde4\% respectively when using HapMap3 variants), contribution from less significant causal variants is missed due to this thresholding selection.
+For height and BMI, estimated SNP heritability is reduced when using this set of most significant variants, and all these variants are estimated to be causal, i.e.\ estimate of $p$ is 1 (Table \ref{tab:ldpred2-est-large}). As height and BMI are very polygenic traits ($p$ is estimated to be \textasciitilde2\% and \textasciitilde4\% respectively when using HapMap3 variants), contribution from less significant causal variants is missed due to this thresholding selection.
 For the three binary phenotypes, breast cancer (phecode: 174.1), prostate cancer (185) and coronary artery disease (411.4), while heritability estimates are larger when using this set of prioritized variants (Table \ref{tab:ldpred2-est-large}), predictive accuracy does not improve compared to when using HapMap3 variants (Figure \ref{fig:ldpred2-large}).
 
 \subsection*{Training with a mixture of ancestries}
@@ -314,7 +315,7 @@ There are 586,534 such high-quality variants, which we read from the BGEN impute
 
 \subsection*{Additional data: 8M+ variants}
 
-We also design a larger set of imputed variants to compare against using only HapMap3 variants for prediction. We first restrict to UKBB variant with MAF > 0.01 and INFO > 0.6.
+We also design a larger set of imputed variants to compare against using only HapMap3 variants for prediction. We first restrict to UKBB variants with MAF > 0.01 and INFO > 0.6.
 We then compile frequencies and imputation INFO scores from other datasets, iPSYCH and summary statistics for breast cancer, prostate cancer, coronary artery disease and type-1 diabetes \cite[]{bybjerg2020ipsych2015,michailidou2017association,schumacher2018association,nikpay2015comprehensive,censin2017childhood}. 
 We restrict to variants with a mean INFO > 0.5 in these other datasets, and also computed the median frequency.
 To exclude potential mismappings in the genotyped data \cite[]{kunert2020allele} that might have propagated to imputed data, we compare frequencies in this data to the ones in UKBB (Figure \ref{fig:compare-MAF}).
