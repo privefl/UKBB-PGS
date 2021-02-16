@@ -258,9 +258,17 @@ The square of this slope is provided above each plot, which we report as the rel
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}[htbp]
+	\centerline{\includegraphics[width=0.9\textwidth]{jews-ref}}
+	\caption{First 24 PC scores for the PCA computed in the reference dataset composed of several Jewish and non-Jewish individuals  \cite[]{behar2013no}. Orange triangles represent the Ashkenazi Jews, pink points the Italian and Sephardi Jews, green points the Maghrebian Jews, and blue points the Iranian and Iraqi Jews.}
+	\label{fig:jew-ref}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}[htbp]
 	\centerline{\includegraphics[width=0.9\textwidth]{qc-plot-new-formula}}
 	\caption{Comparison of the standard deviations (SD) computed from both genotypes and summary statistics for the 1000 most associated variants with bilirubin concentration. A) uses the previous formula $\text{sd}(\boldsymbol{G_j}) \approx \frac{\text{sd}(\boldsymbol{y})}{\sqrt{n ~ \text{se}(\hat{\gamma}_j)^2}}$ proposed in \cite{prive2020ldpred2} while B) uses the updated formula $\text{sd}(\boldsymbol{G_j}) \approx \frac{\text{sd}(\boldsymbol{y})}{\sqrt{n ~ \text{se}(\hat{\gamma}_j)^2 + \hat{\gamma}_j^2}}$ proposed here, which does one less approximation.
-	The slope slightly larger than 1 can be explained by $\text{sd}(\boldsymbol{y}) > \text{sd}(\boldsymbol{\breve{y}})$.}
+		The slope slightly larger than 1 can be explained by $\text{sd}(\boldsymbol{y}) > \text{sd}(\boldsymbol{\breve{y}})$.}
 	\label{fig:new-formula}
 \end{figure}
 
