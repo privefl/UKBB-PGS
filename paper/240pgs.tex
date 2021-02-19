@@ -114,9 +114,11 @@ This allows to circumvent potential confounding bias that might arise in compara
 To investigate portability of PGS to other ancestries, we must first define groups of different ancestries from the data.
 Principal Component Analysis (PCA) has been widely used to correct for population structure in association studies and has been shown to mirror geography in Europe \cite[]{price2006principal,novembre2008genes}.
 Due to its popularity, many methods have been developed for efficiently performing PCA \cite[]{abraham2017flashpca2,prive2017efficient,prive2020efficient} as well as appropriately projecting samples onto a reference PCA space \cite[]{zhang2020fast,prive2020efficient}, making it possible to perform these analyses for ever increasing datasets.
-Naturally, PCA has also been used for ancestry inference \cite[]{chen2013improved}. 
+Naturally, PCA has also been used for ancestry inference \cite[]{chen2013improved,byun2017ancestry,zhang2020fast}. 
 However, among all studies where we have seen PCA used for ancestry inference, there does not seem to be a consensus on what is the most appropriate method for inferring ancestry using PCA.
 For example, there are divergences on which distance metric to use and the number of PCs to use to compute these distances.
+The ancestry of an individual can also be inferred based on other approaches, including the ADMIXTURE model, its various extensions, and haplotype-based methods \cite[]{alexander2009fast,lawson2012inference,raj2014faststructure,frichot2014fast,haller2017mixfit,cheng2017fast,jin2019graf,cabreros2019likelihood}. 
+However, we focus on PCA here because it is very fast.
 
 In this study, we examine the extent to which PGS are transferable between ancestries by deriving {\NBTRAIT} polygenic scores from the UK biobank data and applying them in nine ancestry groups from the same cohort. 
 We first propose simple, robust and effective methods for global ancestry inference and grouping from PCA of genetic data, and use them to define nine ancestry groups in the UK Biobank data.
