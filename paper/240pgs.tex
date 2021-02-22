@@ -86,7 +86,7 @@
 \clearpage
 
 \abstract{
-	The low portability of polygenic scores (PGS) across global populations is a major concern that must be addressed before PGS can be used for everyone in the clinic. Indeed, prediction accuracy has been shown to decay as a function of the genetic distance between the training and test cohorts. However, such cohorts differ not only in their genetic distance but also in their geographical distance and their data collection and assaying, conflating multiple factors. In this study, we examine the extent to which PGS are transferable between ancestries by deriving polygenic scores for {\NBTRAIT} curated traits from the UK Biobank data and applying them in nine ancestry groups from the same cohort. By restricting both training and testing to the UK Biobank data, we reduce the risk of environmental and genotyping confounding from using different cohorts. We define the nine ancestry groups at a high-resolution, country-specific level, based on a simple, robust and effective method that we introduce here. We then apply two different predictive methods to derive polygenic scores for all {\NBTRAIT} phenotypes, and show a systematic and dramatic reduction in portability of PGS trained in the inferred ancestral UK population and applied to the inferred ancestral Polish - Italian - Iranian - Indian - Chinese - Caribbean - Nigerian - Ashkenazi Jew populations, respectively. These analyses, performed at a finer scale than the usual continental scale, demonstrate that prediction already drops off within European ancestries and reduces globally in proportion to PC distance, even when all individuals reside in the same country and are genotyped and phenotyped as part of the same cohort. Our study provides high-resolution and robust insights into the PGS portability problem.
+	The low portability of polygenic scores (PGS) across global populations is a major concern that must be addressed before PGS can be used for everyone in the clinic. Indeed, prediction accuracy has been shown to decay as a function of the genetic distance between the training and test cohorts. However, such cohorts differ not only in their genetic distance but also in their geographical distance and their data collection and assaying, conflating multiple factors. In this study, we examine the extent to which PGS are transferable between ancestries by deriving polygenic scores for {\NBTRAIT} curated traits from the UK Biobank data and applying them in nine ancestry groups from the same cohort. By restricting both training and testing to the UK Biobank data, we reduce the risk of environmental and genotyping confounding from using different cohorts. We define the nine ancestry groups at a high-resolution, country-specific level, based on a simple, robust and effective method that we introduce here. We then apply two different predictive methods to derive polygenic scores for all {\NBTRAIT} phenotypes, and show a systematic and dramatic reduction in portability of PGS trained in the inferred ancestral UK population and applied to the inferred ancestral Polish - Italian - Iranian - Indian - Chinese - Caribbean - Nigerian - Ashkenazi populations, respectively. These analyses, performed at a finer scale than the usual continental scale, demonstrate that prediction already drops off within European ancestries and reduces globally in proportion to PC distance, even when all individuals reside in the same country and are genotyped and phenotyped as part of the same cohort. Our study provides high-resolution and robust insights into the PGS portability problem.
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -139,7 +139,7 @@ We also explore the performance of PGS trained using a mixture of European and n
 
 Here, we use the UK Biobank (UKBB) data only \cite[]{bycroft2018uk}.
 We first infer nine ancestry groups in the UKBB.
-Then we use 391,124 individuals of UK ancestry to train polygenic scores (PGS) for {\NBTRAIT} different phenotypes (about half being diseases) based on UKBB individual-level genotypes and phenotypes, and assess portability of these PGS in the remaining individuals of diverse ancestries (Table \ref{tab:size-sets}).
+Then we use 391,124 individuals of UK ancestry to train polygenic scores (PGS) for {\NBTRAIT} phenotypes (about half being diseases, see categories in figure \ref{fig:pie}) based on UKBB individual-level genotypes and phenotypes, and assess portability of these PGS in the remaining individuals of diverse ancestries (Table \ref{tab:size-sets}).
 As additional analyses, we also  investigate using more variants than the HapMap3 variants used in the main analyses, and train models using a mixture of multiple ancestries.
 To derive PGS in this study, we use two different methods, penalized regression and LDpred2-auto, and finally compare them.
 
@@ -147,7 +147,7 @@ To derive PGS in this study, we use two different methods, penalized regression 
 	\centering
 	\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|}
 		\hline
-		Set & UK1 & UK2 & UK3 & Poland & Italy & Iran & India & China & Caribbean & Nigeria & Ashkenazi Jew \\
+		Set & UK1 & UK2 & UK3 & Poland & Italy & Iran & India & China & Caribbean & Nigeria & Ashkenazi \\
 		\hline
 		Training 1 & 367,063 & 24,061 &  &  &  &  &  &  &  &  &  \\
 		Test 1 &  &  & 20,000 & 4136 & 6660 & 1200 & 6331 & 1810 & 2484 & 3924 & 1709 \\
@@ -172,7 +172,7 @@ We propose two solutions to do so, either relying on projection of PCs to refere
 We show that these solutions are simple, robust and effective methods for inferring global ancestry and for grouping genetically homogeneous individuals.
 
 Here, we first use the second solution presented in the Supplementary Note, relying on PCs computed within the UK Biobank and individual information on the countries of birth, for inferring the first eight ancestry groups presented in table \ref{tab:size-sets}.
-Then, for inferring the ``Ashkenazi Jew'' ancestry group, we use the first solution, projecting UKBB individuals onto the PCA space of a reference dataset composed of many Jewish and non-Jewish individuals \cite[]{behar2013no}. 
+Then, for inferring the ``Ashkenazi Jewish'' ancestry group, we use the first solution, projecting UKBB individuals onto the PCA space of a reference dataset composed of many Jewish and non-Jewish individuals \cite[]{behar2013no}. 
 We identify a ninth group of 1709 unrelated individuals, which is entirely disjunct from the other eight groups previously defined (Methods).
 The nine ancestry groups inferred here are represented in the UKBB PCA space in figure \ref{fig:grouping2}.
 
@@ -183,7 +183,7 @@ The nine ancestry groups inferred here are represented in the UKBB PCA space in 
 
 \subsection*{Portability of polygenic scores to other ancestries}
 
-Figure \ref{fig:lasso-ancestry} presents the results when fitting penalized regression using a training set composed of UK individuals only and testing in nine different ancestry groups. Averaged over {\NBTRAIT} phenotypes, compared to prediction performance in individuals of UK ancestry, relative predictive ability in terms of partial-$r^2$ (Methods) is 93.8\% in Poland, 85.6\% in Italy, 72.2\% in Iran, 64.7\% in India, 48.6\% in China, 25.2\% in the Caribbean, 18\% in Nigeria, and 85.7\% for the Ashkenazi Jews.
+Figure \ref{fig:lasso-ancestry} presents the results when fitting penalized regression using a training set composed of UK individuals only and testing in nine different ancestry groups. Averaged over {\NBTRAIT} phenotypes, compared to prediction performance in individuals of UK ancestry, relative predictive ability in terms of partial-$r^2$ (Methods) is 93.8\% in Poland, 85.6\% in Italy, 72.2\% in Iran, 64.7\% in India, 48.6\% in China, 25.2\% in the Caribbean, 18\% in Nigeria, and 85.7\% for the Ashkenazi group.
 As a follow-up analysis to ensure that this drop in performance in other ancestries is not due to imputation, we perform the same analysis for 83 of the continuous phenotypes using high-quality genotyped variants only (Methods) instead of the (mostly imputed) HapMap3 variants; results are highly consistent (Figure \ref{fig:lasso-ancestry-geno}).
 These results are also very similar when using LDpred2-auto instead of penalized regression for training predictive models for all phenotypes (Figure \ref{fig:ldpred2-ancestry}).
 A few phenotypes deviate from this global trend, e.g.\ prediction of bilirubin concentration ranges between 0.537 and 0.619 (partial-$r$) for all ancestries except for China, for which it is 0.415 (95\% CI: 0.374 - 0.453, see Methods).
@@ -294,14 +294,14 @@ Therefore, the polygenic scores derived here could be combined with polygenic sc
 We derive polygenic scores for {\NBTRAIT} phenotypes using the UK Biobank (UKBB) data only \cite[]{bycroft2018uk}.
 We read dosages data from UKBB BGEN files using function \texttt{snp\_readBGEN()} of R package bigsnpr \cite[]{prive2017efficient}.
 We divide the UKBB data in eight ancestry groups (Supplementary Note), and restrict to 437,669 individuals without second-degree relatives (KING kinship $< 2^{-3.5}$).
-We also define a ninth ancestry group composed of 1709 unrelated Ashkenazi Jews (see Methods below).
+We also define a ninth ancestry group composed of 1709 unrelated Ashkenazi (see Methods below).
 For the variants, we use 1,040,096 HapMap3 variants used in the LD reference provided in \cite{prive2020ldpred2} and that were also present in the iPSYCH2015 data \cite[]{bybjerg2020ipsych2015} with imputation INFO score larger than 0.6.
 Even though the iPSYCH data is not used in this study, we plan to use the PGS derived here for iPSYCH in the future.
 
 To define phenotypes, we first map ICD10 and ICD9 codes (UKBB fields 40001, 40002, 40006, 40013, 41202, 41270 and 41271) to phecodes using R package PheWAS \cite[]{carroll2014r,wu2019mapping}.
 We filter down to 142 phecodes of interest that showed potential genetic signals in the PheWeb results from the SAIGE UKBB GWAS \cite[]{zhou2018efficiently,taliun2020exploring}. There are 106 phecodes with sufficient power for penalized regression to include at least a few variants in the predictive models.
 We then look closely at all 2408 UKBB fields that we have access to and filter down to defining 111 continuous and 28 binary phenotypes based on manual curation.
-
+Description of the {\NBTRAIT} phenotypes used in this study can be downloaded at \url{https://github.com/privefl/UKBB-PGS/blob/main/phenotype-description.xlsx}.
 
 \subsection*{Additional data: genotyped data}
 
@@ -319,14 +319,14 @@ We define the threshold on these smoothed differences based on visual inspection
 This is the same method we have previously applied to PC loadings to detect long-range LD regions when computing PCA \cite[]{prive2017efficient,prive2020efficient}. 
 This results in a set of 8,238,692 variants.
 
-\subsection*{Ashkenazi Jew ancestry group}
+\subsection*{Ashkenazi Jewish ancestry group}
 
-First, we refer the reader to the Supplementary Note on ancestry grouping for the details on how we define the other eight ancestry groups, and also to better understand how we infer the ``Ashkenazi Jew'' ancestry group.
+First, we refer the reader to the Supplementary Note on ancestry grouping for the details on how we define the other eight ancestry groups, and also to better understand how we infer the ``Ashkenazi Jewish'' ancestry group.
 Briefly, we project the UKBB data onto the PCA space of a reference dataset composed of many Jewish and non-Jewish individuals \cite[]{behar2013no}. 
 We then compute the robust center (geometric median) of the Ashkenazi Jewish reference individuals, and compute the PC distance to this center for all projected UKBB individuals.
-Based on visual inspection of the histogram of these distances and on the fact that the closest non-Ashkenazi Jewish reference individual, an Italian Jew (Figure \ref{fig:jew-ref}), is at distance 12.7, we use a threshold of 12.5 under which to assign to the ``Ashkenazi Jew'' ancestry group.
+Based on visual inspection of the histogram of these distances and on the fact that the closest non-Ashkenazi Jewish reference individual, an Italian Jew (Figure \ref{fig:jew-ref}), is at distance 12.7, we use a threshold of 12.5 under which to assign to the ``Ashkenazi Jewish'' ancestry group.
 1709 unrelated UKBB individuals are then assigned to this group.
-Note that, within the already defined eight ancestry groups, the closest individual to this new group belongs to the Italian group, and is at distance 17.3, therefore this new ``Ashkenazi Jew'' group is not overlapping with any of the other groups defined previously.
+Note that, within the already defined eight ancestry groups, the closest individual to this new group belongs to the Italian group, and is at distance 17.3, therefore this new Ashkenazi group is not overlapping with any of the other groups defined previously.
 
 
 \subsection*{Penalized regression}
@@ -400,7 +400,7 @@ We implement this in function \texttt{pcor} of R package bigstatsr and use it he
 %\clearpage
 %\vspace*{5em}
 
-\section*{Software and code availability}
+\section*{Code and results availability}
 
 All code used for this paper is available at \url{https://github.com/privefl/UKBB-PGS/tree/master/code}. Links to the code used for the two supplementary notes are provided there.
 We have extensively used R packages bigstatsr and bigsnpr \cite[]{prive2017efficient} for analyzing large genetic data, packages from the future framework \cite[]{bengtsson2020unifying} for easy scheduling and parallelization of analyses on the HPC cluster, and packages from the tidyverse suite \cite[]{wickham2019welcome} for shaping and visualizing results.
@@ -409,6 +409,10 @@ We have also used R package deming for fitting Deming regressions.
 R packages bigstatsr and bigsnpr can be installed from GitHub and CRAN.
 A tutorial on fitting penalized regressions with R package bigstatsr is available at \url{https://privefl.github.io/bigstatsr/articles/penalized-regressions.html}.
 A tutorial on running LDpred2 with R package bigsnpr is available at \url{https://privefl.github.io/bigsnpr/articles/LDpred2.html}.
+
+PC centers of the individuals from the nine ancestry groups derived here can be downloaded at \url{https://github.com/privefl/UKBB-PGS/blob/main/pop_centers.csv}.
+Description of the {\NBTRAIT} phenotypes used in this study can be downloaded at \url{https://github.com/privefl/UKBB-PGS/blob/main/phenotype-description.xlsx}.
+Effect sizes for 215 polygenic scores derived in this study can be downloaded at \url{https://figshare.com/articles/dataset/Effect_sizes_for_215_polygenic_scores/14074760}.
 
 \section*{Acknowledgements}
 
