@@ -70,6 +70,8 @@ length(files <- grep("/(?!LTFH_).*$", perl = TRUE, value = TRUE,
 library(dplyr)
 res <- purrr::map_dfr(files, function(file) {
   readRDS(file) %>%
+    left_join(readRDS(sub("assess-pred/", "assess-pred-AJ/", file))) %>%
+    rename("Ashkenazi Jew" = "pcor") %>%
     mutate(pheno = sub("\\.rds$", "", basename(file))) %>%
     arrange(validation_loss) %>%
     select(-validation_loss) %>%
@@ -87,7 +89,7 @@ with(res, table(power_adaptive, power_scale))
 library(ggplot2)
 
 POP <- c("United Kingdom", "Poland", "Italy", "Iran",
-         "India", "China", "Caribbean", "Nigeria")
+         "India", "China", "Caribbean", "Nigeria", "Ashkenazi Jew")
 
 OUTLIERS <- c("less_tanned", "darker_hair", "darker_skin", "red_hair",
               "log_bilirubin", "log_lipoA")
@@ -140,14 +142,22 @@ bigstatsr::plot_grid(plotlist = lapply(POP[-1], function(pop) {
 # China: 48.6%
 # Caribbean: 25.2%
 # Nigeria: 18%
+# Ashkenazi Jew: 85.7%
 # ggsave("figures/lasso-ancestry.pdf", width = 12, height = 7)
 
 library(bigsnpr)
 ukbb <- snp_attach("data/UKBB_HM3.rds")
 PC <- dplyr::select(ukbb$fam, PC1:PC16)
 centers <- bigutilsr::geometric_median(PC, by_grp = ukbb$fam$group)
-dist_to_UK <- as.matrix(dist(centers))[, "United Kingdom"]
+center_AJ <- bigutilsr::geometric_median(
+  dplyr::select(snp_attach("data/UKBB_HM3_AJ.rds")$fam, PC1:PC16))
+all_centers <- rbind(centers, "Ashkenazi Jew" = center_AJ)
+all_centers %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column("Ancestry") %>%
+  bigreadr::fwrite2("pop_centers.csv")
 
+dist_to_UK <- as.matrix(dist(all_centers))[, "United Kingdom"]
 qplot(dist_to_UK[names(slopes)], unlist(slopes), size = I(2)) +
   theme_bigstatsr() +
   geom_smooth(method = "lm") +

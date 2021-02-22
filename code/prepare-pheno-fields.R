@@ -161,7 +161,7 @@ SUMMARY(y + 1)
 y[y > 15] <- NA
 saveRDS(y, "data/ukbb-quant-pheno/water_intake.rds")
 
-# Alcohol intake frequency. (1558)
+# Alcohol intake frequency (1558)
 y <- fread2(csv, select = "1558-0.0")[[1]]
 y[y < 0] <- NA
 SUMMARY(y)
@@ -623,7 +623,7 @@ y[log(y) < -6 | log(y) > -2] <- NA
 saveRDS(log(y), "data/ukbb-quant-pheno/log_HLR_reticulocyte.rds")
 
 
-#### Urine biochemistry ####
+#### Urine count ####
 
 # Microalbumin in urine (30500)
 y <- fread2(csv, select = "30500-0.0")[[1]]

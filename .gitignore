@@ -13,3 +13,4 @@
 *.tex.bak
 figures/
 !docs/figures/
+PGS-effects.csv.gz
