@@ -24,6 +24,7 @@ furrr::future_walk(all_mod_todo, function(.) {
 
   library(dplyr)
 
+  # this acf on p may not be a very good idea..
   all_acf <- sapply(res$ldpred2, function(auto) {
     acf(tail(auto$path_p_est, 500), lag.max = 50, plot = FALSE)$acf
   })
