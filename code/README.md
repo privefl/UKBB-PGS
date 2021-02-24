@@ -4,11 +4,13 @@
 
 1. `prepare-data`: Prepare covariates + ancestry groups + HapMap3 data
 
+2. `prepare-ashkenazi-jews`: Prepare the ninth ancestry group + figures 1 and S20
+
 2. `prepare-fields` + `prepare-pheno-fields`: Prepare phenotypes from fields of csv
 
 4. `prepare-phecodes`: Prepare phecodes from ICD data
 
-5. `prepare-genotyped-data` + `prepare-larger-set`: prepare additional data with different sets of variants + figures S19 and S20
+5. `prepare-genotyped-data` + `prepare-larger-set`: prepare additional data with different sets of variants + figures S18 and S19
 
 
 ### Run methods on real data
@@ -26,20 +28,25 @@
 
 ### Visualize results
 
-- `assess-pred`: Figures 1 and 2
+- `assess-pred-AJ` + `assess-pred`: Figures 2 and 3
 
-- `assess-pred-geno`: Figure S1
+- `assess-pred-geno`: Figure S2
 
-- `assess-pred-ldpred2`: Figures S2 + S13 to S16
+- `assess-pred-ldpred2`: Figures S3 + S12 to S15
 
-- `recompute-PCA`: Figures S3 and S4
+- `recompute-PCA`: Figures S4 and S5
 
-- `plot-zoom-gwas`: Figures S5 to S10
+- `plot-zoom-gwas`: Figures 4 and S6 to S10
 
-- `assess-pred-ldpred2-large`: Figure S11
+- `assess-pred-ldpred2-large`: Figure 5 and table S1
 
-- `assess-pred-multi`: Figure S12
+- `assess-pred-multi`: Figure S11
 
-- `timings`: Figures S17 and S18
+- `timings`: Figures S16 and S17
 
 - `QC-plot-large-effect`: Figure S21
+
+
+### Export results
+
+- `export-effects`
