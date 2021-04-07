@@ -6,6 +6,7 @@
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -13,7 +14,10 @@
 
 
 
-class: title-slide center middle inverse
+
+background-image: url(figures/NCRR-logos.svg)
+background-size: contain
+class: title-slide center middle
 
 ## High-resolution portability of 245 polygenic scores&lt;br&gt;when derived and applied in the same cohort
 
@@ -176,47 +180,22 @@ class: center middle inverse
 
 class: center middle inverse
 
-# Future work
+## Thank you for joining the session
 
-### (started as part of this project)
+&lt;br/&gt;&lt;br/&gt;
 
----
+Preprint: [bit.ly/preprint-UKBB-PGS](https://doi.org/10.1101/2021.02.05.21251061)
 
-### Using family history (LT-FH) to increase power (for GWAS)
+Presentation: [bit.ly/pres-UKBB-PGS](https://privefl.github.io/UKBB-PGS/APRS2021.html)
 
-&lt;img src="figures/power_LTFH.JPG" width="58%" style="display: block; margin: auto;" /&gt;
+&lt;br/&gt;
 
-.footnote[Hujoel, M.L.A., Gazal, S., Loh, P. et al. Liability threshold modeling of case–control status and family history of disease increases association power. Nat Genet 52, 541–547 (2020).]
+<i class="fab  fa-twitter "></i> [privefl](https://twitter.com/privefl) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <i class="fab  fa-github "></i> [privefl](https://github.com/privefl) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <i class="fab  fa-stack-overflow "></i> [F. Privé](https://stackoverflow.com/users/6103040/f-priv%c3%a9)
 
----
 
-### Using LT-FH to increase power (for prediction)
+.footnote[Slides created with R package [**xaringan**](https://github.com/yihui/xaringan)]
 
-&lt;img src="figures/lasso_LTFH.JPG" width="90%" style="display: block; margin: auto;" /&gt;
 
-.footnote[I could use LT-FH++ (multi) to improve further in future work with Emil.]
-
----
-
-### Validating inference from LDpred2-auto
-
-&lt;img src="figures/heritability.JPG" width="82%" style="display: block; margin: auto;" /&gt;
-
-.footnote[Clara gets some similar results with 500+ external sumstats.]
-
----
-
-### Formula for upper prediction
-
-&lt;img src="figures/upper-formula.JPG" width="75%" style="display: block; margin: auto 0 auto auto;" /&gt;
-
-&lt;span class="footnote"&gt; `\(r^2 = \frac{h^2}{1 + (1 - r^2) \frac{M p}{N h^2}}\)` &lt;/span&gt;
-
----
-
-class: center middle inverse
-
-# That's all folks!
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

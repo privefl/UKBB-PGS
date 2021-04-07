@@ -15,7 +15,10 @@ options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', dev = "svg")
 ```
 
-class: title-slide center middle inverse
+
+background-image: url(figures/NCRR-logos.svg)
+background-size: contain
+class: title-slide center middle
 
 ## High-resolution portability of 245 polygenic scores<br>when derived and applied in the same cohort
 
@@ -196,52 +199,19 @@ knitr::include_graphics("figures/PLR-ldpred2.JPG")
 
 class: center middle inverse
 
-# Future work
+## Thank you for joining the session
 
-### (started as part of this project)
+<br/><br/>
 
----
+Preprint: [bit.ly/preprint-UKBB-PGS](https://doi.org/10.1101/2021.02.05.21251061)
 
-### Using family history (LT-FH) to increase power (for GWAS)
+Presentation: [bit.ly/pres-UKBB-PGS](https://privefl.github.io/UKBB-PGS/APRS2021.html)
 
-```{r, out.width="58%"}
-knitr::include_graphics("figures/power_LTFH.JPG")
-```
+<br/>
 
-.footnote[Hujoel, M.L.A., Gazal, S., Loh, P. et al. Liability threshold modeling of case–control status and family history of disease increases association power. Nat Genet 52, 541–547 (2020).]
+`r icon::fa("twitter")` [privefl](https://twitter.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("github")` [privefl](https://github.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("stack-overflow")` [F. Privé](https://stackoverflow.com/users/6103040/f-priv%c3%a9)
 
----
 
-### Using LT-FH to increase power (for prediction)
+.footnote[Slides created with R package [**xaringan**](https://github.com/yihui/xaringan)]
 
-```{r, out.width="90%"}
-knitr::include_graphics("figures/lasso_LTFH.JPG")
-```
 
-.footnote[I could use LT-FH++ (multi) to improve further in future work with Emil.]
-
----
-
-### Validating inference from LDpred2-auto
-
-```{r, out.width="82%"}
-knitr::include_graphics("figures/heritability.JPG")
-```
-
-.footnote[Clara gets some similar results with 500+ external sumstats.]
-
----
-
-### Formula for upper prediction
-
-```{r, out.width="75%", fig.align='right'}
-knitr::include_graphics("figures/upper-formula.JPG")
-```
-
-<span class="footnote"> $r^2 = \frac{h^2}{1 + (1 - r^2) \frac{M p}{N h^2}}$ </span>
-
----
-
-class: center middle inverse
-
-# That's all folks!
