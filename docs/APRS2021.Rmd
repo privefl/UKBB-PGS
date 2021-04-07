@@ -187,29 +187,44 @@ knitr::include_graphics("figures/lasso_multi_pcor-1.png")
 
 ---
 
-### Comparing the two methods used
+class: center middle inverse
 
-#### Similar, but LASSO is better when prediction is higher, and inversely
+# Conclusion
 
-```{r, out.width="90%"}
-knitr::include_graphics("figures/PLR-ldpred2.JPG")
-```
+---
+
+## Take-home messages
+
+
+- We provide simple solutions for high-resolution ancestry inference, and use it to define 9 ancestry groups in the UK Biobank  
+
+- We show a dramatic reduction of predictive performance in other ancestries, already within Europe, and increasing with PC distance to the training population
+
+- This predictive reduction is as strong as what was reported in previous studies $^{[1]}$, even though PGS are derived and applied in the same cohort
+
+- Our results are robust because we average over 245 phenotypes, run two different predictive methods and use multiple sets of variants
+
+- Improving ancestry portability is not as straightforward as simply using a different set of variants or a multi-ancestry training
+
+- Bonus: PGS effects for 215 phenotypes are made available 
+
+.footnote[[1] Martin et al., *Nature Genetics* (2019); Duncan et al., *Nature Communications* (2019); Wang et al., *Nature Communications* (2020)]
 
 ---
 
 class: center middle inverse
 
-## Thank you for joining the session
+## Thank you for joining this session
 
 <br/><br/>
 
 Preprint: [bit.ly/preprint-UKBB-PGS](https://doi.org/10.1101/2021.02.05.21251061)
 
-Presentation: [bit.ly/pres-UKBB-PGS](https://privefl.github.io/UKBB-PGS/APRS2021.html)
+Slides: [bit.ly/pres-UKBB-PGS](https://privefl.github.io/UKBB-PGS/APRS2021.html)
 
 <br/>
 
-`r icon::fa("twitter")` [privefl](https://twitter.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("github")` [privefl](https://github.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("stack-overflow")` [F. Privé](https://stackoverflow.com/users/6103040/f-priv%c3%a9)
+`r icon::fa("twitter")` [privefl](https://twitter.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("github")` [privefl](https://github.com/privefl)
 
 
 .footnote[Slides created with R package [**xaringan**](https://github.com/yihui/xaringan)]
