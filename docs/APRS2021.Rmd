@@ -1,0 +1,247 @@
+---
+title: "APRS2021"
+output:
+  xaringan::moon_reader:
+    seal: false
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', dev = "svg")
+```
+
+class: title-slide center middle inverse
+
+## High-resolution portability of 245 polygenic scores<br>when derived and applied in the same cohort
+
+<br>
+
+### APRS 2021
+
+<ins>**Florian Privé**</ins>, Hugues Aschard, Shai Carmi, Lasse Folkersen, Clive Hoggart, Paul F. O’Reilly, Bjarni J. Vilhjálmsson
+
+---
+
+class: center middle inverse
+
+# Introduction
+
+---
+
+### Major strengths of this study using the UK Biobank 
+
+<br>
+
+- A major concern about PGS is their transferability to other ancestries    
+(e.g. bad performances in Africans for PGS trained in Europeans)
+
+--
+
+- UKBB is perfect to provide more detailed evidence of this concern
+
+    - UKBB data contains 450K British, 9K South Asians, 2K East Asians and 7K Africans (including Caribbeans), and other (South and East Europe, Middle East, etc.)
+    
+    - many different phenotypes are available (we use 245)
+    
+    $\Longrightarrow$ high-resolution ancestry analysis, averaged over many traits
+    
+--
+    
+    - individuals all live in the UK and had their genetic and phenotypic information derived **in the same way**
+    
+    $\Longrightarrow$ circumvent potential bias when using independent studies
+
+---
+
+class: center middle inverse
+
+# Methods
+
+---
+
+### Ancestry grouping
+
+- We show that squared Euclidean distances on PCs are proportional to $F_{ST}$
+
+- Then we use these distances and country of birth to define 8 (+1) ancestry groups:
+
+```{r, out.width="85%"}
+knitr::include_graphics("figures/PC-nine-groups.png")
+```
+
+---
+
+### Genetic data
+
+<br>
+
+- 1,040,096 HapMap3 variants (but also secondary analyses with high-quality genotyped variants or a larger set of imputed variants)
+
+- Indidivuals used:
+
+    1. Training based on 391,124 individuals of British ancestry<br>and testing in all 9 ancestry groups (20,000 UK + 28,254 non-UK)
+    
+    2. Training based on 367,063 UK + 24,061 non-UK<br>(391,124 in total $\rightarrow$ same as before)
+
+<br>
+
+```{r, out.width="98%"}
+knitr::include_graphics("figures/table1-2.JPG")
+```
+
+---
+
+### Phenotypic data
+
+- Mapped ICD10 and ICD9 codes to derive 106 phecodes (mostly diseases)
+
+- Used other UKBB fields to also define 111 continuous and 28 binary phenotypes (so, 245 in total)
+
+```{r, out.width="85%"}
+knitr::include_graphics("figures/pheno-categories.png")
+```
+
+---
+
+### Predictive methods
+
+- **Penalized regression** (efficient LASSO, https://doi.org/10.1534/genetics.119.302019) based on *individual-level* training data (genotype dosage matrix + phenotypes)
+
+- **LDpred2-auto** (https://doi.org/10.1093/bioinformatics/btaa1029) on *summary statistics derived from the individual-level* training data (and in-sample LD matrix)
+
+--
+
+<br>
+
+### Predictive accuracy
+
+**Partial correlation** between PGS (x) and phenotype (y), adjusting for covariates (z).
+
+Basically, regress out x and y by z to get x_eps and y_eps, and compute cor(x_eps, y_eps) $\rightarrow$ *signed* measure.
+
+---
+
+class: center middle inverse
+
+# Results
+
+---
+
+### Lasso results in different ancestries
+
+```{r, out.width="95%"}
+knitr::include_graphics("figures/lasso-ancestry-2.png")
+```
+
+.footnote[Percentage in figure title = squared slope (in blue) // same with LDpred2-auto instead of penalized regression or genotyped variants instead of HM3.]
+
+---
+
+### Drop in prediction versus distance
+
+<br>
+
+```{r, out.width="80%"}
+knitr::include_graphics("figures/ratio-dist-2.png")
+```
+
+<!-- <span class="footnote">Recall: $\text{dist}_{PC}^2 \propto F_{ST}$</span> -->
+
+---
+
+### Using more than HapMap3 variants?
+
+#### "Zoomed" GWAS around top HM3 variants for Lipoprotein A 
+
+```{r, out.width="100%"}
+knitr::include_graphics("figures/zoom_log_lipoA.png")
+```
+
+---
+
+### Using more than HapMap3 variants for prediction?
+
+```{r, out.width="85%"}
+knitr::include_graphics("figures/ldpred2-large-1.png")
+```
+
+.footnote[Should try using HM3 + top very high significant?]
+
+---
+
+### (Naively) using multiple ancestries in training
+
+<br> 
+
+```{r, out.width="88%"}
+knitr::include_graphics("figures/lasso_multi_pcor-1.png")
+```
+
+---
+
+### Comparing the two methods used
+
+#### Similar, but LASSO is better when prediction is higher, and inversely
+
+```{r, out.width="90%"}
+knitr::include_graphics("figures/PLR-ldpred2.JPG")
+```
+
+---
+
+class: center middle inverse
+
+# Future work
+
+### (started as part of this project)
+
+---
+
+### Using family history (LT-FH) to increase power (for GWAS)
+
+```{r, out.width="58%"}
+knitr::include_graphics("figures/power_LTFH.JPG")
+```
+
+.footnote[Hujoel, M.L.A., Gazal, S., Loh, P. et al. Liability threshold modeling of case–control status and family history of disease increases association power. Nat Genet 52, 541–547 (2020).]
+
+---
+
+### Using LT-FH to increase power (for prediction)
+
+```{r, out.width="90%"}
+knitr::include_graphics("figures/lasso_LTFH.JPG")
+```
+
+.footnote[I could use LT-FH++ (multi) to improve further in future work with Emil.]
+
+---
+
+### Validating inference from LDpred2-auto
+
+```{r, out.width="82%"}
+knitr::include_graphics("figures/heritability.JPG")
+```
+
+.footnote[Clara gets some similar results with 500+ external sumstats.]
+
+---
+
+### Formula for upper prediction
+
+```{r, out.width="75%", fig.align='right'}
+knitr::include_graphics("figures/upper-formula.JPG")
+```
+
+<span class="footnote"> $r^2 = \frac{h^2}{1 + (1 - r^2) \frac{M p}{N h^2}}$ </span>
+
+---
+
+class: center middle inverse
+
+# That's all folks!
