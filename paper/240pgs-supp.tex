@@ -86,10 +86,17 @@
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.9\textwidth]{lasso-ancestry-geno}
+	\includegraphics[width=0.85\textwidth]{lasso-ancestry-geno}
 	\caption{Partial correlation (and 95\% CI) in the UK test set versus in a test set from another ancestry group. Each point represents a phenotype (only 83 of the continuous phenotypes here) and training has been performed with penalized regression on UK individuals (training 1 in table 1) and \textbf{genotyped} variants. The slope (in blue) is computed using Deming regression accounting for standard errors in both x and y, fixing the intercept at 0.
 	The square of this slope is provided above each plot, which we report as the relative predictive performance compared to testing in UK.}
 	\label{fig:lasso-ancestry-geno}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.85\textwidth]{lasso-ancestry-geno-norel3}
+	\caption{Results from identical analyses as in figure \ref{fig:lasso-ancestry-geno} except that we also remove third-degree relatives in the UK Biobank data we use (instead of second-degree and closer before).}
+	\label{fig:lasso-ancestry-geno-norel3}
 \end{figure}
 
 \begin{figure}[h]
@@ -188,7 +195,7 @@ The square of this slope is provided above each plot, which we report as the rel
 		log\_lipoA & HM3 & 0.34 [0.336-0.345] & 0.000229 [0.000192-0.000268] \\
 		\hline
 	\end{tabular}
-	\caption{Estimates of SNP heritability $h^2$ and proportion of causal variants $p$ from LDpred2-auto, when using either 1,040,096 HapMap3 variants or when prioritizing 1M variants out of 8M+ common variants, for eight phenotypes. Quantiles of all estimates are also reported. \label{tab:ldpred2-est-large}}
+	\caption{Estimates of SNP heritability $h^2$ and proportion of causal variants $p$ from LDpred2-auto, when using either 1,040,096 HapMap3 variants or when prioritizing 1M variants out of 8M+ common variants, for eight phenotypes. Quantiles of all estimates are also reported. Phecode 174.1: breast cancer; 185: prostate cancer; 411.4: coronary artery disease. \label{tab:ldpred2-est-large}}
 \end{table}
 
 \FloatBarrier
@@ -197,8 +204,8 @@ The square of this slope is provided above each plot, which we report as the rel
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.9\textwidth]{lasso_multi_pcor}
-	\caption{Partial correlation achieved per phenotype (each panel) and per ancestry group (x-axis) when training penalized regressions either with UK individuals only (training 1 in table 1) or when using individuals of multiple ancestries (training 2).}
+	\includegraphics[width=0.95\textwidth]{multi_with_prscsx}
+	\caption{Partial correlation achieved per phenotype (each panel) and per ancestry group (x-axis) when training penalized regressions either with UK individuals only (training 1 in table 1) or when using individuals of multiple ancestries (training 2). We also run PRS-CSx on training 2, grouping the UK, Italy and Poland groups as a common European group, and removing the small Iran group as it does not have a similar ancestry as the four LD references provided for PRS-CSx. PRS-CSx-Eur corresponds to the raw prediction from PRS-CSx corresponding to the European ancestry data, while PRS-CSx-comb-Eur corresponds to the best prediction from the linear combination of the predictions for all four global ancestries on the UK test data. Phecode 174.1: breast cancer; 185: prostate cancer; 250.2: type 2 diabetes; 401: hypertension; 411.4: coronary artery disease.}
 	\label{fig:lasso-multi}
 \end{figure}
 
