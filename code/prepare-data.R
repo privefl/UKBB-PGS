@@ -34,6 +34,7 @@ country2 <- factor(df0$country, levels = POP)
 df0$country <- df0$ancestry <- NULL
 nona <- complete.cases(PC_UKBB) & !is.na(country2)
 all_centers <- bigutilsr::geometric_median(PC_UKBB[nona, ], by_grp = country2[nona])
+# saveRDS(all_centers, "data/eight_centers.rds")
 all_sq_dist <- apply(all_centers, 1, function(center) {
   bigutilsr:::rowSumsSq(sweep(PC_UKBB, 2, center, '-'))
 })

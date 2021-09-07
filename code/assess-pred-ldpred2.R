@@ -5,7 +5,7 @@ ind_test <- which(ukbb$fam$set == "test")
 
 NCORES <- 3
 library(future.batchtools)
-plan(batchtools_slurm(resources = list(
+plan(batchtools_slurm(workers = 300, resources = list(
   t = "12:00:00", c = NCORES, mem = "25g",
   name = basename(rstudioapi::getSourceEditorContext()$path))))
 
@@ -24,15 +24,9 @@ furrr::future_walk(all_mod_todo, function(.) {
 
   library(dplyr)
 
-  # this acf on p may not be a very good idea..
-  all_acf <- sapply(res$ldpred2, function(auto) {
-    acf(tail(auto$path_p_est, 500), lag.max = 50, plot = FALSE)$acf
-  })
-  keep <- apply(abs(all_acf), 2, min) < 0.05
-
   all_h2 <- sapply(res$ldpred2, function(auto) auto$h2_est)
-  h2 <- median(all_h2[keep])
-  keep <- keep & between(all_h2, 0.7 * h2, 1.4 * h2)
+  h2 <- median(all_h2)
+  keep <- between(all_h2, 0.7 * h2, 1.4 * h2)
   all_p <- sapply(res$ldpred2, function(auto) auto$p_est)
   p <- median(all_p[keep])
   keep <- keep & between(all_p, 0.5 * p, 2 * p)
@@ -92,7 +86,6 @@ res <- future_map_dfr(files, function(file) {
 res_pred <- res %>%
   mutate(nb_var_ldpred2 = sapply(beta_sp, function(beta) sum(beta != 0))) %>%
   select(-node, -time, -postp, -beta, -beta_sp) %>%
-  filter(n_keep > 0) %>%
   tidyr::pivot_longer(c(pred, pred_sp), values_to = "pred") %>%
   mutate(sparse = (name == "pred_sp"), name = NULL)
 
@@ -112,8 +105,6 @@ POP <- c("United Kingdom", "Poland", "Italy", "Iran",
 pop <- factor(fam_test$group, levels = POP)
 
 res_pred$pcor <- purrr::pmap(res_pred[c("pred", "pheno")], function(pred, pheno) {
-  # pred <- res_pred$pred[[29]]
-  # pheno <- res_pred$pheno[[29]]
   y <- all_pheno[[print(pheno)]] + 0
   lapply(split(seq_along(pop), pop), function(ind) {
     if (sum(y[ind] != 0, na.rm = TRUE) == 0) return(rep(NA_real_, 3))
@@ -189,13 +180,13 @@ bigstatsr::plot_grid(plotlist = lapply(POP[-1], function(pop) {
     ggtitle(paste0(round(100 * unname(robust_slope^2), 1), "%")) +
     coord_equal()
 }), nrow = 2, scale = 0.95)
-# Poland: 94.1%
+# Poland: 93.9%
 # Italy: 86.1%
-# Iran: 72.7%
-# India: 64.8%
-# China: 49.3%
-# Caribbean: 25.2%
-# Nigeria: 18.4%
+# Iran: 72.1%
+# India: 64.5%
+# China: 48.8%
+# Caribbean: 24.9%
+# Nigeria: 18.2%
 # ggsave("figures/ldpred2-ancestry.pdf", width = 12, height = 7)
 
 
@@ -239,18 +230,6 @@ p1 <- ggplot(filter(res_all, pcor_PLR_3 - pcor_PLR_2 < 0.3),
 filter(res_all, pcor_PLR_3 < pcor_ldpred2_2 | pcor_PLR_2 > pcor_ldpred2_3) %>%
   select(-h2_ldsc, -h2_2, -h2_3, -p_2, -p_3, -power_adaptive, -power_scale) %>%
   print(n = Inf, width = Inf)
-#    nb_var pheno               pop            pcor_PLR_1 pcor_PLR_2 pcor_PLR_3
-#    <int> <chr>               <fct>               <dbl>      <dbl>      <dbl>
-# 1    690 615                 China              0.0650    0.00739    0.122
-# 2     20 hard_falling_asleep United Kingdom    -0.0349   -0.0742     0.00452
-# 3 156534 height              United Kingdom     0.634     0.626      0.643
-# 4  33210 log_bilirubin       Nigeria            0.546     0.523      0.569
-#   n_keep    h2_1      p_1 pcor_ldpred2_1 pcor_ldpred2_2 pcor_ldpred2_3
-#    <int>   <dbl>    <dbl>          <dbl>          <dbl>          <dbl>
-# 1      1 0.00945 0.0938          -0.0509        -0.108         0.00677
-# 2      2 0.0402  0.00244          0.0707         0.0314        0.110
-# 3     26 0.546   0.0226           0.613          0.605         0.622
-# 4     30 0.361   0.000481         0.475          0.449         0.500
 
 ggplot(filter(res_all, pop == "United Kingdom"),
        aes(pcor_PLR_1, pcor_ldpred2_1, color = p_1)) +

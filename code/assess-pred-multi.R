@@ -91,11 +91,13 @@ library(ggplot2)
 
 POP <- c("United Kingdom", "Caribbean")
 
-res %>%
+res2 <- res %>%
   tidyr::pivot_longer(all_of(POP), names_to = "pop", values_to = "pcor") %>%
   tidyr::unnest_wider("pcor", names_sep = "_") %>%
-  mutate(pop = factor(pop, POP), train = factor(train, c("UK", "multi"))) %>%
-  ggplot(aes(pop, pcor_1, fill = train)) +
+  mutate(pop = factor(pop, POP), train = factor(train, c("UK", "multi")))
+# saveRDS(res2, "tmp-data/res_multi.rds")
+
+ggplot(res2, aes(pop, pcor_1, fill = train)) +
   bigstatsr::theme_bigstatsr() +
   geom_col(position = position_dodge(), alpha = 0.5, color = "black") +
   geom_errorbar(aes(ymin = pcor_2, ymax = pcor_3),

@@ -148,3 +148,11 @@ snp_save(ukbb)
 # verif
 qplot(PC3, PC4, data = ukbb$fam)
 qplot(PC7, PC8, data = ukbb$fam)
+
+# write all centers
+center_AJ <- bigutilsr::geometric_median(select(ukbb$fam, PC1:PC16))
+readRDS("data/eight_centers.rds") %>%
+  rbind(Ashkenazi = center_AJ) %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column("Ancestry") %>%
+  bigreadr::fwrite2("pop_centers.csv")

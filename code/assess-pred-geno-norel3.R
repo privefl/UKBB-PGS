@@ -1,13 +1,14 @@
 library(bigsnpr)
-ukbb <- snp_attach("data/UKBB_HM3.rds")
-G <- ukbb$genotypes
-ind_test <- which(ukbb$fam$set == "test")
-fam_test <- ukbb$fam[ind_test, ]
+fam <- snp_attach("data/UKBB_HM3.rds")$fam
+G <- snp_attach("data/UKBB_geno.rds")$genotypes
+rel <- bigreadr::fread2("UKBB/ukb58024_rel_s488264.dat")
+rel_id <- dplyr::filter(rel, ID1 %in% fam$eid)$ID2
+ind_test <- which(fam$set == "test" & !fam$eid %in% rel_id)
+c(sum(fam$set == "test"), length(ind_test))  # 46,545 // 43,631
+fam_test <- fam[ind_test, ]
 ind_csv <- match(fam_test$eid, readRDS("data/csv_eid.rds"))
 covar <- dplyr::select(fam_test, -eid, -group, -set)
-# center <- bigreadr::fread2("UKBB/ukb41181.csv", select = "54-0.0")[ind_csv, 1]
-# table(center, exclude = NULL)
-# covar$center <- as.factor(center)
+
 POP <- c("United Kingdom", "Poland", "Italy", "Iran",
          "India", "China", "Caribbean", "Nigeria")
 pop <- factor(fam_test$group, levels = POP)
@@ -19,18 +20,19 @@ plan(batchtools_slurm(resources = list(
   t = "12:00:00", c = NCORES, mem = "125g",
   name = basename(rstudioapi::getSourceEditorContext()$path))))
 
-bigassertr::assert_dir("assess-pred")
+bigassertr::assert_dir("assess-pred-geno-norel3")
 
-all_mod <- c(list.files("PLR-UKBB",        full.names = TRUE),
-             list.files("PLR-UKBB-binary", full.names = TRUE))
-(all_mod_todo <- all_mod[!file.exists(file.path("assess-pred", basename(all_mod)))])
+all_mod <- list.files("PLR-UKBB-geno-norel3", full.names = TRUE)
+(all_mod_todo <- all_mod[
+  !file.exists(file.path("assess-pred-geno-norel3", basename(all_mod)))])
 
 furrr::future_walk(all_mod_todo, function(res_file) {
 
-  res_file2 <- file.path("assess-pred", basename(res_file))
+  res_file2 <- file.path("assess-pred-geno-norel3", basename(res_file))
   if (!file.exists(res_file2)) {
 
-    dir <- `if`(dirname(res_file) == "PLR-UKBB", "data/ukbb-quant-pheno",
+    dir <- `if`(dirname(res_file) == "PLR-UKBB-geno-norel3",
+                "data/ukbb-quant-pheno",
                 "data/ukbb-binary-pheno")
     pheno <- readRDS(file.path(dir, basename(res_file)))
     y <- pheno[ind_csv]
@@ -65,13 +67,10 @@ furrr::future_walk(all_mod_todo, function(res_file) {
 })
 
 
-length(files <- grep("/(?!LTFH_).*$", perl = TRUE, value = TRUE,
-                     list.files("assess-pred", full.names = TRUE)))
+length(files <- list.files("assess-pred-geno-norel3", full.names = TRUE))
 library(dplyr)
 res <- purrr::map_dfr(files, function(file) {
   readRDS(file) %>%
-    left_join(readRDS(sub("assess-pred/", "assess-pred-AJ/", file))) %>%
-    rename("Ashkenazi Jew" = "pcor") %>%
     mutate(pheno = sub("\\.rds$", "", basename(file))) %>%
     arrange(validation_loss) %>%
     select(-validation_loss) %>%
@@ -79,26 +78,14 @@ res <- purrr::map_dfr(files, function(file) {
 })
 res
 
-with(res, table(power_adaptive, power_scale))
-#               power_scale
-# power_adaptive  0 0.5  1
-#            0   18  97 17
-#            0.5  2  10 25
-#            1.5 11  19 46
-
-library(ggplot2)
-
 POP <- c("United Kingdom", "Poland", "Italy", "Iran",
-         "India", "China", "Caribbean", "Nigeria", "Ashkenazi Jew")
+         "India", "China", "Caribbean", "Nigeria")
 
-OUTLIERS <- c("less_tanned", "darker_hair", "darker_skin", "red_hair",
-              "log_bilirubin", "log_lipoA")
+OUTLIERS <- c("less_tanned", "darker_hair", "darker_skin", "log_bilirubin", "log_lipoA")
 stopifnot(all(OUTLIERS %in% res$pheno))
 
-filter(res, pheno %in% OUTLIERS) %>%
-  select(-(1:3)) %>%
-  filter(pheno != "log_bilirubin") %>%
-  tidyr::unnest()
+
+library(ggplot2)
 
 slopes <- list("United Kingdom" = 1)
 
@@ -135,30 +122,11 @@ bigstatsr::plot_grid(plotlist = lapply(POP[-1], function(pop) {
     ggtitle(paste0(round(100 * unname(robust_slope^2), 1), "%")) +
     coord_equal()
 }), nrow = 2, scale = 0.95)
-# Poland: 93.8%
-# Italy: 85.6%
-# Iran: 72.2%
-# India: 64.7%
-# China: 48.6%
+# Poland: 92.1%
+# Italy: 86.6%
+# Iran: 70.8%
+# India: 55.8%
+# China: 49.3%
 # Caribbean: 25.2%
-# Nigeria: 18%
-# Ashkenazi Jew: 85.7%
-# ggsave("figures/lasso-ancestry.pdf", width = 12, height = 7)
-
-library(bigsnpr)
-ukbb <- snp_attach("data/UKBB_HM3.rds")
-PC <- dplyr::select(ukbb$fam, PC1:PC16)
-centers <- bigutilsr::geometric_median(PC, by_grp = ukbb$fam$group)
-center_AJ <- bigutilsr::geometric_median(
-  dplyr::select(snp_attach("data/UKBB_HM3_AJ.rds")$fam, PC1:PC16))
-all_centers <- rbind(centers, "Ashkenazi Jew" = center_AJ)
-
-dist_to_UK <- as.matrix(dist(all_centers))[, "United Kingdom"]
-qplot(dist_to_UK[names(slopes)], unlist(slopes), size = I(2)) +
-  theme_bigstatsr() +
-  geom_smooth(method = "lm") +
-  ggrepel::geom_label_repel(aes(label = names(slopes)), min.segment.length = 0) +
-  # scale_y_log10() +
-  scale_y_continuous(breaks = 0:5 / 5, minor_breaks = 0:10 / 10) +
-  labs(x = "PC distance to UK", y = "Relative predictive performance with UK")
-# ggsave("figures/ratio-dist.pdf", width = 8, height = 6)
+# Nigeria: 18.5%
+# ggsave("figures/lasso-ancestry-geno-norel3.pdf", width = 12, height = 7)
