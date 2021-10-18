@@ -110,9 +110,9 @@ Individual-level data from the UK Biobank offers an opportunity to further inves
 Indeed, while the UKBB data contains genetic information for more than 450K British or European individuals, it also contains the same data for tens of thousands of individuals of non-British ancestry \cite[]{bycroft2018uk}.
 Of particular interest, those individuals of diverse ancestries all live in the UK and had their genetic and phenotypic information derived in the same way as people of UK ancestry. 
 Our study design circumvents potential confounding bias that might arise in comparative analyses from independent studies, and makes the UK Biobank data very well suited for comparing and evaluating predictive performance of derived PGS in diverse ancestries and across multiple phenotypes.
-{\color{red}Indeed, the UK Biobank has been shown to offer a much more controlled setting (compared to published GWAS meta-analyses) in the case of studying e.g.\ polygenic adaptation \cite[]{berg2019reduced,sohail2019polygenic}.
+Indeed, the UK Biobank has been shown to offer a much more controlled setting (compared to published GWAS meta-analyses) in the case of studying e.g.\ polygenic adaptation \cite[]{berg2019reduced,sohail2019polygenic}.
 Note that these analyses are not completely free of bias since, on average, genotyped variants are more common and imputed variants are more accurately imputed in European ancestries.
-We also acknowledge that some residual structure may remain when deriving PGS \cite[]{haworth2019apparent}.}
+We also acknowledge that some residual structure may remain when deriving PGS \cite[]{haworth2019apparent}.
 
 To investigate portability of PGS to other ancestries, we must first define groups of different ancestries from the data.
 Principal Component Analysis (PCA) has been widely used to correct for population structure in association studies and has been shown to mirror geography in Europe \cite[]{price2006principal,novembre2008genes}.
@@ -176,11 +176,11 @@ We show that these solutions are simple, robust and effective methods for inferr
 
 Here, we first use the second solution presented in the Supplementary Note, relying on PCs computed within the UK Biobank and individual information on the countries of birth, for inferring the first eight ancestry groups presented in table \ref{tab:size-sets}.
 These groups were chosen on the basis of being distant enough from the other groups, and including enough individuals (e.g.\ $>1000$) to draw meaningful conclusions.
-{\color{red}Note that the names of the ancestry groups we define here refer to the country names from the UK Biobank (Data-Field 20115) that we use to define the centers of each ancestry group; therefore these groups also include individuals from nearby countries. For example, the ``United Kingdom'' ancestry group also includes many individuals who self-identify as Irish, and the ``India'' ancestry group also includes many individuals who self-identify as Pakistani (Supplementary Note).}
+Note that the names of the ancestry groups we define here refer to the country names from the UK Biobank (Data-Field 20115) that we use to define the centers of each ancestry group; therefore these groups also include individuals from nearby countries. For example, the ``United Kingdom'' ancestry group also includes many individuals who self-identify as Irish, and the ``India'' ancestry group also includes many individuals who self-identify as Pakistani (Supplementary Note).
 Then, for inferring the ``Ashkenazi Jewish'' ancestry group, we use the first solution, projecting UKBB individuals onto the PCA space of a reference dataset composed of many Jewish and non-Jewish individuals \cite[]{behar2013no}. 
 We identify a ninth group of 1709 unrelated individuals, which is entirely non-overlapping with the other eight groups previously defined (Methods).
-{\color{red}Finally, we run ADMIXTURE (with k=8 and k=5) on 200 individuals from each of the nine ancestry groups defined here \cite[]{alexander2009fast}. The results are consistent with the PCA analysis (Figure \ref{fig:grouping2}), e.g.\ showing that the Caribbean group we define is mostly composed of admixed individuals with mostly African ancestry and some small percentage of European ancestry (Figure \ref{fig:admixture}). 
-Moreover, the other groups we define have distinct ADMIXTURE profiles (consistently with being distinct on PCA), except for the UK and Poland groups, which cannot be distinguished based on this analysis.}
+Finally, we run ADMIXTURE (with k=8 and k=5) on 200 individuals from each of the nine ancestry groups defined here \cite[]{alexander2009fast}. The results are consistent with the PCA analysis (Figure \ref{fig:grouping2}), e.g.\ showing that the Caribbean group we define is mostly composed of admixed individuals with mostly African ancestry and some small percentage of European ancestry (Figure \ref{fig:admixture}). 
+Moreover, the other groups we define have distinct ADMIXTURE profiles (consistently with being distinct on PCA), except for the UK and Poland groups, which cannot be distinguished based on this analysis.
 
 \begin{figure}[htb]
 	\centerline{\includegraphics[width=0.8\textwidth]{PC-nine-groups}}
@@ -191,7 +191,7 @@ Moreover, the other groups we define have distinct ADMIXTURE profiles (consisten
 
 Figure \ref{fig:lasso-ancestry} presents the results when fitting penalized regression using a training set composed of UK individuals only and testing in nine different ancestry groups. Averaged over {\NBTRAIT} phenotypes, compared to prediction performance in individuals of UK ancestry, relative predictive ability in terms of partial-$r^2$ (Methods) is 93.8\% in Poland, 85.6\% in Italy, 72.2\% in Iran, 64.7\% in India, 48.6\% in China, 25.2\% in the Caribbean, 18\% in Nigeria, and 85.7\% for the Ashkenazi group.
 As a follow-up analysis to ensure that this drop in performance in other ancestries is not due to imputation, we perform the same analysis for 83 of the continuous phenotypes using high-quality genotyped variants only (Methods) instead of the (mostly imputed) HapMap3 variants; results are highly consistent (Figure \ref{fig:lasso-ancestry-geno}).
-{\color{red}We also run the previous follow-up analysis while removing third-degree relatives, which leaves us with 349,991 individuals for training (instead of 391,124) and 43,631 for testing (instead of 46,545); results are practically unchanged (Figure \ref{fig:lasso-ancestry-geno-norel3}).}
+We also run the previous follow-up analysis while removing third-degree relatives, which leaves us with 349,991 individuals for training (instead of 391,124) and 43,631 for testing (instead of 46,545); results are practically unchanged (Figure \ref{fig:lasso-ancestry-geno-norel3}).
 These results are also very similar when using LDpred2-auto instead of penalized regression for training predictive models for all phenotypes (Figure \ref{fig:ldpred2-ancestry}).
 A few phenotypes deviate from this global trend, e.g.\ prediction of bilirubin concentration ranges between 0.537 and 0.619 (partial-$r$) for all ancestries except for China, for which it is 0.415 (95\% CI: 0.374 - 0.453, see Methods).
 In contrast, e.g.\ for hair and skin color, partial correlations decrease quickly and are not significantly different from 0 for both China and Nigeria, while of 0.420 (95\% CI: 0.409 - 0.432) for ``darker hair'' in the UK ancestry group (Figure \ref{fig:lasso-ancestry}).
@@ -243,16 +243,16 @@ For the three binary phenotypes, breast cancer (phecode: 174.1), prostate cancer
 
 \subsection*{Training with a mixture of ancestries}
 
-{\color{red}We hypothesize that using individuals from diverse ancestries could improve tagging of the causal variants, resulting in an improved prediction in all ancestries. Indeed, power improvements for both association and prediction have been reported when using even a small set of individuals from different ancestries \cite[]{wojcik2019genetic,cavazos2020inclusion,huang2021improving}.}
+We hypothesize that using individuals from diverse ancestries could improve tagging of the causal variants, resulting in an improved prediction in all ancestries. Indeed, power improvements for both association and prediction have been reported when using even a small set of individuals from different ancestries \cite[]{wojcik2019genetic,cavazos2020inclusion,huang2021improving}.
 Here we use all ancestry groups except for the Caribbean and Ashkenazi for training penalized regressions; we remove the same number of UK individuals to keep the same training sample size as before (training 2 in table \ref{tab:size-sets}).
 We recall that Caribbean individuals are mostly admixed between African, European and Native American ancestries \cite[]{moreno2013reconstructing}, which are almost all represented here in the training set 2.
 In figure \ref{fig:lasso-multi}, we investigate nine phenotypes of interest, either because they are highly studied diseases or are outliers in figure \ref{fig:lasso-ancestry}: breast cancer (phecode: 174.1), prostate cancer (186), type-2 diabetes (250.2), hypertension (401), coronary artery disease (411.4), skin tone, total bilirubin concentration, lipoprotein(a) concentration, and years of education.
 We predict in the test sets from the UK and the Caribbean (test set 2); overall, the predictive performance is highly similar when using this multi-ancestry training compared to when using only UK individuals, in both the UK and the Caribbean target samples. 
 Prediction is only improved for lipoprotein(a) concentration when the mixed ancestry training data is used in application to the Caribbean target data (Figure \ref{fig:lasso-multi}).  
 Discrepancies between our results and results from \cite{marquez2017multiethnic} and \cite{cavazos2020inclusion} may be explained by the fact that we use the exact same sample size when training with multiple ancestries (by removing some UK individuals; see table \ref{tab:size-sets}), whereas these studies use extra (non-European) individuals, making it hard to know if the improved predictions come from using non-European individuals, or just from using more individuals.
-{\color{red}We also run the newly developed PRS-CSx method \cite[]{huang2021improving} using individuals from training 2. 
+We also run the newly developed PRS-CSx method \cite[]{huang2021improving} using individuals from training 2. 
 PRS-CSx provides lower predictive performance than using the penalized regression on training 2 for both the UK and Caribbean test sets, except when predicting years of education for both sets as well as ``darker skin'' and coronary artery disease (phecode 411.4) in the Caribbean test set (Figure \ref{fig:lasso-multi}).
-Predictive performance of PRS-CSx is particularly lower for traits with large effects (bilirubin and lipoprotein(a) concentrations) and moderate effects (breast and prostate cancers; phecodes 174.1 and 185).}
+Predictive performance of PRS-CSx is particularly lower for traits with large effects (bilirubin and lipoprotein(a) concentrations) and moderate effects (breast and prostate cancers; phecodes 174.1 and 185).
 
 \subsection*{Comparison of predictive models}
 
@@ -416,9 +416,9 @@ We implement this in function \texttt{pcor} of R package bigstatsr and use it he
 \section*{Code and results availability}
 
 All code used for this paper is available at \url{https://github.com/privefl/UKBB-PGS/tree/master/code}. Links to the code used for the two supplementary notes are provided there.
-{\color{red}Code to reproduce our nine ancestry groups can be found at \url{https://github.com/privefl/UKBB-PGS#code-to-reproduce-ancestry-groups}.
+Code to reproduce our nine ancestry groups can be found at \url{https://github.com/privefl/UKBB-PGS#code-to-reproduce-ancestry-groups}.
 Description of the {\NBTRAIT} phenotypes used in this study, as well as other information such as the sample sizes used, can be downloaded at \url{https://github.com/privefl/UKBB-PGS/blob/main/phenotype-description.xlsx} and \url{https://github.com/privefl/UKBB-PGS/blob/main/phenotype-info.xlsx}.
-Effect sizes for 215 polygenic scores derived in this study, along with their predictive performance for each test group defined here, can be downloaded at \url{https://figshare.com/articles/dataset/Effect_sizes_for_215_polygenic_scores/14074760}.}
+Effect sizes for 215 polygenic scores derived in this study, along with their predictive performance for each test group defined here, can be downloaded at \url{https://figshare.com/articles/dataset/Effect_sizes_for_215_polygenic_scores/14074760}.
 
 We have extensively used R packages bigstatsr and bigsnpr \cite[]{prive2017efficient} for analyzing large genetic data, packages from the future framework \cite[]{bengtsson2020unifying} for easy scheduling and parallelization of analyses on the HPC cluster, and packages from the tidyverse suite \cite[]{wickham2019welcome} for shaping and visualizing results.
 We have also used R package deming for fitting Deming regressions.
