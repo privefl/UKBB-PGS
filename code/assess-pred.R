@@ -71,7 +71,7 @@ library(dplyr)
 res <- purrr::map_dfr(files, function(file) {
   readRDS(file) %>%
     left_join(readRDS(sub("assess-pred/", "assess-pred-AJ/", file))) %>%
-    rename("Ashkenazi Jew" = "pcor") %>%
+    rename("Ashkenazi Jewish" = "pcor") %>%
     mutate(pheno = sub("\\.rds$", "", basename(file))) %>%
     arrange(validation_loss) %>%
     select(-validation_loss) %>%
@@ -89,7 +89,7 @@ with(res, table(power_adaptive, power_scale))
 library(ggplot2)
 
 POP <- c("United Kingdom", "Poland", "Italy", "Iran",
-         "India", "China", "Caribbean", "Nigeria", "Ashkenazi Jew")
+         "India", "China", "Caribbean", "Nigeria", "Ashkenazi Jewish")
 
 OUTLIERS <- c("less_tanned", "darker_hair", "darker_skin", "red_hair",
               "log_bilirubin", "log_lipoA")
@@ -110,7 +110,8 @@ bigstatsr::plot_grid(plotlist = lapply(POP[-1], function(pop) {
     tidyr::unnest_wider("x", names_sep = "_") %>%
     tidyr::unnest_wider("y", names_sep = "_") %>%
     na.omit() %>%
-    mutate(., eps = abs(resid(lm(y_1 ~ x_1 + 0, data = .))))
+    mutate(., eps = abs(resid(lm(y_1 ~ x_1 + 0, data = .))),
+           label = ifelse(rank(-eps) <= 5, pheno, ""))
 
   robust_slope <- deming::deming(y_1 ~ x_1 + 0,
                                  data = filter(df, !pheno %in% OUTLIERS, y_2 != y_3),
@@ -119,8 +120,8 @@ bigstatsr::plot_grid(plotlist = lapply(POP[-1], function(pop) {
 
   cat(pop, ": ", round(100 * (slopes[[pop]] <<- unname(robust_slope^2)), 1), "%\n", sep = "")
 
-  ggplot(df, aes(x_1, y_1, label = pheno)) +
-    bigstatsr::theme_bigstatsr(0.85) +
+  ggplot(df, aes(x_1, y_1, label = label)) +
+    bigstatsr::theme_bigstatsr(0.75) +
     geom_abline(color = "red", linetype = 2) +
     geom_hline(yintercept = 0, color = "red", linetype = 3) +
     geom_vline(xintercept = 0, color = "red", linetype = 3) +
@@ -128,10 +129,10 @@ bigstatsr::plot_grid(plotlist = lapply(POP[-1], function(pop) {
     geom_errorbar(aes(xmin = x_2, xmax = x_3), width = 0, color = "green") +
     geom_errorbar(aes(ymin = y_2, ymax = y_3), width = 0, color = "green") +
     geom_point() +
-    ggrepel::geom_text_repel(data = slice_max(df, eps, n = 5),
-                             min.segment.length = 0, seed = 42, box.padding = 0.5) +
+    ggrepel::geom_text_repel(data = df, color = "purple",
+                             min.segment.length = 0, seed = 42, force = 20) +
     labs(x = "United Kingdom", y = pop) +
-    xlim(-0.1, 0.65) + ylim(-0.2, 0.65) +
+    xlim(-0.1, 0.75) + ylim(-0.2, 0.7) +
     ggtitle(paste0(round(100 * unname(robust_slope^2), 1), "%")) +
     coord_equal()
 }), nrow = 2, scale = 0.95)
@@ -142,7 +143,7 @@ bigstatsr::plot_grid(plotlist = lapply(POP[-1], function(pop) {
 # China: 48.6%
 # Caribbean: 25.2%
 # Nigeria: 18%
-# Ashkenazi Jew: 85.7%
+# Ashkenazi Jewish: 85.7%
 # ggsave("figures/lasso-ancestry.pdf", width = 12, height = 7)
 
 library(bigsnpr)
@@ -151,14 +152,13 @@ PC <- dplyr::select(ukbb$fam, PC1:PC16)
 centers <- bigutilsr::geometric_median(PC, by_grp = ukbb$fam$group)
 center_AJ <- bigutilsr::geometric_median(
   dplyr::select(snp_attach("data/UKBB_HM3_AJ.rds")$fam, PC1:PC16))
-all_centers <- rbind(centers, "Ashkenazi Jew" = center_AJ)
+all_centers <- rbind(centers, "Ashkenazi Jewish" = center_AJ)
 
 dist_to_UK <- as.matrix(dist(all_centers))[, "United Kingdom"]
 qplot(dist_to_UK[names(slopes)], unlist(slopes), size = I(2)) +
   theme_bigstatsr() +
   geom_smooth(method = "lm") +
   ggrepel::geom_label_repel(aes(label = names(slopes)), min.segment.length = 0) +
-  # scale_y_log10() +
   scale_y_continuous(breaks = 0:5 / 5, minor_breaks = 0:10 / 10) +
   labs(x = "PC distance to UK", y = "Relative predictive performance with UK")
 # ggsave("figures/ratio-dist.pdf", width = 8, height = 6)

@@ -136,6 +136,117 @@ We also explore the performance of PGS trained using a mixture of European and n
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Materials and Methods}
+
+\subsection*{Data}
+
+We derive polygenic scores for {\NBTRAIT} phenotypes using the UK Biobank (UKBB) data only \cite[]{bycroft2018uk}.
+We read dosages data from UKBB BGEN files using function \texttt{snp\_readBGEN()} of R package bigsnpr \cite[]{prive2017efficient}.
+We divide the UKBB data in eight ancestry groups (Supplementary Note), and restrict to 437,669 individuals without second-degree relatives (KING kinship $< 2^{-3.5}$).
+We also define a ninth ancestry group composed of 1709 unrelated Ashkenazi (see Methods below).
+For the variants, we use 1,040,096 HapMap3 variants used in the LD reference provided in \cite{prive2020ldpred2} and that were also present in the iPSYCH2015 data \cite[]{bybjerg2020ipsych2015} with imputation INFO score larger than 0.6.
+Even though the iPSYCH data is not used in this study, we plan to use the PGS derived here for iPSYCH in the future.
+
+To define phenotypes, we first map ICD10 and ICD9 codes (UKBB fields 40001, 40002, 40006, 40013, 41202, 41270 and 41271) to phecodes using R package PheWAS \cite[]{carroll2014r,wu2019mapping}.
+We filter down to 142 phecodes of interest that showed potential genetic signals in the PheWeb results from the SAIGE UKBB GWAS \cite[]{zhou2018efficiently,taliun2020exploring}. We further filter down to 106 phecodes with sufficient power for penalized regression to include at least a few variants in the predictive models.
+We then look closely at all 2408 UKBB fields that we have access to and filter down to defining 111 continuous and 28 binary phenotypes based on manual curation.
+
+\subsection*{Additional data: genotyped data}
+
+For the genotyped data used in some follow-up analyses, we restrict to variants that have been genotyped on both chips used by the UK Biobank, that pass quality control (QC) for all batches and QC for possible mismappings \cite[]{kunert2020allele}, with a minor allele frequency (MAF) larger than 0.01 and imputation INFO score of 1.
+There are 586,534 such high-quality variants, which we read from the BGEN imputed data so that there is no missing value.
+
+\subsection*{Additional data: 8M+ variants}
+
+We also design a larger set of imputed variants to compare against using only HapMap3 variants for prediction. We first restrict to UKBB variants with MAF > 0.01 and INFO > 0.6.
+We then compile frequencies and imputation INFO scores from other datasets, iPSYCH and summary statistics for breast cancer, prostate cancer, coronary artery disease and type-1 diabetes \cite[]{bybjerg2020ipsych2015,michailidou2017association,schumacher2018association,nikpay2015comprehensive,censin2017childhood}. 
+We restrict to variants with a mean INFO > 0.5 in these other datasets, and also compute the median frequency.
+To exclude potential mismappings in the genotyped data \cite[]{kunert2020allele} that might have propagated to the imputed data, we compare median frequencies in the external data to the ones in UKBB (Figure \ref{fig:compare-MAF}).
+As we expect these potential errors to be localized around errors in the genotype data (confirmed in figure \ref{fig:diff-MAF}), we apply a moving-average smoothing on the frequency differences to increase power to detect these errors and also reduce false positives.
+We define the threshold on these smoothed differences based on visual inspection of their histogram.
+This is the same method we have previously applied to PC loadings to detect long-range LD regions when computing PCA \cite[]{prive2017efficient,prive2020efficient}. 
+This results in a set of 8,238,692 variants.
+
+\subsection*{Ashkenazi Jewish ancestry group}
+
+First, we refer the reader to the Supplementary Note on ancestry grouping for the details on how we define the other eight ancestry groups, and also to better understand how we infer the ``Ashkenazi Jewish'' ancestry group.
+Briefly, we project the UKBB data onto the PCA space of a reference dataset composed of many Jewish and non-Jewish individuals \cite[]{behar2013no}. 
+We then compute the robust center (geometric median) of the Ashkenazi Jewish reference individuals, and compute the PC distance to this center for all projected UKBB individuals.
+Based on visual inspection of the histogram of these distances and on the fact that the closest non-Ashkenazi Jewish reference individual, an Italian Jew (Figure \ref{fig:jew-ref}), is at distance 12.7, we use a threshold of 12.5 under which to assign to the ``Ashkenazi Jewish'' ancestry group.
+1709 unrelated UKBB individuals are then assigned to this group.
+Note that, within the already defined eight ancestry groups, the closest individual to this new group belongs to the Italian group, and is at distance 17.3, therefore this new Ashkenazi group is not overlapping with any of the other groups defined previously.
+
+
+\subsection*{Penalized regression}
+
+To derive polygenic scores based on individual-level data from the UKBB, we use the fast implementation of penalized linear and logistic regressions from R package bigstatsr \cite[]{prive2019efficient}.
+We have also considered the recently developed R package snpnet for fitting penalized regressions on large genetic data; however, we provide theoretical and empirical evidence that bigstatsr is much faster than snpnet (Supplementary Note).
+Our implementation allows for lasso and elastic-net penalizations; yet, for the sake of simplicity and because the UKBB data is very large, we have decided to only use the lasso penalty \cite[]{prive2019efficient}.
+We recall that fitting a penalized linear regression with lasso penalty corresponds to finding the vector of effects $\beta$ (also $\mu$ and $\gamma$) that minimizes
+\[L(\lambda) = \underbrace{ ||y - \left(\mu + G \beta + X \gamma\right)||_2^2 }_\text{Loss function} + \underbrace{ \lambda \|\beta\|_1 }_\text{Penalisation} ~,\]
+where $\mu$ is an intercept, $G$ is the genotype matrix, $X$ is the matrix of covariates, $y$ is the (quantitative) phenotype of interest and $\lambda$ is a hyper-parameter that controls the strength of the regularization and needs to be chosen.
+We use sex (Field 22001), age (Field 21022), birth date (Fields 34 \& 52), Townsend deprivation index (Field 189) and the first 16 genetic principal components (Field 22009, \cite{prive2020efficient}) as unpenalized covariates when fitting the lasso models.
+
+We have extended our implementation in two ways by allowing for using different penalties for the variants (i.e.\ having $\sum_{j} \lambda_j |\beta_j|$ instead of $\lambda \|\beta\|_1$).
+First, this enables us to use a different scaling for genotypes. By default, variants in $G$ are implicitly scaled. By using $\lambda_j \propto (\text{SD}_j)^{(\xi - 1)}$, this effectively scales variant $j$ by dividing it by $(\text{SD}_j)^\xi$ in our implementation.
+The default uses $\xi = 1$ but we also test $\xi = 0$ (no scaling) and $\xi = 0.5$ (Pareto scaling). We introduce a new parameter \texttt{power\_scale} for which the user can provide a vector of values to test; the best value is chosen within the Cross-Model Selection and Averaging (CMSA) procedure \cite[]{prive2019efficient}.
+We also introduce a second parameter, \texttt{power\_adaptive}, which can be used to put less penalizition on variants with the largest marginal effects \cite[]{zou2006adaptive}; we try 3 values here (0 the default, 0.5 and 1.5) and the best one is also chosen within the CMSA procedure.
+
+\subsection*{LDpred2-auto}
+
+Using the individual-level data from the training set in the UK Biobank, we run a linear regression GWAS using function \texttt{big\_univLinReg} of R package bigstatsr \cite[]{prive2017efficient}, accounting for the same covariates as in the penalized regression above.
+As LD reference, we use the one provided in \cite{prive2020ldpred2} based on UKBB data for European ancestry.
+We use these summary statistics and this LD reference as input for LDpred2-auto.
+LDpred2 assumes a point-normal mixture distribution for effect sizes, where only a proportion of causal variants $p$ contributes to the SNP heritability $h^2$.
+In LDpred2-auto, these two parameters are directly estimated from the data \cite[]{prive2020ldpred2}.
+We use the \texttt{sparse} option in LDpred2-auto to also obtain a vector of effects that is potentially sparse, i.e.\ effects of some variants are exactly 0.
+Also note that, as we use linear regression for all phenotypes, we use the total sample size instead of the effective sample size ($4/\left(1 / n_\text{case} + 1 / n_\text{control}\right)$) for binary phenotypes as input to LDpred2.
+This means that heritability estimates from both LD score regression and LDpred2-auto must be transformed to the liability scale using both the prevalence in the GWAS and in the population; this can be performed using function \texttt{coef\_to\_liab} from R package bigsnpr.
+For simplicity, we assume here that the prevalence in the population is the same as the prevalence in the training set.
+
+\subsection*{New formula used in LDpred2}
+
+We also slightly modify the formula used in \cite{prive2020ldpred2}; we have previously used
+\[\text{se}(\hat{\gamma}_j)^2 = \dfrac{(\boldsymbol{\breve{y}} - \hat{\gamma}_j \boldsymbol{\breve{G}_j})^T (\boldsymbol{\breve{y}} - \hat{\gamma}_j \boldsymbol{\breve{G}_j})}{(n - K - 1) ~ \boldsymbol{\breve{G}_j}^T \boldsymbol{\breve{G}_j}} \approx \dfrac{\boldsymbol{\breve{y}}^T \boldsymbol{\breve{y}}}{n ~ \boldsymbol{\breve{G}_j}^T \boldsymbol{\breve{G}_j}} \approx \dfrac{\text{var}(\boldsymbol{y})}{n ~ \text{var}(\boldsymbol{G_j})} ~,\]
+where $\hat{\gamma}_j$ is the marginal effect of variant $j$, and where $\boldsymbol{\breve{y}}$ and $\boldsymbol{\breve{G}_j}$ are the vectors of phenotypes and genotypes for variant $j$ residualized from $K$ covariates, e.g.\ centering them.
+The first approximation expects $\hat{\gamma}_j$ to be small, while the second approximation assumes the effects from covariates are small.
+However, we have found here that some variants can have very large effects, e.g.\ one variant explains about 30\% of the variance in bilirubin log-concentration.
+Then, instead we compute \[(\boldsymbol{\breve{y}} - \hat{\gamma}_j \boldsymbol{\breve{G}_j})^T (\boldsymbol{\breve{y}} - \hat{\gamma}_j \boldsymbol{\breve{G}_j}) =
+\boldsymbol{\breve{y}}^T \boldsymbol{\breve{y}}
+- 2 \hat{\gamma}_j \boldsymbol{\breve{G}_j}^T \boldsymbol{\breve{y}}
++ \hat{\gamma}_j^2 \boldsymbol{\breve{G}_j}^T \boldsymbol{\breve{G}_j} =
+\boldsymbol{\breve{y}}^T \boldsymbol{\breve{y}}
+- \hat{\gamma}_j^2 \boldsymbol{\breve{G}_j}^T \boldsymbol{\breve{G}_j} ~,\]
+which now gives 
+\[ (n - K - 1) ~ \text{se}(\hat{\gamma}_j)^2 = \dfrac{ \boldsymbol{\breve{y}}^T \boldsymbol{\breve{y}} - \hat{\gamma}_j^2 \boldsymbol{\breve{G}_j}^T \boldsymbol{\breve{G}_j} }{\boldsymbol{\breve{G}_j}^T \boldsymbol{\breve{G}_j} } =
+\dfrac{ \boldsymbol{\breve{y}}^T \boldsymbol{\breve{y}} }{\boldsymbol{\breve{G}_j}^T \boldsymbol{\breve{G}_j} } - \hat{\gamma}_j^2 \approx \dfrac{\text{var}(\boldsymbol{\breve{y}})}{\text{var}(\boldsymbol{G_j})} - \hat{\gamma}_j^2 ~,\]
+finally giving (note the added term $\hat{\gamma}_j^2$)
+\begin{equation}\label{eq:approx-sd-lin}
+\text{sd}(\boldsymbol{G_j}) \approx \dfrac{\text{sd}(\boldsymbol{\breve{y}})}{\sqrt{n ~ \text{se}(\hat{\gamma}_j)^2 + \hat{\gamma}_j^2}} ~.
+\end{equation}
+Figure \ref{fig:new-formula} shows that the updated formula \eqref{eq:approx-sd-lin} is better; we now use it in the code of LDpred2, and also recommend using it for the QC procedure proposed in \cite{prive2020ldpred2}.
+
+\subsection*{Using more than HapMap3 variants in LDpred2}
+
+Here we also run LDpred2 using more than HapMap3 variants, based on a set of 8M+ variants (see above).
+However, LDpred2 cannot be run on 8M variants because the implementation is quadratic with the number of variants in terms of time and memory requirements.
+Thus, we employ another strategy consisting in keeping only the 1M most significant variants.
+To correct for winner's curse, we employ the maximum likelihood estimator used in \cite{zhong2008bias} and \cite{shi2016winner}:
+\[Z = Z^* + \dfrac{\phi\left(Z^* - Z_{thr}\right) - \phi\left(-Z^* - Z_{thr}\right)}{\Phi\left(Z^* - Z_{thr}\right) + \Phi\left(-Z^* - Z_{thr}\right)} ~,\]
+where $\phi$ is the standard normal density function, $\Phi$ is the standard normal cumulative density function, $Z$ is the Z-score obtained from the GWAS, $Z_{thr}$ is the threshold used on (absolute) Z-scores for filtering, and $Z^*$ is the corrected Z-score that we estimate and use.
+As input for LDpred2, instead of using $\beta$ (along with $\text{SE}(\beta)$ and $N$), we use $\beta^* = \beta \cdot Z^* / Z$ where $Z = \beta / \text{SE}(\beta)$.
+This is now implemented in function \texttt{snp\_thr\_correct} of package bigsnpr.
+
+\subsection*{Performance metric}
+
+Here we use the partial correlation as the performance metric, which is the correlation between the PGS and the phenotype after they have been both residualized using the covariates used in this paper, i.e.\ sex, age, birth date, deprivation index and 16 PCs.
+To derive 95\% confidence intervals for these correlations, we use Fisher's Z-transformation.
+We implement this in function \texttt{pcor} of R package bigstatsr and use it here.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section*{Results}
 
 \subsection*{Overview of study}
@@ -185,7 +296,7 @@ Moreover, the other groups we define have distinct ADMIXTURE profiles (consisten
 
 \begin{figure}[htb]
 	\centerline{\includegraphics[width=0.8\textwidth]{PC-nine-groups}}
-	\caption{The first eight PC scores of the UK Biobank (Data-Field 22009) colored by the homogeneous ancestry group we infer for these individuals. Only 50,000 individuals are represented at random. \label{fig:grouping2}}
+	\caption{The first eight PC scores of the UK Biobank (Data-Field 22009) colored by the homogeneous ancestry group we infer for these individuals. Only 50,000 individuals are represented at random. ``NA'' means that the corresponding individual is not categorized in any of the nine ancestry groups. \label{fig:grouping2}}
 \end{figure}
 
 \subsection*{Portability of polygenic scores to other ancestries}
@@ -300,134 +411,6 @@ Nevertheless, \cite{albinana2020leveraging} have shown that an efficient strateg
 Therefore, the polygenic scores we derived here could be combined with polygenic scores derived using external summary statistics; we will release these PGS publicly and share them in databases such as the PGS Catalog and the Cancer-PRSweb \cite[]{fritsche2020cancer,lambert2020polygenic}.
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section*{Materials and Methods}
-
-\subsection*{Data}
-
-We derive polygenic scores for {\NBTRAIT} phenotypes using the UK Biobank (UKBB) data only \cite[]{bycroft2018uk}.
-We read dosages data from UKBB BGEN files using function \texttt{snp\_readBGEN()} of R package bigsnpr \cite[]{prive2017efficient}.
-We divide the UKBB data in eight ancestry groups (Supplementary Note), and restrict to 437,669 individuals without second-degree relatives (KING kinship $< 2^{-3.5}$).
-We also define a ninth ancestry group composed of 1709 unrelated Ashkenazi (see Methods below).
-For the variants, we use 1,040,096 HapMap3 variants used in the LD reference provided in \cite{prive2020ldpred2} and that were also present in the iPSYCH2015 data \cite[]{bybjerg2020ipsych2015} with imputation INFO score larger than 0.6.
-Even though the iPSYCH data is not used in this study, we plan to use the PGS derived here for iPSYCH in the future.
-
-To define phenotypes, we first map ICD10 and ICD9 codes (UKBB fields 40001, 40002, 40006, 40013, 41202, 41270 and 41271) to phecodes using R package PheWAS \cite[]{carroll2014r,wu2019mapping}.
-We filter down to 142 phecodes of interest that showed potential genetic signals in the PheWeb results from the SAIGE UKBB GWAS \cite[]{zhou2018efficiently,taliun2020exploring}. We further filter down to 106 phecodes with sufficient power for penalized regression to include at least a few variants in the predictive models.
-We then look closely at all 2408 UKBB fields that we have access to and filter down to defining 111 continuous and 28 binary phenotypes based on manual curation.
-Description of the {\NBTRAIT} phenotypes used in this study can be downloaded at \url{https://github.com/privefl/UKBB-PGS/blob/main/phenotype-description.xlsx}.
-
-\subsection*{Additional data: genotyped data}
-
-For the genotyped data used in some follow-up analyses, we restrict to variants that have been genotyped on both chips used by the UK Biobank, that pass quality control (QC) for all batches (cf.\ \url{https://biobank.ctsu.ox.ac.uk/crystal/crystal/auxdata/ukb_snp_qc.txt}) and QC for possible mismappings \cite[]{kunert2020allele}, with a minor allele frequency (MAF) larger than 0.01 and imputation INFO score of 1.
-There are 586,534 such high-quality variants, which we read from the BGEN imputed data so that there is no missing value.
-
-\subsection*{Additional data: 8M+ variants}
-
-We also design a larger set of imputed variants to compare against using only HapMap3 variants for prediction. We first restrict to UKBB variants with MAF > 0.01 and INFO > 0.6.
-We then compile frequencies and imputation INFO scores from other datasets, iPSYCH and summary statistics for breast cancer, prostate cancer, coronary artery disease and type-1 diabetes \cite[]{bybjerg2020ipsych2015,michailidou2017association,schumacher2018association,nikpay2015comprehensive,censin2017childhood}. 
-We restrict to variants with a mean INFO > 0.5 in these other datasets, and also compute the median frequency.
-To exclude potential mismappings in the genotyped data \cite[]{kunert2020allele} that might have propagated to the imputed data, we compare median frequencies in the external data to the ones in UKBB (Figure \ref{fig:compare-MAF}).
-As we expect these potential errors to be localized around errors in the genotype data (confirmed in figure \ref{fig:diff-MAF}), we apply a moving-average smoothing on the frequency differences to increase power to detect these errors and also reduce false positives.
-We define the threshold on these smoothed differences based on visual inspection of their histogram.
-This is the same method we have previously applied to PC loadings to detect long-range LD regions when computing PCA \cite[]{prive2017efficient,prive2020efficient}. 
-This results in a set of 8,238,692 variants.
-
-\subsection*{Ashkenazi Jewish ancestry group}
-
-First, we refer the reader to the Supplementary Note on ancestry grouping for the details on how we define the other eight ancestry groups, and also to better understand how we infer the ``Ashkenazi Jewish'' ancestry group.
-Briefly, we project the UKBB data onto the PCA space of a reference dataset composed of many Jewish and non-Jewish individuals \cite[]{behar2013no}. 
-We then compute the robust center (geometric median) of the Ashkenazi Jewish reference individuals, and compute the PC distance to this center for all projected UKBB individuals.
-Based on visual inspection of the histogram of these distances and on the fact that the closest non-Ashkenazi Jewish reference individual, an Italian Jew (Figure \ref{fig:jew-ref}), is at distance 12.7, we use a threshold of 12.5 under which to assign to the ``Ashkenazi Jewish'' ancestry group.
-1709 unrelated UKBB individuals are then assigned to this group.
-Note that, within the already defined eight ancestry groups, the closest individual to this new group belongs to the Italian group, and is at distance 17.3, therefore this new Ashkenazi group is not overlapping with any of the other groups defined previously.
-
-
-\subsection*{Penalized regression}
-
-To derive polygenic scores based on individual-level data from the UKBB, we use the fast implementation of penalized linear and logistic regressions from R package bigstatsr \cite[]{prive2019efficient}.
-We have also considered the recently developed R package snpnet for fitting penalized regressions on large genetic data; however, we provide theoretical and empirical evidence that bigstatsr is much faster than snpnet (Supplementary Note).
-Our implementation allows for lasso and elastic-net penalizations; yet, for the sake of simplicity and because the UKBB data is very large, we have decided to only use the lasso penalty \cite[]{prive2019efficient}.
-We recall that fitting a penalized linear regression with lasso penalty corresponds to finding the vector of effects $\beta$ (also $\mu$ and $\gamma$) that minimizes
-\[L(\lambda) = \underbrace{ ||y - \left(\mu + G \beta + X \gamma\right)||_2^2 }_\text{Loss function} + \underbrace{ \lambda \|\beta\|_1 }_\text{Penalisation} ~,\]
-where $\mu$ is an intercept, $G$ is the genotype matrix, $X$ is the matrix of covariates, $y$ is the (quantitative) phenotype of interest and $\lambda$ is a hyper-parameter that controls the strength of the regularization and needs to be chosen.
-We use sex (Field 22001), age (Field 21022), birth date (Fields 34 \& 52), Townsend deprivation index (Field 189) and the first 16 genetic principal components (Field 22009, \cite{prive2020efficient}) as unpenalized covariates when fitting the lasso models.
-
-We have extended our implementation in two ways by allowing for using different penalties for the variants (i.e.\ having $\sum_{j} \lambda_j |\beta_j|$ instead of $\lambda \|\beta\|_1$).
-First, this enables us to use a different scaling for genotypes. By default, variants in $G$ are implicitly scaled. By using $\lambda_j \propto (\text{SD}_j)^{(\xi - 1)}$, this effectively scales variant $j$ by dividing it by $(\text{SD}_j)^\xi$ in our implementation.
-The default uses $\xi = 1$ but we also test $\xi = 0$ (no scaling) and $\xi = 0.5$ (Pareto scaling). We introduce a new parameter \texttt{power\_scale} for which the user can provide a vector of values to test; the best value is chosen within the Cross-Model Selection and Averaging (CMSA) procedure \cite[]{prive2019efficient}.
-We also introduce a second parameter, \texttt{power\_adaptive}, which can be used to put less penalizition on variants with the largest marginal effects \cite[]{zou2006adaptive}; we try 3 values here (0 the default, 0.5 and 1.5) and the best one is also chosen within the CMSA procedure.
-
-\subsection*{LDpred2-auto}
-
-Using the individual-level data from the training set in the UK Biobank, we run a linear regression GWAS using function \texttt{big\_univLinReg} of R package bigstatsr \cite[]{prive2017efficient}, accounting for the same covariates as in the penalized regression above.
-As LD reference, we use the one provided in \cite{prive2020ldpred2} based on UKBB data for European ancestry.
-We use these summary statistics and this LD reference as input for LDpred2-auto.
-LDpred2 assumes a point-normal mixture distribution for effect sizes, where only a proportion of causal variants $p$ contributes to the SNP heritability $h^2$.
-In LDpred2-auto, these two parameters are directly estimated from the data \cite[]{prive2020ldpred2}.
-We use the \texttt{sparse} option in LDpred2-auto to also obtain a vector of effects that is potentially sparse, i.e.\ effects of some variants are exactly 0.
-Also note that, as we use linear regression for all phenotypes, we use the total sample size instead of the effective sample size ($4/\left(1 / n_\text{case} + 1 / n_\text{control}\right)$) for binary phenotypes as input to LDpred2.
-This means that heritability estimates from both LD score regression and LDpred2-auto must be transformed to the liability scale using both the prevalence in the GWAS and in the population; this can be performed using function \texttt{coef\_to\_liab} from R package bigsnpr.
-For simplicity, we assume here that the prevalence in the population is the same as the prevalence in the training set.
-
-\subsection*{New formula used in LDpred2}
-
-We also slightly modify the formula used in \cite{prive2020ldpred2}; we have previously used
-\[\text{se}(\hat{\gamma}_j)^2 = \dfrac{(\boldsymbol{\breve{y}} - \hat{\gamma}_j \boldsymbol{\breve{G}_j})^T (\boldsymbol{\breve{y}} - \hat{\gamma}_j \boldsymbol{\breve{G}_j})}{(n - K - 1) ~ \boldsymbol{\breve{G}_j}^T \boldsymbol{\breve{G}_j}} \approx \dfrac{\boldsymbol{\breve{y}}^T \boldsymbol{\breve{y}}}{n ~ \boldsymbol{\breve{G}_j}^T \boldsymbol{\breve{G}_j}} \approx \dfrac{\text{var}(\boldsymbol{y})}{n ~ \text{var}(\boldsymbol{G_j})} ~,\]
-where $\hat{\gamma}_j$ is the marginal effect of variant $j$, and where $\boldsymbol{\breve{y}}$ and $\boldsymbol{\breve{G}_j}$ are the vectors of phenotypes and genotypes for variant $j$ residualized from $K$ covariates, e.g.\ centering them.
-The first approximation expects $\hat{\gamma}_j$ to be small, while the second approximation assumes the effects from covariates are small.
-However, we have found here that some variants can have very large effects, e.g.\ one variant explains about 30\% of the variance in bilirubin log-concentration.
-Then, instead we compute \[(\boldsymbol{\breve{y}} - \hat{\gamma}_j \boldsymbol{\breve{G}_j})^T (\boldsymbol{\breve{y}} - \hat{\gamma}_j \boldsymbol{\breve{G}_j}) =
-\boldsymbol{\breve{y}}^T \boldsymbol{\breve{y}}
-- 2 \hat{\gamma}_j \boldsymbol{\breve{G}_j}^T \boldsymbol{\breve{y}}
-+ \hat{\gamma}_j^2 \boldsymbol{\breve{G}_j}^T \boldsymbol{\breve{G}_j} =
-\boldsymbol{\breve{y}}^T \boldsymbol{\breve{y}}
-- \hat{\gamma}_j^2 \boldsymbol{\breve{G}_j}^T \boldsymbol{\breve{G}_j} ~,\]
-which now gives 
-\[ (n - K - 1) ~ \text{se}(\hat{\gamma}_j)^2 = \dfrac{ \boldsymbol{\breve{y}}^T \boldsymbol{\breve{y}} - \hat{\gamma}_j^2 \boldsymbol{\breve{G}_j}^T \boldsymbol{\breve{G}_j} }{\boldsymbol{\breve{G}_j}^T \boldsymbol{\breve{G}_j} } =
-\dfrac{ \boldsymbol{\breve{y}}^T \boldsymbol{\breve{y}} }{\boldsymbol{\breve{G}_j}^T \boldsymbol{\breve{G}_j} } - \hat{\gamma}_j^2 \approx \dfrac{\text{var}(\boldsymbol{\breve{y}})}{\text{var}(\boldsymbol{G_j})} - \hat{\gamma}_j^2 ~,\]
-finally giving (note the added term $\hat{\gamma}_j^2$)
-\begin{equation}\label{eq:approx-sd-lin}
-\text{sd}(\boldsymbol{G_j}) \approx \dfrac{\text{sd}(\boldsymbol{\breve{y}})}{\sqrt{n ~ \text{se}(\hat{\gamma}_j)^2 + \hat{\gamma}_j^2}} ~.
-\end{equation}
-Figure \ref{fig:new-formula} shows that the updated formula \eqref{eq:approx-sd-lin} is better; we now use it in the code of LDpred2, and also recommend using it for the QC procedure proposed in \cite{prive2020ldpred2}.
-
-\subsection*{Using more than HapMap3 variants in LDpred2}
-
-Here we also run LDpred2 using more than HapMap3 variants, based on a set of 8M+ variants (see above).
-However, LDpred2 cannot be run on 8M variants because the implementation is quadratic with the number of variants in terms of time and memory requirements.
-Thus, we employ another strategy consisting in keeping only the 1M most significant variants.
-To correct for winner's curse, we employ the maximum likelihood estimator used in \cite{zhong2008bias} and \cite{shi2016winner}:
-\[Z = Z^* + \dfrac{\phi\left(Z^* - Z_{thr}\right) - \phi\left(-Z^* - Z_{thr}\right)}{\Phi\left(Z^* - Z_{thr}\right) + \Phi\left(-Z^* - Z_{thr}\right)} ~,\]
-where $\phi$ is the standard normal density function, $\Phi$ is the standard normal cumulative density function, $Z$ is the Z-score obtained from the GWAS, $Z_{thr}$ is the threshold used on (absolute) Z-scores for filtering, and $Z^*$ is the corrected Z-score that we estimate and use.
-As input for LDpred2, instead of using $\beta$ (along with $\text{SE}(\beta)$ and $N$), we use $\beta^* = \beta \cdot Z^* / Z$ where $Z = \beta / \text{SE}(\beta)$.
-This is now implemented in function \texttt{snp\_thr\_correct} of package bigsnpr.
-
-\subsection*{Performance metric}
-
-Here we use the partial correlation as the performance metric, which is the correlation between the PGS and the phenotype after they have been both residualized using the covariates used in this paper, i.e.\ sex, age, birth date, deprivation index and 16 PCs.
-To derive 95\% confidence intervals for these correlations, we use Fisher's Z-transformation.
-We implement this in function \texttt{pcor} of R package bigstatsr and use it here.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%\clearpage
-%\vspace*{5em}
-
-\section*{Code and results availability}
-
-All code used for this paper is available at \url{https://github.com/privefl/UKBB-PGS/tree/master/code}. Links to the code used for the two supplementary notes are provided there.
-Code to reproduce our nine ancestry groups can be found at \url{https://github.com/privefl/UKBB-PGS#code-to-reproduce-ancestry-groups}.
-Description of the {\NBTRAIT} phenotypes used in this study, as well as other information such as the sample sizes used, can be downloaded at \url{https://github.com/privefl/UKBB-PGS/blob/main/phenotype-description.xlsx} and \url{https://github.com/privefl/UKBB-PGS/blob/main/phenotype-info.xlsx}.
-Effect sizes for 215 polygenic scores derived in this study, along with their predictive performance for each test group defined here, can be downloaded at \url{https://figshare.com/articles/dataset/Effect_sizes_for_215_polygenic_scores/14074760}.
-
-We have extensively used R packages bigstatsr and bigsnpr \cite[]{prive2017efficient} for analyzing large genetic data, packages from the future framework \cite[]{bengtsson2020unifying} for easy scheduling and parallelization of analyses on the HPC cluster, and packages from the tidyverse suite \cite[]{wickham2019welcome} for shaping and visualizing results.
-We have also used R package deming for fitting Deming regressions.
-R packages bigstatsr and bigsnpr can be installed from GitHub and CRAN.
-A tutorial on fitting penalized regressions with R package bigstatsr is available at \url{https://privefl.github.io/bigstatsr/articles/penalized-regressions.html}.
-A tutorial on running LDpred2 with R package bigsnpr is available at \url{https://privefl.github.io/bigsnpr/articles/LDpred2.html}.
-
 \section*{Acknowledgements}
 
 Authors thank the reviewers for their comments and suggestions.
@@ -435,7 +418,8 @@ Authors thank Abdel Abdellaoui for his help with defining the ``years of educati
 Authors thank GenomeDK and Aarhus University for providing computational resources and support that contributed to these research results.
 This research has been conducted using the UK Biobank Resource under Application Number 58024.
 
-\section*{Funding}
+We have extensively used R packages bigstatsr and bigsnpr \cite[]{prive2017efficient} for analyzing large genetic data, packages from the future framework \cite[]{bengtsson2020unifying} for easy scheduling and parallelization of analyses on the HPC cluster, and packages from the tidyverse suite \cite[]{wickham2019welcome} for shaping and visualizing results.
+We have also used R package deming for fitting Deming regressions.
 
 F.P.\ and B.J.V.\ are supported by the Danish National Research Foundation (Niels Bohr Professorship to Prof. John McGrath), and also acknowledge the Lundbeck Foundation Initiative for Integrative Psychiatric Research, iPSYCH (R248-2017-2003). B.J.V. is also supported by a Lundbeck Foundation Fellowship (R335-2019-2339).
 
@@ -443,6 +427,26 @@ F.P.\ and B.J.V.\ are supported by the Danish National Research Foundation (Niel
 
 S.C.\ is a paid consultant to MyHeritage.
 The other authors declare no competing interests.
+
+\section*{Web Resources}
+
+\noindent Quality control information on genetic variants from the UK Biobank, \url{https://biobank.ctsu.ox.ac.uk/crystal/crystal/auxdata/ukb_snp_qc.txt}
+
+\noindent All code used for this paper (links to the code used for the two supplementary notes are provided there), \url{https://github.com/privefl/UKBB-PGS/tree/master/code}
+
+\noindent Code to reproduce our nine ancestry groups, \url{https://github.com/privefl/UKBB-PGS#code-to-reproduce-ancestry-groups}
+
+\noindent Description of the {\NBTRAIT} phenotypes used in this study, \url{https://github.com/privefl/UKBB-PGS/blob/main/phenotype-description.xlsx}
+
+\noindent Other information on the phenotypes (e.g.\ sample sizes), \url{https://github.com/privefl/UKBB-PGS/blob/main/phenotype-info.xlsx}
+
+\noindent Effect sizes for 215 polygenic scores derived in this study, along with their predictive performance for each test group defined here,  \url{https://figshare.com/articles/dataset/Effect_sizes_for_215_polygenic_scores/14074760}
+
+\noindent A tutorial on fitting penalized regressions with R package bigstatsr, \url{https://privefl.github.io/bigstatsr/articles/penalized-regressions.html}
+
+\noindent A tutorial on running LDpred2 with R package bigsnpr, \url{https://privefl.github.io/bigsnpr/articles/LDpred2.html}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

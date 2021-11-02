@@ -36,7 +36,7 @@
 
 - `assess-pred-AJ` + `assess-pred`: Figures 2 and 3
 
-- `assess-pred-geno` + `assess-pred-geno3`: Figure S3 and S4
+- `assess-pred-geno` + `assess-pred-geno-norel3`: Figure S3 and S4
 
 - `assess-pred-ldpred2`: Figures S5 + S14 to S17
 

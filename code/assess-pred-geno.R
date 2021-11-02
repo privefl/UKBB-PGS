@@ -94,7 +94,8 @@ bigstatsr::plot_grid(plotlist = lapply(POP[-1], function(pop) {
     tidyr::unnest_wider("x", names_sep = "_") %>%
     tidyr::unnest_wider("y", names_sep = "_") %>%
     na.omit() %>%
-    mutate(., eps = abs(resid(lm(y_1 ~ x_1 + 0, data = .))))
+    mutate(., eps = abs(resid(lm(y_1 ~ x_1 + 0, data = .))),
+           label = ifelse(rank(-eps) <= 5, pheno, ""))
 
   robust_slope <- deming::deming(y_1 ~ x_1 + 0,
                                  data = filter(df, !pheno %in% OUTLIERS, y_2 != y_3),
@@ -103,8 +104,8 @@ bigstatsr::plot_grid(plotlist = lapply(POP[-1], function(pop) {
 
   cat(pop, ": ", round(100 * (slopes[[pop]] <<- unname(robust_slope^2)), 1), "%\n", sep = "")
 
-  ggplot(df, aes(x_1, y_1, label = pheno)) +
-    bigstatsr::theme_bigstatsr(0.85) +
+  ggplot(df, aes(x_1, y_1, label = label)) +
+    bigstatsr::theme_bigstatsr(0.75) +
     geom_abline(color = "red", linetype = 2) +
     geom_hline(yintercept = 0, color = "red", linetype = 3) +
     geom_vline(xintercept = 0, color = "red", linetype = 3) +
@@ -112,10 +113,10 @@ bigstatsr::plot_grid(plotlist = lapply(POP[-1], function(pop) {
     geom_errorbar(aes(xmin = x_2, xmax = x_3), width = 0, color = "green") +
     geom_errorbar(aes(ymin = y_2, ymax = y_3), width = 0, color = "green") +
     geom_point() +
-    ggrepel::geom_text_repel(data = slice_max(df, eps, n = 5),
-                             min.segment.length = 0, seed = 42, box.padding = 0.5) +
+    ggrepel::geom_text_repel(data = df, color = "purple",
+                             min.segment.length = 0, seed = 42, force = 30) +
     labs(x = "United Kingdom", y = pop) +
-    xlim(-0.1, 0.65) + ylim(-0.2, 0.65) +
+    xlim(-0.1, 0.75) + ylim(-0.2, 0.7) +
     ggtitle(paste0(round(100 * unname(robust_slope^2), 1), "%")) +
     coord_equal()
 }), nrow = 2, scale = 0.95)
