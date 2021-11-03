@@ -21,8 +21,8 @@
 
 \renewcommand{\arraystretch}{1.3}
 
-\usepackage{xr}
-\externaldocument{240pgs-supp}
+%\usepackage{xr}
+%\externaldocument{240pgs-supp}
 
 %\linenumbers
 %\doublespacing
@@ -163,8 +163,8 @@ There are 586,534 such high-quality variants, which we read from the BGEN impute
 We also design a larger set of imputed variants to compare against using only HapMap3 variants for prediction. We first restrict to UKBB variants with MAF > 0.01 and INFO > 0.6.
 We then compile frequencies and imputation INFO scores from other datasets, iPSYCH and summary statistics for breast cancer, prostate cancer, coronary artery disease and type-1 diabetes \cite[]{bybjerg2020ipsych2015,michailidou2017association,schumacher2018association,nikpay2015comprehensive,censin2017childhood}. 
 We restrict to variants with a mean INFO > 0.5 in these other datasets, and also compute the median frequency.
-To exclude potential mismappings in the genotyped data \cite[]{kunert2020allele} that might have propagated to the imputed data, we compare median frequencies in the external data to the ones in UKBB (Figure \ref{fig:compare-MAF}).
-As we expect these potential errors to be localized around errors in the genotype data (confirmed in figure \ref{fig:diff-MAF}), we apply a moving-average smoothing on the frequency differences to increase power to detect these errors and also reduce false positives.
+To exclude potential mismappings in the genotyped data \cite[]{kunert2020allele} that might have propagated to the imputed data, we compare median frequencies in the external data to the ones in UKBB (Figure S20).
+As we expect these potential errors to be localized around errors in the genotype data (confirmed in figure S21), we apply a moving-average smoothing on the frequency differences to increase power to detect these errors and also reduce false positives.
 We define the threshold on these smoothed differences based on visual inspection of their histogram.
 This is the same method we have previously applied to PC loadings to detect long-range LD regions when computing PCA \cite[]{prive2017efficient,prive2020efficient}. 
 This results in a set of 8,238,692 variants.
@@ -174,7 +174,7 @@ This results in a set of 8,238,692 variants.
 First, we refer the reader to the Supplementary Note on ancestry grouping for the details on how we define the other eight ancestry groups, and also to better understand how we infer the ``Ashkenazi Jewish'' ancestry group.
 Briefly, we project the UKBB data onto the PCA space of a reference dataset composed of many Jewish and non-Jewish individuals \cite[]{behar2013no}. 
 We then compute the robust center (geometric median) of the Ashkenazi Jewish reference individuals, and compute the PC distance to this center for all projected UKBB individuals.
-Based on visual inspection of the histogram of these distances and on the fact that the closest non-Ashkenazi Jewish reference individual, an Italian Jew (Figure \ref{fig:jew-ref}), is at distance 12.7, we use a threshold of 12.5 under which to assign to the ``Ashkenazi Jewish'' ancestry group.
+Based on visual inspection of the histogram of these distances and on the fact that the closest non-Ashkenazi Jewish reference individual, an Italian Jew (Figure S22), is at distance 12.7, we use a threshold of 12.5 under which to assign to the ``Ashkenazi Jewish'' ancestry group.
 1709 unrelated UKBB individuals are then assigned to this group.
 Note that, within the already defined eight ancestry groups, the closest individual to this new group belongs to the Italian group, and is at distance 17.3, therefore this new Ashkenazi group is not overlapping with any of the other groups defined previously.
 
@@ -226,7 +226,7 @@ finally giving (note the added term $\hat{\gamma}_j^2$)
 \begin{equation}\label{eq:approx-sd-lin}
 \text{sd}(\boldsymbol{G_j}) \approx \dfrac{\text{sd}(\boldsymbol{\breve{y}})}{\sqrt{n ~ \text{se}(\hat{\gamma}_j)^2 + \hat{\gamma}_j^2}} ~.
 \end{equation}
-Figure \ref{fig:new-formula} shows that the updated formula \eqref{eq:approx-sd-lin} is better; we now use it in the code of LDpred2, and also recommend using it for the QC procedure proposed in \cite{prive2020ldpred2}.
+Figure S23 shows that the updated formula \eqref{eq:approx-sd-lin} is better; we now use it in the code of LDpred2, and also recommend using it for the QC procedure proposed in \cite{prive2020ldpred2}.
 
 \subsection*{Using more than HapMap3 variants in LDpred2}
 
@@ -253,7 +253,7 @@ We implement this in function \texttt{pcor} of R package bigstatsr and use it he
 
 Here, we use the UK Biobank (UKBB) data only \cite[]{bycroft2018uk}.
 We first infer nine ancestry groups in the UKBB.
-Then we use 391,124 individuals of Northwestern European ancestry to train polygenic scores (PGS) for {\NBTRAIT} phenotypes (about half being diseases, see categories in figure \ref{fig:pie}) based on UKBB individual-level genotypes and phenotypes, and assess portability of these PGS in the remaining individuals of diverse ancestries (Table \ref{tab:size-sets}).
+Then we use 391,124 individuals of Northwestern European ancestry to train polygenic scores (PGS) for {\NBTRAIT} phenotypes (about half being diseases, see categories in figure S1) based on UKBB individual-level genotypes and phenotypes, and assess portability of these PGS in the remaining individuals of diverse ancestries (Table \ref{tab:size-sets}).
 As additional analyses, we also investigate using more variants than the HapMap3 variants used in the main analyses, and train models using a mixture of multiple ancestries.
 To derive PGS in this study, we use two different methods, penalized regression and LDpred2-auto, and finally compare them.
 
@@ -291,7 +291,7 @@ Note that the names of the ancestry groups we define here refer to the country n
 Then, for inferring the ``Ashkenazi Jewish'' ancestry group, we use the first solution, projecting UKBB individuals onto the PCA space of a reference dataset composed of many Jewish and non-Jewish individuals \cite[]{behar2013no}.
 We identify a ninth group of 1709 unrelated individuals, which is entirely non-overlapping with the other eight groups previously defined (Methods).
 This group is largely overlapping with the 1719 presumably British Jews identified from IBD segments in \cite{naseri2021personalized} (personal correspondence with the authors).
-Finally, we run ADMIXTURE (with k=8 and k=5) on 200 individuals from each of the nine ancestry groups defined here \cite[]{alexander2009fast}. The results are consistent with the PCA analysis (Figure \ref{fig:grouping2}), e.g.\ showing that the Caribbean group we define is mostly composed of admixed individuals with mostly African ancestry and some small percentage of European ancestry (Figure \ref{fig:admixture}). 
+Finally, we run ADMIXTURE (with k=8 and k=5) on 200 individuals from each of the nine ancestry groups defined here \cite[]{alexander2009fast}. The results are consistent with the PCA analysis (Figure \ref{fig:grouping2}), e.g.\ showing that the Caribbean group we define is mostly composed of admixed individuals with mostly African ancestry and some small percentage of European ancestry (Figure S2). 
 Moreover, the other groups we define have distinct ADMIXTURE profiles (consistently with being distinct on PCA), except for the ``United Kingdom'' and ``Poland'' ancestry groups, which cannot be distinguished based on this analysis.
 
 \begin{figure}[htb]
@@ -302,12 +302,12 @@ Moreover, the other groups we define have distinct ADMIXTURE profiles (consisten
 \subsection*{Portability of polygenic scores to other ancestries}
 
 Figure \ref{fig:lasso-ancestry} presents the results when fitting penalized regression using a training set composed of Northwestern European individuals from the UK Biobank (``United Kingdom'', hereinafter also referred to as ``the UK individuals'' or ``the UK'' for simplicity purposes) and testing in nine different ancestry groups from the same cohort (Table \ref{tab:size-sets}). Averaged over {\NBTRAIT} phenotypes, compared to prediction performance in individuals of Northwestern European ancestry, relative predictive ability in terms of partial-$r^2$ (Methods) is 93.8\% in the ``Poland'' ancestry group (North-East Europe), 85.6\% in ``Italy'' (South Europe), 72.2\% in ``Iran'' (Middle East), 64.7\% in ``India'' (South Asia), 48.6\% in ``China'' (East Asia), 25.2\% in the ``Caribbean'', 18\% in ``Nigeria'' (West Africa), and 85.7\% for the Ashkenazi Jewish group.
-As a follow-up analysis to ensure that this drop in performance in other ancestries is not due to differences in imputation quality across ancestries, we perform the same analysis for 83 of the continuous phenotypes using high-quality genotyped variants only (Methods) instead of the (mostly imputed) HapMap3 variants; results are highly consistent (Figure \ref{fig:lasso-ancestry-geno}).
-We also run the previous follow-up analysis while removing third-degree relatives, which leaves us with 349,991 individuals for training (instead of 391,124) and 43,631 for testing (instead of 46,545); results are practically unchanged (Figure \ref{fig:lasso-ancestry-geno-norel3}).
-These results are also very similar when using LDpred2-auto instead of penalized regression for training predictive models for all phenotypes (Figure \ref{fig:ldpred2-ancestry}).
+As a follow-up analysis to ensure that this drop in performance in other ancestries is not due to differences in imputation quality across ancestries, we perform the same analysis for 83 of the continuous phenotypes using high-quality genotyped variants only (Methods) instead of the (mostly imputed) HapMap3 variants; results are highly consistent (Figure S3).
+We also run the previous follow-up analysis while removing third-degree relatives, which leaves us with 349,991 individuals for training (instead of 391,124) and 43,631 for testing (instead of 46,545); results are practically unchanged (Figure S4).
+These results are also very similar when using LDpred2-auto instead of penalized regression for training predictive models for all phenotypes (Figure S5).
 A few phenotypes deviate from this global trend, e.g.\ prediction of bilirubin concentration ranges between 0.537 and 0.619 (partial-$r$) for all ancestries except for ``China'', for which it is 0.415 (95\% CI: 0.374 - 0.453, see Methods).
 In contrast, e.g.\ for hair and skin color, partial correlations decrease quickly and are not significantly different from 0 for both ``China'' and ``Nigeria'', while of 0.420 (95\% CI: 0.409 - 0.432) for ``darker hair'' in the ``United Kingdom'' ancestry group (Figure \ref{fig:lasso-ancestry}).
-Overall, relative predictive performance decreases approximately linearly with PC distance to the training set (Figure \ref{fig:ratio-dist}). A similar pattern is observed when computing PCA based on more balanced ancestry groups, as recommended in \cite{prive2020efficient} (Figure \ref{fig:ratio-dist2}).
+Overall, relative predictive performance decreases approximately linearly with PC distance to the training set (Figure \ref{fig:ratio-dist}). A similar pattern is observed when computing PCA based on more balanced ancestry groups, as recommended in \cite{prive2020efficient} (Figure S6).
 
 \begin{figure}[htb]
 \centering
@@ -328,11 +328,11 @@ The square of this slope is provided above each plot, which we report as the rel
 We investigate some of the outlier phenotypes in figure \ref{fig:lasso-ancestry}, especially the ones from blood biochemistry which have some variants with large effects.
 We hypothesize that using a denser set of variants could improve tagging of the causal variants with large effect sizes, resulting in an improved prediction in all ancestries.
 We focus on ``total bilirubin'', ``lipoprotein(a)'' (lipoA) and ``apolipoprotein B'' (apoB). We perform a localized GWAS which includes all variants around the most significant variant (hereinafter denoted as ``top hit'') from the GWAS in the training set 1 (UK individuals and HapMap3 variants only) in each of the first eight ancestry groups defined here. More precisely, we include all variants with an imputation INFO score larger than 0.3 and within a window of 500Kb from the HapMap3 top hit in the UK; there are approximately 30K such variants for all three phenotypes.
-For bilirubin, the overall top hit is a HapMap3 variant and explains around 30\% of the phenotypic variance (Figure \ref{fig:zoom-bilirubin}). Effects from the three top hits are fairly consistent within all ancestry groups (Figure \ref{fig:top3-bilirubin}) explaining why genetic prediction is highly consistent in all ancestries, except for ``China'' (Figure \ref{fig:lasso-ancestry}), for which these variants are rarer.
+For bilirubin, the overall top hit is a HapMap3 variant and explains around 30\% of the phenotypic variance (Figure S8). Effects from the three top hits are fairly consistent within all ancestry groups (Figure S9) explaining why genetic prediction is highly consistent in all ancestries, except for ``China'' (Figure \ref{fig:lasso-ancestry}), for which these variants are rarer.
 For lipoA, results are very different across ancestries; HapMap3 variants are far from being the top hits for the UK individuals, where the top HapMap3 variant explains 5\% of phenotypic variance compared to 29\% for the (non-HapMap3) top hit (Figure \ref{fig:zoom-lipoA}).
 Note that this top hit is more than 200Kb away from the HapMap3 top hit from the UK group.
-Moreover, the 3 top hits for lipoA do not have very consistent effect sizes across ancestries (Figure \ref{fig:top3-lipoA}).
-Finally, for apoB, effects from the three top hits, which are not part of HapMap3 variants, are fairly consistent across ancestries and explain up to 8.5\% of the phenotypic variance (Figures \ref{fig:zoom-apoB} \& \ref{fig:top3-apoB}).
+Moreover, the 3 top hits for lipoA do not have very consistent effect sizes across ancestries (Figure S10).
+Finally, for apoB, effects from the three top hits, which are not part of HapMap3 variants, are fairly consistent across ancestries and explain up to 8.5\% of the phenotypic variance (Figures S11 and S12).
 
 \begin{figure}[htb]
 	\centering
@@ -343,8 +343,8 @@ Finally, for apoB, effects from the three top hits, which are not part of HapMap
 
 We then investigate if the use of a larger set of variants than the HapMap3 set is beneficial; we use more than 8M common variants (Methods) and apply LDpred2-auto after restricting to the 1M most significant variants and applying winner's curse correction (Methods). 
 Except for lipoA for which we get a large improvement in predictive accuracy compared to using HapMap3 variants only, it is not beneficial for the other seven phenotypes analyzed here (Figure \ref{fig:ldpred2-large}). Remarkably, while the partial correlation for lipoA is about 75\% in the UK test set when using this prioritized set of variants, it is still not different from 0 when applied to the ``Nigeria'' group.
-For height and BMI, estimated SNP heritability is reduced when using this set of most significant variants only, and all these variants are estimated to be causal, i.e.\ the estimate of the proportion of causal variants $p$ is 1 (Table \ref{tab:ldpred2-est-large}). As height and BMI are very polygenic traits ($p$ is estimated to be \textasciitilde2\% and \textasciitilde4\% respectively when using HapMap3 variants), contribution from less significant causal variants is missed due to this thresholding selection.
-For the three binary phenotypes, breast cancer (phecode: 174.1), prostate cancer (185) and coronary artery disease (411.4), although heritability estimates are larger when using this set of prioritized variants (Table \ref{tab:ldpred2-est-large}), predictive accuracy does not improve compared to when using HapMap3 variants (Figure \ref{fig:ldpred2-large}).
+For height and BMI, estimated SNP heritability is reduced when using this set of most significant variants only, and all these variants are estimated to be causal, i.e.\ the estimate of the proportion of causal variants $p$ is 1 (Table S1). As height and BMI are very polygenic traits ($p$ is estimated to be \textasciitilde2\% and \textasciitilde4\% respectively when using HapMap3 variants), contribution from less significant causal variants is missed due to this thresholding selection.
+For the three binary phenotypes, breast cancer (phecode: 174.1), prostate cancer (185) and coronary artery disease (411.4), although heritability estimates are larger when using this set of prioritized variants (Table S1), predictive accuracy does not improve compared to when using HapMap3 variants (Figure \ref{fig:ldpred2-large}).
 
 \begin{figure}[htb]
 	\centering
@@ -358,26 +358,26 @@ For the three binary phenotypes, breast cancer (phecode: 174.1), prostate cancer
 We hypothesize that using individuals from diverse ancestries could improve tagging of the causal variants, resulting in an improved prediction in all ancestries. Indeed, power improvements for both association and prediction have been reported when using even a small set of individuals from different ancestries \cite[]{wojcik2019genetic,cavazos2020inclusion,huang2021improving}.
 Here we use all ancestry groups except for the Caribbean and Ashkenazi for training penalized regressions; we remove the same number of UK individuals to keep the same training sample size as before (training 2 in table \ref{tab:size-sets}).
 We recall that Caribbean individuals are mostly admixed between African, European and Native American ancestries \cite[]{moreno2013reconstructing}, which are almost all represented here in the training set 2.
-In figure \ref{fig:lasso-multi}, we investigate nine phenotypes of interest, either because they are highly studied diseases or are outliers in figure \ref{fig:lasso-ancestry}: breast cancer (phecode: 174.1), prostate cancer (186), type-2 diabetes (250.2), hypertension (401), coronary artery disease (411.4), skin tone, total bilirubin concentration, lipoprotein(a) concentration, and years of education.
+In figure S13, we investigate nine phenotypes of interest, either because they are highly studied diseases or are outliers in figure \ref{fig:lasso-ancestry}: breast cancer (phecode: 174.1), prostate cancer (186), type-2 diabetes (250.2), hypertension (401), coronary artery disease (411.4), skin tone, total bilirubin concentration, lipoprotein(a) concentration, and years of education.
 We predict in the test sets from the UK and the Caribbean (test set 2); overall, the predictive performance is highly similar when using this multi-ancestry training compared to when using only UK individuals, in both the UK and the Caribbean target samples. 
-Prediction is only improved for lipoprotein(a) concentration when the mixed ancestry training data is used in application to the Caribbean target data (Figure \ref{fig:lasso-multi}).  
+Prediction is only improved for lipoprotein(a) concentration when the mixed ancestry training data is used in application to the Caribbean target data (Figure S13).  
 Discrepancies between our results and results from \cite{marquez2017multiethnic} and \cite{cavazos2020inclusion} may be explained by the fact that we use the exact same sample size when training with multiple ancestries (by removing some UK individuals; see table \ref{tab:size-sets}), whereas these studies use extra (non-European) individuals, making it hard to know if the improved predictions come from using non-European individuals, or just from using more individuals.
 We also run the newly developed PRS-CSx method \cite[]{huang2021improving} using individuals from training 2, deriving the GWAS summary statistics from the UK Biobank individual-level data (as for LDpred2-auto). 
-PRS-CSx provides lower predictive performance than using the penalized regression on training 2 for both the UK and Caribbean test sets, except when predicting years of education for both sets as well as ``darker skin'' and coronary artery disease (phecode 411.4) in the Caribbean test set (Figure \ref{fig:lasso-multi}).
+PRS-CSx provides lower predictive performance than using the penalized regression on training 2 for both the UK and Caribbean test sets, except when predicting years of education for both sets as well as ``darker skin'' and coronary artery disease (phecode 411.4) in the Caribbean test set (Figure S13).
 Predictive performance of PRS-CSx is particularly lower for traits with large effects (bilirubin and lipoprotein(a) concentrations) and moderate effects (breast and prostate cancers; phecodes 174.1 and 185).
 
 \subsection*{Comparison of predictive models}
 
-Penalized regression and LDpred2-auto provide approximately similar predictive performance across all traits and ancestries considered here (Figure \ref{fig:plr-ldpred2}); there are only four pairs of phenotype-ancestry (out of nearly 2000 pairs) for which 95\% CIs for partial-$r$ from penalized regression and LDpred2 are not overlapping: ``615: Endometriosis'' in the ``China'' ancestry group with 0.065 (0.0074 - 0.122) vs -0.051 (-0.108 - 0.0068); ``hard falling asleep'' in UK with -0.0349 (-0.742 - 0.0045) vs 0.071 (0.031 - 0.110); height in UK with 0.634 (0.626 - 0.643) vs 0.613 (0.605 - 0.622); log-bilirubin in ``Nigeria'' with 0.546 (0.523 - 0.569) vs 0.475 (0.449 - 0.500).
-For prediction in UK ancestry, penalized regression tends to provide better predictive performance than LDpred2 for phenotypes for which partial-$r$ > 0.3, and LDpred2 tends to outperform penalized regression for phenotypes harder to predict (Figure \ref{fig:plr-ldpred2}).
+Penalized regression and LDpred2-auto provide approximately similar predictive performance across all traits and ancestries considered here (Figure S14); there are only four pairs of phenotype-ancestry (out of nearly 2000 pairs) for which 95\% CIs for partial-$r$ from penalized regression and LDpred2 are not overlapping: ``615: Endometriosis'' in the ``China'' ancestry group with 0.065 (0.0074 - 0.122) vs -0.051 (-0.108 - 0.0068); ``hard falling asleep'' in UK with -0.0349 (-0.742 - 0.0045) vs 0.071 (0.031 - 0.110); height in UK with 0.634 (0.626 - 0.643) vs 0.613 (0.605 - 0.622); log-bilirubin in ``Nigeria'' with 0.546 (0.523 - 0.569) vs 0.475 (0.449 - 0.500).
+For prediction in UK ancestry, penalized regression tends to provide better predictive performance than LDpred2 for phenotypes for which partial-$r$ > 0.3, and LDpred2 tends to outperform penalized regression for phenotypes harder to predict (Figure S14).
 
 Both methods allow for fitting sparse effects, i.e.\ some resulting effects are exactly 0. Sparse models may be beneficial because they may be more easily implemented. 
-The sparse option in LDpred2-auto provides similar performance as LDpred2-auto without this option (Figure \ref{fig:sparse-ldpred2}).
+The sparse option in LDpred2-auto provides similar performance as LDpred2-auto without this option (Figure S15).
 Sparsity of resulting effects follows a very different pattern for penalized regression compared to LDpred2-auto-sparse.
-Indeed, penalized regression tends not to include variants if it is uncertain that they have a non-zero effect, i.e.\ when effects are very small and prediction is difficult (Figure \ref{fig:sparsity-plr}).
-In contrast, LDpred2-auto-sparse tends not to discard variants, only when $h^2$ is large enough it sets lots of effects to 0 if $p$ is small (Figure \ref{fig:sparsity-ldpred2}).
-Finally, running each penalized regression model takes between a few minutes and a few days depending on the number of non-zero effects in the resulting model (Figure \ref{fig:timings-plr}).
-In contrast, LDpred2-auto should take the same computation time for all phenotypes; it completed under seven hours for most phenotypes (Figure \ref{fig:timings-ldpred2}).
+Indeed, penalized regression tends not to include variants if it is uncertain that they have a non-zero effect, i.e.\ when effects are very small and prediction is difficult (Figure S16).
+In contrast, LDpred2-auto-sparse tends not to discard variants, only when $h^2$ is large enough it sets lots of effects to 0 if $p$ is small (Figure S17).
+Finally, running each penalized regression model takes between a few minutes and a few days depending on the number of non-zero effects in the resulting model (Figure S18).
+In contrast, LDpred2-auto should take the same computation time for all phenotypes; it completed under seven hours for most phenotypes (Figure S19).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -410,6 +410,19 @@ Moreover, we do not use external summary statistics, which means that polygenic 
 Nevertheless, \cite{albinana2020leveraging} have shown that an efficient strategy to improve predictive ability of polygenic scores consists in combining two different polygenic scores, one derived using external summary statistics, and another one derived using internal individual-level data.
 Therefore, the polygenic scores we derived here could be combined with polygenic scores derived using external summary statistics; we will release these PGS publicly and share them in databases such as the PGS Catalog and the Cancer-PRSweb \cite[]{fritsche2020cancer,lambert2020polygenic}.
 
+\section*{Data and code availability}
+
+The UK Biobank data is available through a procedure described at \url{https://www.ukbiobank.ac.uk/using-the-resource/}. All code used for this paper is available at \url{https://github.com/privefl/UKBB-PGS/tree/master/code}. 
+Links to the code used for the two supplementary notes are provided there. 
+Code to reproduce our nine ancestry groups is available at \url{https://github.com/privefl/UKBB-PGS#code-to-reproduce-ancestry-groups}.
+
+We have extensively used R packages bigstatsr and bigsnpr \cite[]{prive2017efficient} for analyzing large genetic data, packages from the future framework \cite[]{bengtsson2020unifying} for easy scheduling and parallelization of analyses on the HPC cluster, and packages from the tidyverse suite \cite[]{wickham2019welcome} for shaping and visualizing results.
+We have also used R package deming for fitting Deming regressions.
+
+\section*{Declaration of Interests}
+
+S.C.\ is a paid consultant to MyHeritage.
+The other authors declare no competing interests.
 
 \section*{Acknowledgements}
 
@@ -418,23 +431,11 @@ Authors thank Abdel Abdellaoui for his help with defining the ``years of educati
 Authors thank GenomeDK and Aarhus University for providing computational resources and support that contributed to these research results.
 This research has been conducted using the UK Biobank Resource under Application Number 58024.
 
-We have extensively used R packages bigstatsr and bigsnpr \cite[]{prive2017efficient} for analyzing large genetic data, packages from the future framework \cite[]{bengtsson2020unifying} for easy scheduling and parallelization of analyses on the HPC cluster, and packages from the tidyverse suite \cite[]{wickham2019welcome} for shaping and visualizing results.
-We have also used R package deming for fitting Deming regressions.
-
 F.P.\ and B.J.V.\ are supported by the Danish National Research Foundation (Niels Bohr Professorship to Prof. John McGrath), and also acknowledge the Lundbeck Foundation Initiative for Integrative Psychiatric Research, iPSYCH (R248-2017-2003). B.J.V. is also supported by a Lundbeck Foundation Fellowship (R335-2019-2339).
-
-\section*{Declaration of Interests}
-
-S.C.\ is a paid consultant to MyHeritage.
-The other authors declare no competing interests.
 
 \section*{Web Resources}
 
 \noindent Quality control information on genetic variants from the UK Biobank, \url{https://biobank.ctsu.ox.ac.uk/crystal/crystal/auxdata/ukb_snp_qc.txt}
-
-\noindent All code used for this paper (links to the code used for the two supplementary notes are provided there), \url{https://github.com/privefl/UKBB-PGS/tree/master/code}
-
-\noindent Code to reproduce our nine ancestry groups, \url{https://github.com/privefl/UKBB-PGS#code-to-reproduce-ancestry-groups}
 
 \noindent Description of the {\NBTRAIT} phenotypes used in this study, \url{https://github.com/privefl/UKBB-PGS/blob/main/phenotype-description.xlsx}
 

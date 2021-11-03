@@ -180,43 +180,6 @@ The square of this slope is provided above each plot, which we report as the rel
 
 \FloatBarrier
 
-% latex table generated in R 3.6.1 by xtable 1.8-4 package
-\begin{table}[ht]
-	\centering
-	\begin{tabular}{|c|c|c|c|}
-		\hline
-		Phenotype & Set of variants & h2 [2.5\%-97.5\%] & p [2.5\%-97.5\%] \\
-		\hline
-		174.1 & top1M & 0.0889 [0.086-0.092] & 0.0076 [0.00678-0.00841] \\
-		174.1 & HM3 & 0.0299 [0.0264-0.0334] & 0.000881 [0.000636-0.00117] \\
-		\hline
-		185 & top1M & 0.113 [0.109-0.116] & 0.00819 [0.00743-0.00906] \\
-		185 & HM3 & 0.0381 [0.0343-0.0423] & 0.000784 [0.000588-0.00105] \\
-		\hline
-		411.4 & top1M & 0.0641 [0.0624-0.0659] & 0.0152 [0.0138-0.0168] \\
-		411.4 & HM3 & 0.0401 [0.0379-0.0422] & 0.00457 [0.00397-0.00526] \\
-		\hline
-		apoB & top1M & 0.269 [0.265-0.272] & 0.0533 [0.0498-0.0568] \\
-		apoB & HM3 & 0.163 [0.16-0.166] & 0.00132 [0.00119-0.00145] \\
-		\hline
-		height & top1M & 0.482 [0.479-0.486] & 1 [1-1] \\
-		height & HM3 & 0.546 [0.541-0.552] & 0.0226 [0.0218-0.0235] \\
-		\hline
-		log\_bilirubin & top1M & 0.301 [0.267-0.363] & 0.214 [0.195-0.227] \\
-		log\_bilirubin & HM3 & 0.361 [0.357-0.365] & 0.000481 [0.000423-0.000545] \\
-		\hline
-		log\_BMI & top1M & 0.173 [0.171-0.176] & 1 [1-1] \\
-		log\_BMI & HM3 & 0.263 [0.26-0.266] & 0.0426 [0.0404-0.0446] \\
-		\hline
-		log\_lipoA & top1M & 0.696 [0.689-0.702] & 0.0116 [0.011-0.0122] \\
-		log\_lipoA & HM3 & 0.34 [0.336-0.345] & 0.000229 [0.000192-0.000268] \\
-		\hline
-	\end{tabular}
-	\caption{Estimates of SNP heritability $h^2$ and proportion of causal variants $p$ from LDpred2-auto, when using either 1,040,096 HapMap3 variants or when prioritizing 1M variants out of 8M+ common variants, for eight phenotypes. Quantiles of all estimates are also reported. Phecode 174.1: breast cancer; 185: prostate cancer; 411.4: coronary artery disease. \label{tab:ldpred2-est-large}}
-\end{table}
-
-\FloatBarrier
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}[h]
@@ -307,11 +270,48 @@ The square of this slope is provided above each plot, which we report as the rel
 
 %\clearpage
 
+\FloatBarrier
+
+% latex table generated in R 3.6.1 by xtable 1.8-4 package
+\begin{table}[p]
+	\centering
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		Phenotype & Set of variants & h2 [2.5\%-97.5\%] & p [2.5\%-97.5\%] \\
+		\hline
+		174.1 & top1M & 0.0889 [0.086-0.092] & 0.0076 [0.00678-0.00841] \\
+		174.1 & HM3 & 0.0299 [0.0264-0.0334] & 0.000881 [0.000636-0.00117] \\
+		\hline
+		185 & top1M & 0.113 [0.109-0.116] & 0.00819 [0.00743-0.00906] \\
+		185 & HM3 & 0.0381 [0.0343-0.0423] & 0.000784 [0.000588-0.00105] \\
+		\hline
+		411.4 & top1M & 0.0641 [0.0624-0.0659] & 0.0152 [0.0138-0.0168] \\
+		411.4 & HM3 & 0.0401 [0.0379-0.0422] & 0.00457 [0.00397-0.00526] \\
+		\hline
+		apoB & top1M & 0.269 [0.265-0.272] & 0.0533 [0.0498-0.0568] \\
+		apoB & HM3 & 0.163 [0.16-0.166] & 0.00132 [0.00119-0.00145] \\
+		\hline
+		height & top1M & 0.482 [0.479-0.486] & 1 [1-1] \\
+		height & HM3 & 0.546 [0.541-0.552] & 0.0226 [0.0218-0.0235] \\
+		\hline
+		log\_bilirubin & top1M & 0.301 [0.267-0.363] & 0.214 [0.195-0.227] \\
+		log\_bilirubin & HM3 & 0.361 [0.357-0.365] & 0.000481 [0.000423-0.000545] \\
+		\hline
+		log\_BMI & top1M & 0.173 [0.171-0.176] & 1 [1-1] \\
+		log\_BMI & HM3 & 0.263 [0.26-0.266] & 0.0426 [0.0404-0.0446] \\
+		\hline
+		log\_lipoA & top1M & 0.696 [0.689-0.702] & 0.0116 [0.011-0.0122] \\
+		log\_lipoA & HM3 & 0.34 [0.336-0.345] & 0.000229 [0.000192-0.000268] \\
+		\hline
+	\end{tabular}
+	\caption{Estimates of SNP heritability $h^2$ and proportion of causal variants $p$ from LDpred2-auto, when using either 1,040,096 HapMap3 variants or when prioritizing 1M variants out of 8M+ common variants, for eight phenotypes. Quantiles of all estimates are also reported. Phecode 174.1: breast cancer; 185: prostate cancer; 411.4: coronary artery disease. \label{tab:ldpred2-est-large}}
+\end{table}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \FloatBarrier
-%\clearpage
+\clearpage
 
 \bibliographystyle{natbib}
 \bibliography{refs}
