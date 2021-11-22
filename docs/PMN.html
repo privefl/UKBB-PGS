@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Personalised Medicine Network</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+background-image: url(figures/NCRR-logos.svg)
+background-size: contain
+class: title-slide center middle
+
+## Portability of 245 polygenic scores&lt;br&gt;when derived from the UK Biobank and applied&lt;br&gt;to 9 ancestry groups from the same cohort
+
+&lt;br&gt;
+
+### Personalised Medicine Network
+
+&lt;br&gt;
+
+&lt;ins&gt;**Florian Privé**&lt;/ins&gt;, Hugues Aschard, Shai Carmi, Lasse Folkersen,&lt;br&gt;Clive Hoggart, Paul F. O’Reilly, Bjarni J. Vilhjálmsson
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+---
+
+&lt;!-- ### Introduction  --&gt;
+
+- **Polygenic scores (PGS)**, which aggregates information from multiple variants into a single predictor, have shown **great promise** for identifying high-risk (or low-risk) individuals for several diseases
+
+- However, **portability** of PGS across ancestries is **concerning**  
+(e.g. PGS trained using European individuals underperform in African individuals)
+
+&lt;br&gt;
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="figures/violin-martin.png" alt="&amp;lt;small&amp;gt;Prediction accuracy relative to European ancestry individuals across 17 quantitative traits and 5 continental populations in UKBB. Figure from Martin et al. Nature Genetics (2019).&amp;lt;/small&amp;gt;" width="70%" /&gt;
+&lt;p class="caption"&gt;&lt;small&gt;Prediction accuracy relative to European ancestry individuals across 17 quantitative traits and 5 continental populations in UKBB. Figure from Martin et al. Nature Genetics (2019).&lt;/small&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+### What does our study add?
+
+The UK Biobank data can provide more detailed evidence of this concern
+
+- The UK Biobank data contains 450K individuals of British ancestry, but also from many other ancestries; we define **9 large ancestry groups**:
+&lt;img src="figures/table1-2.JPG" width="100%" style="display: block; margin: auto;" /&gt;
+
+- there are many different phenotypes available (we use **245**)
+
+`\(\Longrightarrow\)` higher-resolution ancestry analysis, averaged over many traits
+
+- individuals all live in the UK and had their genetic and phenotypic information derived **in the same way**
+
+`\(\Longrightarrow\)` circumvent potential bias when using independent studies
+
+- using individual-level data makes deriving PGS highly reliable, and we use different methods: *penalized regression* and *LDpred2-auto*
+    
+---
+
+### Portability across 245 phenotypes and 9 ancestry groups
+
+&lt;img src="figures/lasso-ancestry-2.png" width="95%" style="display: block; margin: auto;" /&gt;
+
+.footnote[Percentage in figure title = squared slope (in blue) // same with LDpred2-auto instead of penalized regression or genotyped variants instead of HapMap3 variants.]
+
+---
+
+### Predictive performance drops with genetic distance
+
+&lt;br&gt;
+
+&lt;img src="figures/ratio-dist-2.png" width="82%" style="display: block; margin: auto;" /&gt;
+
+&lt;!-- &lt;span class="footnote"&gt;Recall: `\(\text{dist}_{PC}^2 \propto F_{ST}\)`&lt;/span&gt; --&gt;
+
+---
+
+### Take-home messages
+
+- We provide simple solutions for high-resolution ancestry inference, and use them to define 9 ancestry groups in the UK Biobank  
+
+- We show a dramatic reduction of predictive performance in other ancestries, already within Europe, and increasing with PC distance to the training population
+
+- This predictive reduction is consistent with previous studies `\(^{[1]}\)`, even though PGS are derived and applied in the same cohort
+
+- Our results are robust because we average over 245 phenotypes, run two different predictive methods and use multiple sets of variants
+
+***
+
+- PGS effects for 215 phenotypes are made available 
+
+- Accepted in AJHG / avialable as medRxiv preprint
+
+- What's next? More population and multiple-ancestry training
+
+.footnote[[1] Martin et al., *Nature Genetics* (2019); Duncan et al., *Nature Communications* (2019); Wang et al., *Nature Communications* (2020)]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
