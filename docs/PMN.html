@@ -36,7 +36,7 @@ class: title-slide center middle
 
 &lt;!-- ### Introduction  --&gt;
 
-- **Polygenic scores (PGS)**, which aggregates information from multiple variants into a single predictor, have shown **great promise** for identifying high-risk (or low-risk) individuals for several diseases
+- **Polygenic scores (PGS)**, which aggregates information from multiple genetic variants into a single predictor, have shown **great potential** for identifying high-risk (or low-risk) individuals for several diseases
 
 - However, **portability** of PGS across ancestries is **concerning**  
 (e.g. PGS trained using European individuals underperform in African individuals)
@@ -52,6 +52,8 @@ class: title-slide center middle
 
 ### What does our study add?
 
+&lt;br&gt;
+
 The UK Biobank data can provide more detailed evidence of this concern
 
 - The UK Biobank data contains 450K individuals of British ancestry, but also from many other ancestries; we define **9 large ancestry groups**:
@@ -65,15 +67,13 @@ The UK Biobank data can provide more detailed evidence of this concern
 
 `\(\Longrightarrow\)` circumvent potential bias when using independent studies
 
-- using individual-level data makes deriving PGS highly reliable, and we use different methods: *penalized regression* and *LDpred2-auto*
-    
 ---
 
 ### Portability across 245 phenotypes and 9 ancestry groups
 
 &lt;img src="figures/lasso-ancestry-2.png" width="95%" style="display: block; margin: auto;" /&gt;
 
-.footnote[Percentage in figure title = squared slope (in blue) // same with LDpred2-auto instead of penalized regression or genotyped variants instead of HapMap3 variants.]
+.footnote[Percentage in figure title = squared slope (in blue) // same with two different PGS methods, and with genotyped variants instead of HapMap3 variants.]
 
 ---
 
@@ -91,9 +91,9 @@ The UK Biobank data can provide more detailed evidence of this concern
 
 - We provide simple solutions for high-resolution ancestry inference, and use them to define 9 ancestry groups in the UK Biobank  
 
-- We show a dramatic reduction of predictive performance in other ancestries, already within Europe, and increasing with PC distance to the training population
+- We show a dramatic reduction of predictive performance in other ancestries, already within Europe, and largely proportional to the genetic distance to the training population
 
-- This predictive reduction is consistent with previous studies `\(^{[1]}\)`, even though PGS are derived and applied in the same cohort
+- This reduction in prediction is consistent with previous studies `\(^{[1]}\)`, even though PGS are derived and applied in the same cohort
 
 - Our results are robust because we average over 245 phenotypes, run two different predictive methods and use multiple sets of variants
 
@@ -101,9 +101,9 @@ The UK Biobank data can provide more detailed evidence of this concern
 
 - PGS effects for 215 phenotypes are made available 
 
-- Accepted in AJHG / avialable as medRxiv preprint
+- Accepted in AJHG / available as medRxiv preprint
 
-- What's next? More population and multiple-ancestry training
+- What's next? More populations and multiple-ancestry training
 
 .footnote[[1] Martin et al., *Nature Genetics* (2019); Duncan et al., *Nature Communications* (2019); Wang et al., *Nature Communications* (2020)]
     </textarea>
