@@ -1,6 +1,8 @@
-## High-resolution portability of 245 polygenic scores when derived and applied in the same cohort
+## Portability of 245 polygenic scores when derived from the UK Biobank and applied to 9 ancestry groups from the same cohort
 
 Preprint: https://doi.org/10.1101/2021.02.05.21251061
+
+AJHG paper: https://doi.org/10.1016/j.ajhg.2021.11.008
 
 ### Code to reproduce ancestry groups
 
@@ -31,3 +33,9 @@ table(group, exclude = NULL)
 # Italy        Nigeria         Poland United Kingdom           <NA>
 #  6824           4086           4311         446682          25640
 ```
+
+### Polygenic score effect sizes for 200+ phenotypes
+
+- from the PGS Catalog: https://www.pgscatalog.org/publication/PGP000263/
+
+- from FigShare: https://doi.org/10.6084/m9.figshare.14074760.v2 (one large matrix of variants x phenotypes)
