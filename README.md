@@ -38,4 +38,4 @@ table(group, exclude = NULL)
 
 - from the PGS Catalog: https://www.pgscatalog.org/publication/PGP000263/
 
-- from FigShare: https://doi.org/10.6084/m9.figshare.14074760.v2 (one large matrix of variants x phenotypes)
+- from figshare: https://doi.org/10.6084/m9.figshare.14074760.v2 (one large matrix of variants x phenotypes)
